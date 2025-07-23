@@ -1,18 +1,26 @@
 import Foundation
 
-public class Task: ObservableObject, Identifiable {
+public class Task: Identifiable {
     public let id: UUID
-    @Published public var title: String
-    @Published public var description: String?
-    @Published public var willPowerCost: Int
-    @Published public var priority: TaskPriority
-    @Published public var category: TaskCategory
-    @Published public private(set) var status: TaskStatus
-    @Published public var estimatedDuration: TimeInterval?
+    public var title: String
+    public var description: String?
+    public var willPowerCost: Int
+    public var priority: TaskPriority
+    public var category: TaskCategory
+    private(set) var status: TaskStatus
+    
+    // statusへの公開アクセサ
+    public var currentStatus: TaskStatus {
+        return status
+    }
+    public var estimatedDuration: TimeInterval?
 
-    @Published public private(set) var createdAt: Date
-    @Published public private(set) var startedAt: Date?
-    @Published public private(set) var completedAt: Date?
+    private(set) var createdAt: Date
+    private(set) var startedAt: Date?
+    private(set) var completedAt: Date?
+    
+    // ドメインイベント通知のための観察者パターン
+    private var observers: [(Task) -> Void] = []
 
     public init(
         id: UUID = UUID(),
@@ -41,6 +49,16 @@ public class Task: ObservableObject, Identifiable {
     public var priorityScore: Int {
         return priority.rawValue
     }
+    
+    // ドメインイベント観察者の追加
+    public func addObserver(_ observer: @escaping (Task) -> Void) {
+        observers.append(observer)
+    }
+    
+    // ドメインイベント通知
+    private func notifyObservers() {
+        observers.forEach { $0(self) }
+    }
 
     public func start() {
         guard status == .pending || status == .paused else { return }
@@ -48,25 +66,30 @@ public class Task: ObservableObject, Identifiable {
         if startedAt == nil {
             startedAt = Date()
         }
+        notifyObservers() // ドメインイベント通知
     }
 
     public func markAsCompleted() {
         status = .completed
         completedAt = Date()
+        notifyObservers() // ドメインイベント通知
     }
 
     public func cancel() {
         status = .cancelled
+        notifyObservers() // ドメインイベント通知
     }
 
     public func pause() {
         guard status == .inProgress else { return }
         status = .paused
+        notifyObservers() // ドメインイベント通知
     }
 
     public func resume() {
         guard status == .paused else { return }
         status = .inProgress
+        notifyObservers() // ドメインイベント通知
     }
 
     public func setEstimatedDuration(_ duration: TimeInterval) {

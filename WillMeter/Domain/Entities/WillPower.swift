@@ -1,8 +1,11 @@
 import Foundation
 
-public class WillPower: ObservableObject {
-    @Published private(set) var currentValue: Int
+public class WillPower {
+    private(set) var currentValue: Int
     public let maxValue: Int
+    
+    // ドメインイベント通知のための観察者パターン
+    private var observers: [(WillPower) -> Void] = []
 
     public init(currentValue: Int, maxValue: Int) {
         self.currentValue = max(0, min(currentValue, maxValue))
@@ -28,6 +31,16 @@ public class WillPower: ObservableObject {
         }
     }
 
+    // ドメインイベント観察者の追加
+    public func addObserver(_ observer: @escaping (WillPower) -> Void) {
+        observers.append(observer)
+    }
+    
+    // ドメインイベント通知
+    private func notifyObservers() {
+        observers.forEach { $0(self) }
+    }
+
     @discardableResult
     public func consume(amount: Int) -> Bool {
         guard amount >= 0, currentValue >= amount else {
@@ -35,12 +48,14 @@ public class WillPower: ObservableObject {
         }
 
         currentValue -= amount
+        notifyObservers() // ドメインイベント通知
         return true
     }
 
     public func restore(amount: Int) {
         guard amount >= 0 else { return }
         currentValue = min(currentValue + amount, maxValue)
+        notifyObservers() // ドメインイベント通知
     }
 
     public func canPerformTask(cost: Int) -> Bool {

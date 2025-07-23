@@ -1,55 +1,66 @@
+//
+// WillPowerViewModel.swift
+// WillMeter
+//
+// プレゼンテーション層：UI専用のロジックとデータ変換
+
 import Combine
 import Foundation
+import SwiftUI
 
 @MainActor
 public class WillPowerViewModel: ObservableObject {
-    @Published private var willPower: WillPower
+    private let observableWillPower: ObservableWillPower
 
-    public init(initialValue: Int = 100, maxValue: Int = 100) {
-        self.willPower = WillPower(currentValue: initialValue, maxValue: maxValue)
+    public init(willPower: WillPower? = nil) {
+        let domainEntity = willPower ?? WillPower(currentValue: 100, maxValue: 100)
+        self.observableWillPower = ObservableWillPower(domainEntity)
+        
+        // インフラ層のObservableWillPowerの変更を監視してUI更新
+        observableWillPower.objectWillChange.sink { [weak self] in
+            self?.objectWillChange.send()
+        }.store(in: &cancellables)
     }
+    
+    private var cancellables = Set<AnyCancellable>()
 
-    // MARK: - Published Properties
+    // MARK: - ドメインエンティティへの読み取り専用アクセス
 
     public var currentValue: Int {
-        willPower.currentValue
+        observableWillPower.currentValue
     }
 
     public var maxValue: Int {
-        willPower.maxValue
+        observableWillPower.maxValue
     }
 
     public var percentage: Double {
-        willPower.percentage
+        observableWillPower.percentage
     }
 
     public var status: WillPowerStatus {
-        willPower.status
+        observableWillPower.status
     }
 
-    // MARK: - Actions
+    // MARK: - ユーザーアクション（ドメインロジックへの委譲）
 
     @discardableResult
     public func consumeWillPower(amount: Int) -> Bool {
-        let result = willPower.consume(amount: amount)
-        objectWillChange.send()
-        return result
+        return observableWillPower.consume(amount: amount)
     }
 
     public func restoreWillPower(amount: Int) {
-        willPower.restore(amount: amount)
-        objectWillChange.send()
+        observableWillPower.restore(amount: amount)
     }
 
     public func resetWillPower() {
-        willPower.restore(amount: willPower.maxValue - willPower.currentValue)
-        objectWillChange.send()
+        observableWillPower.reset()
     }
 
     // MARK: - Task Related Methods
 
     public func canPerformTask(_ task: Task) -> Bool {
-        return willPower.canPerformTask(cost: task.willPowerCost)
+        return observableWillPower.canPerformTask(cost: task.willPowerCost)
     }
 
     @discardableResult
@@ -58,10 +69,9 @@ public class WillPowerViewModel: ObservableObject {
             return false
         }
 
-        let success = willPower.consume(amount: task.willPowerCost)
+        let success = observableWillPower.consume(amount: task.willPowerCost)
         if success {
             task.markAsCompleted()
-            objectWillChange.send()
         }
         return success
     }
