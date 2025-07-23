@@ -15,16 +15,22 @@ struct ContentView: View {
                         willPowerViewModel.consumeWillPower(amount: 20)
                     }
                     .buttonStyle(.borderedProminent)
+                    .accessibilityLabel("意志力を20ポイント消費")
+                    .accessibilityHint("現在の意志力から20ポイントを減らします")
 
                     Button("ウィルパワーを回復 (+20)") {
                         willPowerViewModel.restoreWillPower(amount: 20)
                     }
                     .buttonStyle(.bordered)
+                    .accessibilityLabel("意志力を20ポイント回復")
+                    .accessibilityHint("現在の意志力に20ポイントを追加します")
 
                     Button("リセット") {
                         willPowerViewModel.resetWillPower()
                     }
                     .buttonStyle(.bordered)
+                    .accessibilityLabel("意志力をリセット")
+                    .accessibilityHint("意志力を最大値に戻します")
                 }
 
                 Spacer()

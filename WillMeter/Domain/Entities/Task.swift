@@ -83,11 +83,11 @@ public class Task: ObservableObject, Identifiable {
 }
 
 public enum TaskStatus: String, CaseIterable {
-    case pending = "pending"
-    case inProgress = "inProgress"
-    case completed = "completed"
-    case cancelled = "cancelled"
-    case paused = "paused"
+    case pending
+    case inProgress
+    case completed
+    case cancelled
+    case paused
 
     public var displayName: String {
         switch self {
@@ -96,16 +96,6 @@ public enum TaskStatus: String, CaseIterable {
         case .completed: return "完了"
         case .cancelled: return "キャンセル"
         case .paused: return "一時停止"
-        }
-    }
-
-    public var color: String {
-        switch self {
-        case .pending: return "blue"
-        case .inProgress: return "orange"
-        case .completed: return "green"
-        case .cancelled: return "red"
-        case .paused: return "yellow"
         }
     }
 }
@@ -122,24 +112,16 @@ public enum TaskPriority: Int, CaseIterable {
         case .high: return "高"
         }
     }
-
-    public var color: String {
-        switch self {
-        case .low: return "green"
-        case .medium: return "yellow"
-        case .high: return "red"
-        }
-    }
 }
 
 public enum TaskCategory: String, CaseIterable {
-    case work = "work"
-    case personal = "personal"
-    case health = "health"
-    case learning = "learning"
-    case development = "development"
-    case urgent = "urgent"
-    case maintenance = "maintenance"
+    case work
+    case personal
+    case health
+    case learning
+    case development
+    case urgent
+    case maintenance
 
     public var displayName: String {
         switch self {

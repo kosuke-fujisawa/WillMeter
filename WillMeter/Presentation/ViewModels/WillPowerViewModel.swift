@@ -77,7 +77,12 @@ public class WillPowerViewModel: ObservableObject {
     }
 
     public var statusColor: String {
-        return status.color
+        switch status {
+        case .high: return "green"
+        case .medium: return "yellow"
+        case .low: return "orange"
+        case .critical: return "red"
+        }
     }
 
     public var isLowWillPower: Bool {

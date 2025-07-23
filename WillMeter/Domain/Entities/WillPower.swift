@@ -49,10 +49,10 @@ public class WillPower: ObservableObject {
 }
 
 public enum WillPowerStatus: String, CaseIterable {
-    case high = "high"
-    case medium = "medium"
-    case low = "low"
-    case critical = "critical"
+    case high
+    case medium
+    case low
+    case critical
 
     public var displayName: String {
         switch self {
@@ -60,15 +60,6 @@ public enum WillPowerStatus: String, CaseIterable {
         case .medium: return "中"
         case .low: return "低"
         case .critical: return "危険"
-        }
-    }
-
-    public var color: String {
-        switch self {
-        case .high: return "green"
-        case .medium: return "yellow"
-        case .low: return "orange"
-        case .critical: return "red"
         }
     }
 }
