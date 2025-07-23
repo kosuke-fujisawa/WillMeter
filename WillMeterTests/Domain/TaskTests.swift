@@ -1,8 +1,7 @@
-import XCTest
 @testable import WillMeter
+import XCTest
 
 final class TaskTests: XCTestCase {
-    
     func testTaskInitialization() throws {
         // Given
         let id = UUID()
@@ -11,7 +10,7 @@ final class TaskTests: XCTestCase {
         let willPowerCost = 30
         let priority = TaskPriority.high
         let category = TaskCategory.development
-        
+
         // When
         let task = Task(
             id: id,
@@ -21,7 +20,7 @@ final class TaskTests: XCTestCase {
             priority: priority,
             category: category
         )
-        
+
         // Then
         XCTAssertEqual(task.id, id)
         XCTAssertEqual(task.title, title)
@@ -32,85 +31,85 @@ final class TaskTests: XCTestCase {
         XCTAssertEqual(task.status, .pending)
         XCTAssertFalse(task.isCompleted)
     }
-    
+
     func testTaskCompletion() throws {
         // Given
         let task = createSampleTask()
-        
+
         // When
         task.markAsCompleted()
-        
+
         // Then
         XCTAssertEqual(task.status, .completed)
         XCTAssertTrue(task.isCompleted)
         XCTAssertNotNil(task.completedAt)
     }
-    
+
     func testTaskStart() throws {
         // Given
         let task = createSampleTask()
-        
+
         // When
         task.start()
-        
+
         // Then
         XCTAssertEqual(task.status, .inProgress)
         XCTAssertFalse(task.isCompleted)
         XCTAssertNotNil(task.startedAt)
     }
-    
+
     func testTaskCancel() throws {
         // Given
         let task = createSampleTask()
         task.start()
-        
+
         // When
         task.cancel()
-        
+
         // Then
         XCTAssertEqual(task.status, .cancelled)
         XCTAssertFalse(task.isCompleted)
     }
-    
+
     func testTaskPause() throws {
         // Given
         let task = createSampleTask()
         task.start()
-        
+
         // When
         task.pause()
-        
+
         // Then
         XCTAssertEqual(task.status, .paused)
         XCTAssertFalse(task.isCompleted)
     }
-    
+
     func testTaskResume() throws {
         // Given
         let task = createSampleTask()
         task.start()
         task.pause()
-        
+
         // When
         task.resume()
-        
+
         // Then
         XCTAssertEqual(task.status, .inProgress)
         XCTAssertFalse(task.isCompleted)
     }
-    
+
     func testTaskEstimatedDuration() throws {
         // Given
         let task = createSampleTask()
-        let expectedDuration: TimeInterval = 3600 // 1 hour
-        
+        let expectedDuration: TimeInterval = 3_600 // 1 hour
+
         // When
         task.setEstimatedDuration(expectedDuration)
-        
+
         // Then
         XCTAssertEqual(task.estimatedDuration, expectedDuration)
     }
-    
+
     func testTaskPriorityScore() throws {
         // Given & When & Then
         let highPriorityTask = Task(
@@ -120,15 +119,15 @@ final class TaskTests: XCTestCase {
             category: .urgent
         )
         XCTAssertEqual(highPriorityTask.priorityScore, 3)
-        
+
         let mediumPriorityTask = Task(
-            title: "通常タスク", 
+            title: "通常タスク",
             willPowerCost: 20,
             priority: .medium,
             category: .work
         )
         XCTAssertEqual(mediumPriorityTask.priorityScore, 2)
-        
+
         let lowPriorityTask = Task(
             title: "後回しタスク",
             willPowerCost: 10,
@@ -137,22 +136,22 @@ final class TaskTests: XCTestCase {
         )
         XCTAssertEqual(lowPriorityTask.priorityScore, 1)
     }
-    
+
     func testTaskCanBePerformed() throws {
         // Given
         let task = createSampleTask()
         let willPower = WillPower(currentValue: 50, maxValue: 100)
-        
+
         // When & Then
         XCTAssertTrue(task.canBePerformed(with: willPower))
-        
+
         // When willPower is insufficient
         let insufficientWillPower = WillPower(currentValue: 20, maxValue: 100)
         XCTAssertFalse(task.canBePerformed(with: insufficientWillPower))
     }
-    
+
     // MARK: - Helper Methods
-    
+
     private func createSampleTask() -> Task {
         return Task(
             title: "サンプルタスク",

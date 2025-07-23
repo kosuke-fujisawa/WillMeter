@@ -3,17 +3,17 @@ import Foundation
 public class WillPower: ObservableObject {
     @Published private(set) var currentValue: Int
     public let maxValue: Int
-    
+
     public init(currentValue: Int, maxValue: Int) {
         self.currentValue = max(0, min(currentValue, maxValue))
         self.maxValue = maxValue
     }
-    
+
     public var percentage: Double {
         guard maxValue > 0 else { return 0.0 }
         return Double(currentValue) / Double(maxValue)
     }
-    
+
     public var status: WillPowerStatus {
         let percentageValue = percentage
         switch percentageValue {
@@ -27,22 +27,22 @@ public class WillPower: ObservableObject {
             return .critical
         }
     }
-    
+
     @discardableResult
     public func consume(amount: Int) -> Bool {
         guard amount >= 0, currentValue >= amount else {
             return false
         }
-        
+
         currentValue -= amount
         return true
     }
-    
+
     public func restore(amount: Int) {
         guard amount >= 0 else { return }
         currentValue = min(currentValue + amount, maxValue)
     }
-    
+
     public func canPerformTask(cost: Int) -> Bool {
         return currentValue >= cost && cost >= 0
     }
@@ -50,10 +50,10 @@ public class WillPower: ObservableObject {
 
 public enum WillPowerStatus: String, CaseIterable {
     case high = "high"
-    case medium = "medium" 
+    case medium = "medium"
     case low = "low"
     case critical = "critical"
-    
+
     public var displayName: String {
         switch self {
         case .high: return "高"
@@ -62,7 +62,7 @@ public enum WillPowerStatus: String, CaseIterable {
         case .critical: return "危険"
         }
     }
-    
+
     public var color: String {
         switch self {
         case .high: return "green"
