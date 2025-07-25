@@ -135,12 +135,16 @@ type_name:
     - T
     - ID
 
-# File header template (optional)
+# File header template for CC BY-NC 4.0 license compliance
 file_header:
   required_pattern: |
                     \/\/
                     \/\/ .*\.swift
                     \/\/ WillMeter
+                    \/\/
+                    \/\/ Created by WillMeter Project
+                    \/\/ Licensed under CC BY-NC 4\.0
+                    \/\/ https:\/\/creativecommons\.org\/licenses\/by-nc\/4\.0\/
                     \/\/
 
 # Force unwrapping in tests is acceptable

@@ -13,23 +13,23 @@ public protocol TaskRepository {
     /// - Returns: タスクの配列
     /// - Throws: 取得に失敗した場合のエラー
     func getAllTasks() async throws -> [Task]
-    
+
     /// 指定されたIDのタスクを取得する
     /// - Parameter id: タスクのID
     /// - Returns: 指定されたIDのタスク（見つからない場合はnil）
     /// - Throws: 取得に失敗した場合のエラー
     func getTask(by id: UUID) async throws -> Task?
-    
+
     /// タスクを保存する（新規作成または更新）
     /// - Parameter task: 保存するタスク
     /// - Throws: 保存に失敗した場合のエラー
     func save(_ task: Task) async throws
-    
+
     /// タスクを削除する
     /// - Parameter id: 削除するタスクのID
     /// - Throws: 削除に失敗した場合のエラー
     func delete(by id: UUID) async throws
-    
+
     /// 指定された条件でタスクを検索する
     /// - Parameters:
     ///   - status: タスクのステータス（nilの場合は全ステータス）

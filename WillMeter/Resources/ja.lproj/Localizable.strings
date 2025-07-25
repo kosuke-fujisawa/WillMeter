@@ -1,0 +1,50 @@
+/*
+  Localizable.strings (Japanese)
+  WillMeter
+
+  Created by WillMeter Project
+  Licensed under CC BY-NC 4.0
+  https://creativecommons.org/licenses/by-nc/4.0/
+*/
+
+// MARK: - アプリケーション
+"ui.app.title" = "WillMeter";
+
+// MARK: - ウィルパワー関連
+"willpower.title" = "意志力";
+"willpower.current.value" = "現在値";
+"willpower.max.value" = "最大値";
+"willpower.percentage" = "残量";
+
+// MARK: - ステータス表示
+"willpower.status.excellent" = "最高";
+"willpower.status.good" = "良好";
+"willpower.status.normal" = "普通";
+"willpower.status.low" = "低下";
+"willpower.status.critical" = "危険";
+
+// MARK: - アクション
+"willpower.action.consume" = "ウィルパワーを消費 (-20)";
+"willpower.action.restore" = "ウィルパワーを回復 (+20)";
+"willpower.action.reset" = "リセット";
+
+// MARK: - UI表示
+"ui.current.state" = "現在の状態";
+
+// MARK: - アクセシビリティ
+"ui.accessibility.consume.hint" = "現在の意志力から20ポイントを減らします";
+"ui.accessibility.restore.hint" = "現在の意志力に20ポイントを追加します";
+"ui.accessibility.reset.hint" = "意志力を最大値に戻します";
+
+// MARK: - 推奨アクション
+"recommendation.excellent" = "素晴らしい状態です！集中力の高い作業に取り組みましょう。";
+"recommendation.good" = "良好な状態です。重要なタスクを進めるのに適しています。";
+"recommendation.normal" = "標準的な状態です。日常のタスクを着実に進めましょう。";
+"recommendation.low" = "少し疲れています。軽めのタスクか休憩を取ることをお勧めします。";
+"recommendation.critical" = "意志力が不足しています。十分な休息を取りましょう。";
+
+// MARK: - 言語設定
+"settings.language" = "言語";
+"settings.language.japanese" = "日本語";
+"settings.language.english" = "English";
+"settings.language.chinese" = "简体中文";

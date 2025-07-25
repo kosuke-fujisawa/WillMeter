@@ -189,7 +189,18 @@ public class ObservableWillPower: ObservableObject {
 
 ## 📄 ライセンス
 
-MIT License - 詳細は [LICENSE](LICENSE) ファイルを参照してください。
+このプロジェクトは **Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)** の下でライセンスされています。
+
+### ✅ 許可されること
+- **非営利目的での自由な利用**: 複製、配布、改変が可能
+- **改変作品の作成**: リミックス、変換、派生作品の作成
+- **あらゆる媒体・形式での共有**: 制限なし
+
+### ⛔ 制限事項
+- **商用利用の禁止**: 営利目的での使用は許可されていません
+- **適切なクレジット表示**: 作者名、ライセンスへのリンク、変更点の明示が必要
+
+詳細は [LICENSE](LICENSE) ファイルを参照してください。
 
 ---
 

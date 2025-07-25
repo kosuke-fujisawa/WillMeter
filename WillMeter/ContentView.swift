@@ -1,48 +1,80 @@
+//
+//  ContentView.swift
+//  WillMeter
+//
+//  Created by WillMeter Project
+//  Licensed under CC BY-NC 4.0
+//  https://creativecommons.org/licenses/by-nc/4.0/
+//
+
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var willPowerViewModel = WillPowerViewModel()
+    @StateObject private var localizationService = SwiftUILocalizationService()
+    @StateObject private var willPowerViewModel: WillPowerViewModel
+    @State private var showLanguageSettings = false
+
+    init() {
+        let service = SwiftUILocalizationService()
+        self._localizationService = StateObject(wrappedValue: service)
+        self._willPowerViewModel = StateObject(wrappedValue: WillPowerViewModel(localizationService: service))
+    }
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 30) {
                 WillPowerDisplayView(viewModel: willPowerViewModel)
+                    .environmentObject(localizationService)
 
                 Spacer()
 
                 VStack(spacing: 15) {
-                    Button("ウィルパワーを消費 (-20)") {
+                    Button(localizationService.localizedString(for: LocalizationKeys.WillPower.Action.consume)) {
                         willPowerViewModel.consumeWillPower(amount: 20)
                     }
                     .buttonStyle(.borderedProminent)
-                    .accessibilityLabel("意志力を20ポイント消費")
-                    .accessibilityHint("現在の意志力から20ポイントを減らします")
+                    .accessibilityLabel(localizationService.localizedString(for: LocalizationKeys.WillPower.Action.consume))
+                    .accessibilityHint(localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.consumeHint))
 
-                    Button("ウィルパワーを回復 (+20)") {
+                    Button(localizationService.localizedString(for: LocalizationKeys.WillPower.Action.restore)) {
                         willPowerViewModel.restoreWillPower(amount: 20)
                     }
                     .buttonStyle(.bordered)
-                    .accessibilityLabel("意志力を20ポイント回復")
-                    .accessibilityHint("現在の意志力に20ポイントを追加します")
+                    .accessibilityLabel(localizationService.localizedString(for: LocalizationKeys.WillPower.Action.restore))
+                    .accessibilityHint(localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.restoreHint))
 
-                    Button("リセット") {
+                    Button(localizationService.localizedString(for: LocalizationKeys.WillPower.Action.reset)) {
                         willPowerViewModel.resetWillPower()
                     }
                     .buttonStyle(.bordered)
-                    .accessibilityLabel("意志力をリセット")
-                    .accessibilityHint("意志力を最大値に戻します")
+                    .accessibilityLabel(localizationService.localizedString(for: LocalizationKeys.WillPower.Action.reset))
+                    .accessibilityHint(localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.resetHint))
                 }
 
                 Spacer()
             }
             .padding()
-            .navigationTitle("WillMeter")
+            .navigationTitle(localizationService.localizedString(for: LocalizationKeys.UI.appTitle))
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showLanguageSettings = true
+                    } label: {
+                        Image(systemName: "globe")
+                    }
+                }
+            }
+            .sheet(isPresented: $showLanguageSettings) {
+                LanguageSettingsView()
+                    .environmentObject(localizationService)
+            }
         }
     }
 }
 
 struct WillPowerDisplayView: View {
     @ObservedObject var viewModel: WillPowerViewModel
+    @EnvironmentObject var localizationService: SwiftUILocalizationService
 
     var body: some View {
         VStack(spacing: 20) {
@@ -79,7 +111,7 @@ struct WillPowerDisplayView: View {
 
             // Status Information
             VStack(spacing: 10) {
-                Text("現在の状態: \(viewModel.statusText)")
+                Text("\(localizationService.localizedString(for: LocalizationKeys.UI.currentState)): \(viewModel.statusText)")
                     .font(.headline)
 
                 Text(viewModel.recommendedAction)

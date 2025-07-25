@@ -1,3 +1,12 @@
+//
+//  Task.swift
+//  WillMeter
+//
+//  Created by WillMeter Project
+//  Licensed under CC BY-NC 4.0
+//  https://creativecommons.org/licenses/by-nc/4.0/
+//
+
 import Foundation
 
 public class Task: Identifiable {
@@ -8,7 +17,7 @@ public class Task: Identifiable {
     public var priority: TaskPriority
     public var category: TaskCategory
     private(set) var status: TaskStatus
-    
+
     // statusへの公開アクセサ
     public var currentStatus: TaskStatus {
         return status
@@ -18,7 +27,7 @@ public class Task: Identifiable {
     private(set) var createdAt: Date
     private(set) var startedAt: Date?
     private(set) var completedAt: Date?
-    
+
     // ドメインイベント通知のための観察者パターン
     private var observers: [(Task) -> Void] = []
 
@@ -49,12 +58,12 @@ public class Task: Identifiable {
     public var priorityScore: Int {
         return priority.rawValue
     }
-    
+
     // ドメインイベント観察者の追加
     public func addObserver(_ observer: @escaping (Task) -> Void) {
         observers.append(observer)
     }
-    
+
     // ドメインイベント通知
     private func notifyObservers() {
         observers.forEach { $0(self) }

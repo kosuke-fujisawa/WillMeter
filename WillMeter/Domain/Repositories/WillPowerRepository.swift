@@ -13,12 +13,12 @@ public protocol WillPowerRepository {
     /// - Parameter willPower: 保存するWillPowerエンティティ
     /// - Throws: 保存に失敗した場合のエラー
     func save(_ willPower: WillPower) async throws
-    
+
     /// WillPowerエンティティを読み込む
     /// - Returns: 読み込んだWillPowerエンティティ
     /// - Throws: 読み込みに失敗した場合のエラー
     func load() async throws -> WillPower
-    
+
     /// デフォルトのWillPowerエンティティを作成する
     /// - Returns: デフォルト設定のWillPowerエンティティ
     func createDefault() -> WillPower
@@ -30,7 +30,7 @@ public enum RepositoryError: Error, LocalizedError {
     case saveFailed(underlying: Error)
     case loadFailed(underlying: Error)
     case invalidData
-    
+
     public var errorDescription: String? {
         switch self {
         case .dataNotFound:

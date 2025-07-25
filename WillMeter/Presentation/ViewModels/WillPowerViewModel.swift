@@ -11,17 +11,26 @@ import SwiftUI
 @MainActor
 public class WillPowerViewModel: ObservableObject {
     private let observableWillPower: ObservableWillPower
+    private let localizationService: LocalizationService
 
-    public init(willPower: WillPower? = nil) {
+    public init(willPower: WillPower? = nil, localizationService: LocalizationService = SwiftUILocalizationService()) {
         let domainEntity = willPower ?? WillPower(currentValue: 100, maxValue: 100)
         self.observableWillPower = ObservableWillPower(domainEntity)
-        
+        self.localizationService = localizationService
+
         // インフラ層のObservableWillPowerの変更を監視してUI更新
         observableWillPower.objectWillChange.sink { [weak self] in
             self?.objectWillChange.send()
         }.store(in: &cancellables)
+
+        // 言語変更監視（SwiftUILocalizationServiceの場合）
+        if let swiftUIService = localizationService as? SwiftUILocalizationService {
+            swiftUIService.objectWillChange.sink { [weak self] in
+                self?.objectWillChange.send()
+            }.store(in: &cancellables)
+        }
     }
-    
+
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - ドメインエンティティへの読み取り専用アクセス
@@ -83,7 +92,21 @@ public class WillPowerViewModel: ObservableObject {
     }
 
     public var statusText: String {
-        return "\(status.displayName) (\(Int(percentage * 100))%)"
+        let statusDisplayName = localizedStatusDisplayName
+        return "\(statusDisplayName) (\(Int(percentage * 100))%)"
+    }
+
+    private var localizedStatusDisplayName: String {
+        switch status {
+        case .high:
+            return localizationService.localizedString(for: LocalizationKeys.WillPower.Status.excellent)
+        case .medium:
+            return localizationService.localizedString(for: LocalizationKeys.WillPower.Status.good)
+        case .low:
+            return localizationService.localizedString(for: LocalizationKeys.WillPower.Status.low)
+        case .critical:
+            return localizationService.localizedString(for: LocalizationKeys.WillPower.Status.critical)
+        }
     }
 
     public var statusColor: String {
@@ -108,13 +131,13 @@ public class WillPowerViewModel: ObservableObject {
     public var recommendedAction: String {
         switch status {
         case .high:
-            return "新しいタスクに挑戦する絶好のタイミングです！"
+            return localizationService.localizedString(for: LocalizationKeys.Recommendation.excellent)
         case .medium:
-            return "適度なタスクを選んで取り組みましょう。"
+            return localizationService.localizedString(for: LocalizationKeys.Recommendation.good)
         case .low:
-            return "簡単なタスクに集中するか、休憩を取ることをお勧めします。"
+            return localizationService.localizedString(for: LocalizationKeys.Recommendation.low)
         case .critical:
-            return "休憩を取って意思力を回復させましょう。"
+            return localizationService.localizedString(for: LocalizationKeys.Recommendation.critical)
         }
     }
 

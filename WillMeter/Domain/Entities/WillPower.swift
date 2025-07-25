@@ -1,9 +1,18 @@
+//
+//  WillPower.swift
+//  WillMeter
+//
+//  Created by WillMeter Project
+//  Licensed under CC BY-NC 4.0
+//  https://creativecommons.org/licenses/by-nc/4.0/
+//
+
 import Foundation
 
 public class WillPower {
     private(set) var currentValue: Int
     public let maxValue: Int
-    
+
     // ドメインイベント通知のための観察者パターン
     private var observers: [(WillPower) -> Void] = []
 
@@ -35,7 +44,7 @@ public class WillPower {
     public func addObserver(_ observer: @escaping (WillPower) -> Void) {
         observers.append(observer)
     }
-    
+
     // ドメインイベント通知
     private func notifyObservers() {
         observers.forEach { $0(self) }
