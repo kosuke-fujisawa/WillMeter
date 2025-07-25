@@ -78,12 +78,12 @@ public enum WillPowerStatus: String, CaseIterable {
     case low
     case critical
 
-    public var displayName: String {
+    public var localizationKey: String {
         switch self {
-        case .high: return "高"
-        case .medium: return "中"
-        case .low: return "低"
-        case .critical: return "危険"
+        case .high: return LocalizationKeys.WillPower.Status.high
+        case .medium: return LocalizationKeys.WillPower.Status.medium
+        case .low: return LocalizationKeys.WillPower.Status.low
+        case .critical: return LocalizationKeys.WillPower.Status.critical
         }
     }
 }

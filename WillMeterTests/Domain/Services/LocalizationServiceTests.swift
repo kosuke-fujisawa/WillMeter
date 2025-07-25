@@ -109,7 +109,7 @@ final class LocalizationServiceTests: XCTestCase {
 
     // MARK: - キー命名規則テスト
 
-    func testLocalizationKeys_shouldFollowHierarchicalNaming() {
+    func testLocalizationKeys_shouldFollowHierarchicalNaming() throws {
         // Given: 階層的命名規則のテストケース
         let testCases: [(key: String, expectedPattern: String)] = [
             (LocalizationKeys.WillPower.title, "^willpower\\.[a-z]+$"),
@@ -122,7 +122,7 @@ final class LocalizationServiceTests: XCTestCase {
 
         for testCase in testCases {
             // When & Then: 正規表現パターンマッチング
-            let regex = try! NSRegularExpression(pattern: testCase.expectedPattern)
+            let regex = try NSRegularExpression(pattern: testCase.expectedPattern)
             let range = NSRange(location: 0, length: testCase.key.utf16.count)
             let matches = regex.numberOfMatches(in: testCase.key, options: [], range: range)
 

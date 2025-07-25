@@ -101,7 +101,7 @@ struct WillPowerDisplayView: View {
                         .font(.title2)
                         .foregroundStyle(.secondary)
 
-                    Text(viewModel.status.displayName)
+                    Text(localizationService.localizedString(for: viewModel.status.localizationKey))
                         .font(.title3)
                         .foregroundStyle(Color(viewModel.statusColor))
                         .fontWeight(.semibold)

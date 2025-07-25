@@ -121,13 +121,13 @@ public enum TaskStatus: String, CaseIterable {
     case cancelled
     case paused
 
-    public var displayName: String {
+    public var localizationKey: String {
         switch self {
-        case .pending: return "未開始"
-        case .inProgress: return "実行中"
-        case .completed: return "完了"
-        case .cancelled: return "キャンセル"
-        case .paused: return "一時停止"
+        case .pending: return LocalizationKeys.Task.Status.pending
+        case .inProgress: return LocalizationKeys.Task.Status.inProgress
+        case .completed: return LocalizationKeys.Task.Status.completed
+        case .cancelled: return LocalizationKeys.Task.Status.cancelled
+        case .paused: return LocalizationKeys.Task.Status.paused
         }
     }
 }
@@ -137,11 +137,11 @@ public enum TaskPriority: Int, CaseIterable {
     case medium = 2
     case high = 3
 
-    public var displayName: String {
+    public var localizationKey: String {
         switch self {
-        case .low: return "低"
-        case .medium: return "中"
-        case .high: return "高"
+        case .low: return LocalizationKeys.Task.Priority.low
+        case .medium: return LocalizationKeys.Task.Priority.medium
+        case .high: return LocalizationKeys.Task.Priority.high
         }
     }
 }

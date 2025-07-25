@@ -48,6 +48,8 @@ public enum LocalizationKeys {
             public static let normal = "willpower.status.normal"
             public static let low = "willpower.status.low"
             public static let critical = "willpower.status.critical"
+            public static let high = "willpower.status.high"
+            public static let medium = "willpower.status.medium"
         }
 
         public enum Action {
@@ -74,5 +76,33 @@ public enum LocalizationKeys {
         public static let normal = "recommendation.normal"
         public static let low = "recommendation.low"
         public static let critical = "recommendation.critical"
+    }
+
+    public enum Task {
+        public enum Status {
+            public static let pending = "task.status.pending"
+            public static let inProgress = "task.status.inprogress"
+            public static let completed = "task.status.completed"
+            public static let cancelled = "task.status.cancelled"
+            public static let paused = "task.status.paused"
+        }
+
+        public enum Priority {
+            public static let low = "task.priority.low"
+            public static let medium = "task.priority.medium"
+            public static let high = "task.priority.high"
+            public static let critical = "task.priority.critical"
+        }
+
+        public enum Category {
+            public static let work = "task.category.work"
+            public static let study = "task.category.study"
+            public static let health = "task.category.health"
+            public static let personal = "task.category.personal"
+        }
+    }
+
+    public enum Error {
+        public static let dataNotFound = "error.data.notfound"
     }
 }
