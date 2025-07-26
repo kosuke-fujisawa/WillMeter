@@ -50,9 +50,11 @@ final class SwiftUILocalizationServiceTests: XCTestCase {
         let targetLanguage = "en"
         var languageChanged = false
 
-        sut.objectWillChange.sink {
-            languageChanged = true
-        }.store(in: &cancellables)
+        sut.objectWillChange
+            .sink {
+                languageChanged = true
+            }
+            .store(in: &cancellables)
 
         // When: 言語変更
         sut.changeLanguage(to: targetLanguage)
@@ -68,9 +70,11 @@ final class SwiftUILocalizationServiceTests: XCTestCase {
         let unsupportedLanguage = "fr"
         var languageChanged = false
 
-        sut.objectWillChange.sink {
-            languageChanged = true
-        }.store(in: &cancellables)
+        sut.objectWillChange
+            .sink {
+                languageChanged = true
+            }
+            .store(in: &cancellables)
 
         // When: サポート対象外言語に変更試行
         sut.changeLanguage(to: unsupportedLanguage)

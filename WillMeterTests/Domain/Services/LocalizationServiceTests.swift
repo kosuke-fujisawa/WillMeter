@@ -86,7 +86,10 @@ final class LocalizationServiceTests: XCTestCase {
         // Then: 全アクセシビリティキーが定義されている
         for key in accessibilityKeys {
             XCTAssertFalse(key.isEmpty, "Accessibility key should not be empty")
-            XCTAssertTrue(key.contains("ui.accessibility"), "Accessibility key should contain 'ui.accessibility' prefix")
+            XCTAssertTrue(
+                key.contains("ui.accessibility"),
+                "Accessibility key should contain 'ui.accessibility' prefix"
+            )
         }
     }
 

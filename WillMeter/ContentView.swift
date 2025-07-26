@@ -124,7 +124,8 @@ struct WillPowerDisplayView: View {
             // Status Information
             VStack(spacing: 10) {
                 Text(
-                    "\(localizationService.localizedString(for: LocalizationKeys.UI.currentState)): \(viewModel.statusText)"
+                    "\(localizationService.localizedString(for: LocalizationKeys.UI.currentState)): " +
+                    "\(viewModel.statusText)"
                 )
                     .font(.headline)
 

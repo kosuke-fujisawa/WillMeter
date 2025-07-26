@@ -22,7 +22,9 @@ public class WillPower {
     }
 
     public var percentage: Double {
-        guard maxValue > 0 else { return 0.0 }
+        guard maxValue > 0 else {
+            return 0.0
+        }
         return Double(currentValue) / Double(maxValue)
     }
 
@@ -62,7 +64,9 @@ public class WillPower {
     }
 
     public func restore(amount: Int) {
-        guard amount >= 0 else { return }
+        guard amount >= 0 else {
+            return
+        }
         currentValue = min(currentValue + amount, maxValue)
         notifyObservers() // ドメインイベント通知
     }

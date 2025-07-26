@@ -19,10 +19,14 @@ public struct OSCompatibilityLayer {
     /// - Parameter version: 比較対象のiOSバージョン（例: "19.0"）
     /// - Returns: 指定バージョン以上の場合true
     public static func isAvailable(_ version: String) -> Bool {
-        guard let targetVersion = parseVersion(version) else { return false }
+        guard let targetVersion = parseVersion(version) else {
+            return false
+        }
 
         let systemVersion = UIDevice.current.systemVersion
-        guard let currentVersion = parseVersion(systemVersion) else { return false }
+        guard let currentVersion = parseVersion(systemVersion) else {
+            return false
+        }
 
         return compareVersions(currentVersion, targetVersion)
     }
@@ -32,10 +36,12 @@ public struct OSCompatibilityLayer {
     /// - Returns: 比較可能な数値配列（例: [18, 5, 2]）
     private static func parseVersion(_ version: String) -> [Int]? {
         let components = version.split(separator: ".").compactMap { Int($0) }
-        guard !components.isEmpty else { return nil }
+        guard !components.isEmpty else {
+            return nil
+        }
         return components
     }
-    
+
     /// バージョン配列を比較する補助メソッド
     /// - Parameters:
     ///   - current: 現在のバージョン配列
@@ -43,18 +49,18 @@ public struct OSCompatibilityLayer {
     /// - Returns: current >= target の場合true
     private static func compareVersions(_ current: [Int], _ target: [Int]) -> Bool {
         let maxLength = max(current.count, target.count)
-        
-        for i in 0..<maxLength {
-            let currentComponent = i < current.count ? current[i] : 0
-            let targetComponent = i < target.count ? target[i] : 0
-            
+
+        for index in 0..<maxLength {
+            let currentComponent = index < current.count ? current[index] : 0
+            let targetComponent = index < target.count ? target[index] : 0
+
             if currentComponent > targetComponent {
                 return true
             } else if currentComponent < targetComponent {
                 return false
             }
         }
-        
+
         return true // 完全一致の場合はtrue
     }
 
@@ -231,7 +237,7 @@ public struct OSCompatibilityLayer {
 
 public extension OSCompatibilityLayer {
     /// ログ出力の互換性ラッパー
-    public static func compatibleLog(_ message: String, category: String = "WillMeter") {
+    static func compatibleLog(_ message: String, category: String = "WillMeter") {
         if #available(iOS 19.0, *) {
             // iOS 19での新しいロギング方式
             print("[\(category)] \(message)")

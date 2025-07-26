@@ -13,7 +13,7 @@ import SwiftUI
 /// 動的言語切り替え機能を提供するプレゼンテーション層コンポーネント
 struct LanguageSettingsView: View {
     @EnvironmentObject var localizationService: SwiftUILocalizationService
-    @Environment(\.dismiss) 
+    @Environment(\.dismiss)
     private var dismiss
 
     var body: some View {

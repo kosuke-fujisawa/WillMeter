@@ -9,8 +9,7 @@ import SwiftUI
 
 /// TaskエンティティをObservableObjectとしてラップ
 /// インフラ層の責務：ドメインエンティティとSwiftUIの橋渡し
-@MainActor
-public final class ObservableTask: ObservableObject {
+public class ObservableTask: ObservableObject {
     @Published private var task: Task
 
     public init(_ task: Task) {
@@ -18,7 +17,9 @@ public final class ObservableTask: ObservableObject {
 
         // ドメインエンティティの変更を監視してUI更新
         task.addObserver { [weak self] _ in
-            self?.objectWillChange.send()
+            DispatchQueue.main.async {
+                self?.objectWillChange.send()
+            }
         }
     }
 

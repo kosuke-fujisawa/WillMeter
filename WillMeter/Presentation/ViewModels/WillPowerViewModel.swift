@@ -146,15 +146,17 @@ public class WillPowerViewModel: ObservableObject {
     }
 
     public func getSuggestedTasks(from tasks: [Task]) -> [Task] {
-        return tasks.filter { task in
-            canPerformTask(task)
-        }.sorted { task1, task2 in
-            // Priority based sorting
-            if task1.priority.rawValue != task2.priority.rawValue {
-                return task1.priority.rawValue > task2.priority.rawValue
+        return tasks
+            .filter { task in
+                canPerformTask(task)
             }
-            // If same priority, sort by will power cost (ascending)
-            return task1.willPowerCost < task2.willPowerCost
-        }
+            .sorted { task1, task2 in
+                // Priority based sorting
+                if task1.priority.rawValue != task2.priority.rawValue {
+                    return task1.priority.rawValue > task2.priority.rawValue
+                }
+                // If same priority, sort by will power cost (ascending)
+                return task1.willPowerCost < task2.willPowerCost
+            }
     }
 }

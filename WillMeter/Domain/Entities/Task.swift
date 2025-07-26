@@ -70,7 +70,9 @@ public class Task: Identifiable {
     }
 
     public func start() {
-        guard status == .pending || status == .paused else { return }
+        guard status == .pending || status == .paused else {
+            return
+        }
         status = .inProgress
         if startedAt == nil {
             startedAt = Date()
@@ -90,13 +92,17 @@ public class Task: Identifiable {
     }
 
     public func pause() {
-        guard status == .inProgress else { return }
+        guard status == .inProgress else {
+            return
+        }
         status = .paused
         notifyObservers() // ドメインイベント通知
     }
 
     public func resume() {
-        guard status == .paused else { return }
+        guard status == .paused else {
+            return
+        }
         status = .inProgress
         notifyObservers() // ドメインイベント通知
     }
