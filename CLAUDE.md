@@ -54,7 +54,7 @@
 
 ### テスト構成（TDD準拠）
 - **ドメインテスト**: ビジネスロジックの単体テスト
-- **インフラテスト**: Repository等の実装テスト  
+- **インフラテスト**: Repository等の実装テスト
 - **UIテスト**: SwiftUIコンポーネントテスト
 - **統合テスト**: システム全体の動作確認
 
@@ -163,7 +163,7 @@ public class WillPower: ObservableObject {
 public class WillPower {
     private(set) var currentValue: Int
     private var observers: [(WillPower) -> Void] = []
-    
+
     public func addObserver(_ observer: @escaping (WillPower) -> Void) {
         observers.append(observer)
     }
@@ -172,7 +172,7 @@ public class WillPower {
 // Infrastructure層：SwiftUI統合
 public class ObservableWillPower: ObservableObject {
     @Published private var willPower: WillPower
-    
+
     public init(_ willPower: WillPower) {
         self.willPower = willPower
         willPower.addObserver { [weak self] _ in
