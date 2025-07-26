@@ -50,3 +50,13 @@
 "settings.language.japanese" = "日本語";
 "settings.language.english" = "English";
 "settings.language.chinese" = "简体中文";
+
+// MARK: - 任务类别
+"task.category.work" = "工作";
+"task.category.study" = "学习";
+"task.category.health" = "健康";
+"task.category.personal" = "个人";
+"task.category.learning" = "学习";
+"task.category.development" = "开发";
+"task.category.urgent" = "紧急";
+"task.category.maintenance" = "维护";

@@ -24,20 +24,38 @@ public struct OSCompatibilityLayer {
         let systemVersion = UIDevice.current.systemVersion
         guard let currentVersion = parseVersion(systemVersion) else { return false }
 
-        return currentVersion >= targetVersion
+        return compareVersions(currentVersion, targetVersion)
     }
 
-    /// バージョン文字列を数値に変換する補助メソッド
-    /// - Parameter version: バージョン文字列（例: "18.5"）
-    /// - Returns: 比較可能な数値（例: 18.5）
-    private static func parseVersion(_ version: String) -> Double? {
-        let components = version.split(separator: ".").map(String.init)
+    /// バージョン文字列を数値配列に変換する補助メソッド
+    /// - Parameter version: バージョン文字列（例: "18.5.2"）
+    /// - Returns: 比較可能な数値配列（例: [18, 5, 2]）
+    private static func parseVersion(_ version: String) -> [Int]? {
+        let components = version.split(separator: ".").compactMap { Int($0) }
         guard !components.isEmpty else { return nil }
-
-        let major = Double(components[0]) ?? 0
-        let minor = components.count > 1 ? (Double(components[1]) ?? 0) / 10.0 : 0
-
-        return major + minor
+        return components
+    }
+    
+    /// バージョン配列を比較する補助メソッド
+    /// - Parameters:
+    ///   - current: 現在のバージョン配列
+    ///   - target: 対象バージョン配列
+    /// - Returns: current >= target の場合true
+    private static func compareVersions(_ current: [Int], _ target: [Int]) -> Bool {
+        let maxLength = max(current.count, target.count)
+        
+        for i in 0..<maxLength {
+            let currentComponent = i < current.count ? current[i] : 0
+            let targetComponent = i < target.count ? target[i] : 0
+            
+            if currentComponent > targetComponent {
+                return true
+            } else if currentComponent < targetComponent {
+                return false
+            }
+        }
+        
+        return true // 完全一致の場合はtrue
     }
 
     // MARK: - SwiftUI Compatibility
@@ -211,7 +229,7 @@ public struct OSCompatibilityLayer {
 
 // MARK: - Extensions
 
-extension OSCompatibilityLayer {
+public extension OSCompatibilityLayer {
     /// ログ出力の互換性ラッパー
     public static func compatibleLog(_ message: String, category: String = "WillMeter") {
         if #available(iOS 19.0, *) {

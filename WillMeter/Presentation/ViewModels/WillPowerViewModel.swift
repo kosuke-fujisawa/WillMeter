@@ -19,15 +19,19 @@ public class WillPowerViewModel: ObservableObject {
         self.localizationService = localizationService
 
         // インフラ層のObservableWillPowerの変更を監視してUI更新
-        observableWillPower.objectWillChange.sink { [weak self] in
-            self?.objectWillChange.send()
-        }.store(in: &cancellables)
+        observableWillPower.objectWillChange
+            .sink { [weak self] in
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
 
         // 言語変更監視（SwiftUILocalizationServiceの場合）
         if let swiftUIService = localizationService as? SwiftUILocalizationService {
-            swiftUIService.objectWillChange.sink { [weak self] in
-                self?.objectWillChange.send()
-            }.store(in: &cancellables)
+            swiftUIService.objectWillChange
+                .sink { [weak self] in
+                    self?.objectWillChange.send()
+                }
+                .store(in: &cancellables)
         }
     }
 

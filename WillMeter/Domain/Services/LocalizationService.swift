@@ -105,6 +105,10 @@ public enum LocalizationKeys {
             public static let study = "task.category.study"
             public static let health = "task.category.health"
             public static let personal = "task.category.personal"
+            public static let learning = "task.category.learning"
+            public static let development = "task.category.development"
+            public static let urgent = "task.category.urgent"
+            public static let maintenance = "task.category.maintenance"
         }
     }
 

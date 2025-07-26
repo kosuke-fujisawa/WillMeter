@@ -50,3 +50,13 @@
 "settings.language.japanese" = "日本語";
 "settings.language.english" = "English";
 "settings.language.chinese" = "简体中文";
+
+// MARK: - タスクカテゴリ
+"task.category.work" = "仕事";
+"task.category.study" = "学習";
+"task.category.health" = "健康";
+"task.category.personal" = "個人";
+"task.category.learning" = "学習";
+"task.category.development" = "開発";
+"task.category.urgent" = "緊急";
+"task.category.maintenance" = "メンテナンス";

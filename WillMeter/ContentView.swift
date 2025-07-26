@@ -33,22 +33,34 @@ struct ContentView: View {
                         willPowerViewModel.consumeWillPower(amount: 20)
                     }
                     .buttonStyle(.borderedProminent)
-                    .accessibilityLabel(localizationService.localizedString(for: LocalizationKeys.WillPower.Action.consume))
-                    .accessibilityHint(localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.consumeHint))
+                    .accessibilityLabel(
+                        localizationService.localizedString(for: LocalizationKeys.WillPower.Action.consume)
+                    )
+                    .accessibilityHint(
+                        localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.consumeHint)
+                    )
 
                     Button(localizationService.localizedString(for: LocalizationKeys.WillPower.Action.restore)) {
                         willPowerViewModel.restoreWillPower(amount: 20)
                     }
                     .buttonStyle(.bordered)
-                    .accessibilityLabel(localizationService.localizedString(for: LocalizationKeys.WillPower.Action.restore))
-                    .accessibilityHint(localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.restoreHint))
+                    .accessibilityLabel(
+                        localizationService.localizedString(for: LocalizationKeys.WillPower.Action.restore)
+                    )
+                    .accessibilityHint(
+                        localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.restoreHint)
+                    )
 
                     Button(localizationService.localizedString(for: LocalizationKeys.WillPower.Action.reset)) {
                         willPowerViewModel.resetWillPower()
                     }
                     .buttonStyle(.bordered)
-                    .accessibilityLabel(localizationService.localizedString(for: LocalizationKeys.WillPower.Action.reset))
-                    .accessibilityHint(localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.resetHint))
+                    .accessibilityLabel(
+                        localizationService.localizedString(for: LocalizationKeys.WillPower.Action.reset)
+                    )
+                    .accessibilityHint(
+                        localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.resetHint)
+                    )
                 }
 
                 Spacer()
@@ -111,7 +123,9 @@ struct WillPowerDisplayView: View {
 
             // Status Information
             VStack(spacing: 10) {
-                Text("\(localizationService.localizedString(for: LocalizationKeys.UI.currentState)): \(viewModel.statusText)")
+                Text(
+                    "\(localizationService.localizedString(for: LocalizationKeys.UI.currentState)): \(viewModel.statusText)"
+                )
                     .font(.headline)
 
                 Text(viewModel.recommendedAction)

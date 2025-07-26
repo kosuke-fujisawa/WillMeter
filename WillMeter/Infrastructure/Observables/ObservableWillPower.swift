@@ -9,7 +9,8 @@ import SwiftUI
 
 /// WillPowerエンティティをObservableObjectとしてラップ
 /// インフラ層の責務：ドメインエンティティとSwiftUIの橋渡し
-public class ObservableWillPower: ObservableObject {
+@MainActor
+public final class ObservableWillPower: ObservableObject {
     @Published private var willPower: WillPower
 
     public init(_ willPower: WillPower) {
@@ -17,9 +18,7 @@ public class ObservableWillPower: ObservableObject {
 
         // ドメインエンティティの変更を監視してUI更新
         willPower.addObserver { [weak self] _ in
-            DispatchQueue.main.async {
-                self?.objectWillChange.send()
-            }
+            self?.objectWillChange.send()
         }
     }
 

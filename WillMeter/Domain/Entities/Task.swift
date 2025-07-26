@@ -155,15 +155,15 @@ public enum TaskCategory: String, CaseIterable {
     case urgent
     case maintenance
 
-    public var displayName: String {
+    public var localizationKey: String {
         switch self {
-        case .work: return "仕事"
-        case .personal: return "個人"
-        case .health: return "健康"
-        case .learning: return "学習"
-        case .development: return "開発"
-        case .urgent: return "緊急"
-        case .maintenance: return "メンテナンス"
+        case .work: return LocalizationKeys.Task.Category.work
+        case .personal: return LocalizationKeys.Task.Category.personal
+        case .health: return LocalizationKeys.Task.Category.health
+        case .learning: return LocalizationKeys.Task.Category.learning
+        case .development: return LocalizationKeys.Task.Category.development
+        case .urgent: return LocalizationKeys.Task.Category.urgent
+        case .maintenance: return LocalizationKeys.Task.Category.maintenance
         }
     }
 

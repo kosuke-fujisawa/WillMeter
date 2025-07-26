@@ -8,12 +8,12 @@ import Foundation
 
 /// WillPowerRepositoryのインメモリ実装
 /// インフラ層の責務：データの永続化と取得（開発・テスト用）
-public class InMemoryWillPowerRepository: WillPowerRepository {
+actor InMemoryWillPowerRepository: WillPowerRepository {
     private var storedWillPower: WillPower?
 
-    public init() {}
+    init() {}
 
-    public func save(_ willPower: WillPower) async throws {
+    func save(_ willPower: WillPower) async throws {
         // インメモリ保存（実際の実装ではCore DataやUserDefaultsを使用）
         storedWillPower = WillPower(
             currentValue: willPower.currentValue,
@@ -21,7 +21,7 @@ public class InMemoryWillPowerRepository: WillPowerRepository {
         )
     }
 
-    public func load() async throws -> WillPower {
+    func load() async throws -> WillPower {
         guard let stored = storedWillPower else {
             throw RepositoryError.dataNotFound
         }
@@ -32,7 +32,7 @@ public class InMemoryWillPowerRepository: WillPowerRepository {
         )
     }
 
-    public func createDefault() -> WillPower {
+    func createDefault() -> WillPower {
         return WillPower(currentValue: 100, maxValue: 100)
     }
 }

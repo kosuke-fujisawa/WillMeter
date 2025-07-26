@@ -50,3 +50,13 @@
 "settings.language.japanese" = "日本語";
 "settings.language.english" = "English";
 "settings.language.chinese" = "简体中文";
+
+// MARK: - Task Categories  
+"task.category.work" = "Work";
+"task.category.study" = "Study";
+"task.category.health" = "Health";
+"task.category.personal" = "Personal";
+"task.category.learning" = "Learning";
+"task.category.development" = "Development";
+"task.category.urgent" = "Urgent";
+"task.category.maintenance" = "Maintenance";

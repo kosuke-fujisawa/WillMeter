@@ -8,7 +8,7 @@ import Foundation
 
 /// Taskエンティティの永続化を抽象化するRepository
 /// ドメイン層の責務：データアクセスの抽象化（実装はインフラ層）
-public protocol TaskRepository {
+public protocol TaskRepository: Sendable {
     /// 全てのタスクを取得する
     /// - Returns: タスクの配列
     /// - Throws: 取得に失敗した場合のエラー
