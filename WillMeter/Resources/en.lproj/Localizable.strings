@@ -51,7 +51,7 @@
 "settings.language.english" = "English";
 "settings.language.chinese" = "简体中文";
 
-// MARK: - Task Categories  
+// MARK: - Task Categories
 "task.category.work" = "Work";
 "task.category.study" = "Study";
 "task.category.health" = "Health";
