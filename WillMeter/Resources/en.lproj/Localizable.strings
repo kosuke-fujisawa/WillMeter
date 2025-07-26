@@ -24,8 +24,8 @@
 "willpower.status.critical" = "Critical";
 
 // MARK: - Actions
-"willpower.action.consume" = "Consume Willpower (-20)";
-"willpower.action.restore" = "Restore Willpower (+20)";
+"willpower.action.consume" = "Consume Willpower (%d)";
+"willpower.action.restore" = "Restore Willpower (+%d)";
 "willpower.action.reset" = "Reset";
 
 // MARK: - UI Display
@@ -33,8 +33,8 @@
 "ui.done" = "Done";
 
 // MARK: - Accessibility
-"ui.accessibility.consume.hint" = "Reduces current willpower by 20 points";
-"ui.accessibility.restore.hint" = "Adds 20 points to current willpower";
+"ui.accessibility.consume.hint" = "Reduces current willpower by %d points";
+"ui.accessibility.restore.hint" = "Adds %d points to current willpower";
 "ui.accessibility.reset.hint" = "Resets willpower to maximum value";
 
 // MARK: - Recommendations

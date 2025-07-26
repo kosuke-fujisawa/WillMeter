@@ -24,8 +24,8 @@
 "willpower.status.critical" = "危险";
 
 // MARK: - 操作
-"willpower.action.consume" = "消耗意志力 (-20)";
-"willpower.action.restore" = "恢复意志力 (+20)";
+"willpower.action.consume" = "消耗意志力 (%d)";
+"willpower.action.restore" = "恢复意志力 (+%d)";
 "willpower.action.reset" = "重置";
 
 // MARK: - UI显示
@@ -33,8 +33,8 @@
 "ui.done" = "完成";
 
 // MARK: - 辅助功能
-"ui.accessibility.consume.hint" = "从当前意志力中减少20点";
-"ui.accessibility.restore.hint" = "为当前意志力增加20点";
+"ui.accessibility.consume.hint" = "从当前意志力中减少%d点";
+"ui.accessibility.restore.hint" = "为当前意志力增加%d点";
 "ui.accessibility.reset.hint" = "将意志力重置为最大值";
 
 // MARK: - 建议操作

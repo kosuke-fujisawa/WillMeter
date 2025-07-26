@@ -88,7 +88,10 @@ final class WillPowerViewModelTests: XCTestCase {
     func testCanPerformTask() async throws {
         // Given - Wait for async loading to complete
         try await _Concurrency.Task.sleep(nanoseconds: 100_000_000) // 0.1 second
-        let task = Task(title: "Test Task", willPowerCost: 30, priority: .medium, category: .work)
+        let task = Task(title: "Test Task",
+                       willPowerCost: 30,
+                       priority: .medium,
+                       category: .work)
 
         // When & Then
         XCTAssertTrue(viewModel.canPerformTask(task))
@@ -103,7 +106,10 @@ final class WillPowerViewModelTests: XCTestCase {
     func testPerformTask() async throws {
         // Given - Wait for async loading to complete
         try await _Concurrency.Task.sleep(nanoseconds: 100_000_000) // 0.1 second
-        let task = Task(title: "Test Task", willPowerCost: 30, priority: .medium, category: .work)
+        let task = Task(title: "Test Task",
+                       willPowerCost: 30,
+                       priority: .medium,
+                       category: .work)
 
         // When
         let result = viewModel.performTask(task)
@@ -117,7 +123,10 @@ final class WillPowerViewModelTests: XCTestCase {
     func testPerformTaskFails() async throws {
         // Given - Wait for async loading to complete
         try await _Concurrency.Task.sleep(nanoseconds: 100_000_000) // 0.1 second
-        let task = Task(title: "Test Task", willPowerCost: 30, priority: .medium, category: .work)
+        let task = Task(title: "Test Task",
+                       willPowerCost: 30,
+                       priority: .medium,
+                       category: .work)
         viewModel.consumeWillPower(amount: 80) // Reduce to 20
 
         // When

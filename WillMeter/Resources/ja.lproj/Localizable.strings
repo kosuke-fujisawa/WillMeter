@@ -24,8 +24,8 @@
 "willpower.status.critical" = "危険";
 
 // MARK: - アクション
-"willpower.action.consume" = "ウィルパワーを消費 (-20)";
-"willpower.action.restore" = "ウィルパワーを回復 (+20)";
+"willpower.action.consume" = "ウィルパワーを消費 (%d)";
+"willpower.action.restore" = "ウィルパワーを回復 (+%d)";
 "willpower.action.reset" = "リセット";
 
 // MARK: - UI表示
@@ -33,8 +33,8 @@
 "ui.done" = "完了";
 
 // MARK: - アクセシビリティ
-"ui.accessibility.consume.hint" = "現在の意志力から20ポイントを減らします";
-"ui.accessibility.restore.hint" = "現在の意志力に20ポイントを追加します";
+"ui.accessibility.consume.hint" = "現在の意志力から%dポイントを減らします";
+"ui.accessibility.restore.hint" = "現在の意志力に%dポイントを追加します";
 "ui.accessibility.reset.hint" = "意志力を最大値に戻します";
 
 // MARK: - 推奨アクション
