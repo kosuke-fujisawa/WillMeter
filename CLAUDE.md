@@ -118,6 +118,16 @@ find . -name "*.swift" -not -path "./.git/*" -exec sed -i '' 's/[[:space:]]*$//'
 - **SwiftLint trailing_whitespace**: severity=error で厳格な品質管理
 - **npm scripts**: 開発者向け手動メンテナンスコマンド
 
+#### Git Hooks セットアップ
+```bash
+# pre-commit hookの自動インストール
+./scripts/setup-hooks.sh
+
+# 手動インストール（必要に応じて）
+cp scripts/pre-commit .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+```
+
 ## 🏗️ Clean Architecture + DDD アーキテクチャルール
 
 ### アーキテクチャ構成（4層レイヤー）
