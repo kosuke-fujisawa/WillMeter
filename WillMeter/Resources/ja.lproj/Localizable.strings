@@ -30,6 +30,7 @@
 
 // MARK: - UI表示
 "ui.current.state" = "現在の状態";
+"ui.done" = "完了";
 
 // MARK: - アクセシビリティ
 "ui.accessibility.consume.hint" = "現在の意志力から20ポイントを減らします";
@@ -45,6 +46,7 @@
 
 // MARK: - 言語設定
 "settings.language" = "言語";
+"settings.current.language" = "現在の言語";
 "settings.language.japanese" = "日本語";
 "settings.language.english" = "English";
 "settings.language.chinese" = "简体中文";

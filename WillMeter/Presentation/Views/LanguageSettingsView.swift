@@ -42,7 +42,7 @@ struct LanguageSettingsView: View {
 
                 // 現在の言語表示
                 VStack(spacing: 8) {
-                    Text("現在の言語")
+                    Text(localizationService.localizedString(for: LocalizationKeys.Settings.currentLanguage))
                         .font(.headline)
                         .foregroundStyle(.secondary)
 
@@ -53,11 +53,11 @@ struct LanguageSettingsView: View {
                 }
                 .padding(.bottom, 40)
             }
-            .navigationTitle("Language Settings")
+            .navigationTitle(localizationService.localizedString(for: LocalizationKeys.Settings.language))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
+                    Button(localizationService.localizedString(for: LocalizationKeys.UI.done)) {
                         dismiss()
                     }
                 }

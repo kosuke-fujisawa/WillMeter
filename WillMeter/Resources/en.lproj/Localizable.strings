@@ -30,6 +30,7 @@
 
 // MARK: - UI Display
 "ui.current.state" = "Current State";
+"ui.done" = "Done";
 
 // MARK: - Accessibility
 "ui.accessibility.consume.hint" = "Reduces current willpower by 20 points";
@@ -45,6 +46,7 @@
 
 // MARK: - Language Settings
 "settings.language" = "Language";
+"settings.current.language" = "Current Language";
 "settings.language.japanese" = "日本語";
 "settings.language.english" = "English";
 "settings.language.chinese" = "简体中文";

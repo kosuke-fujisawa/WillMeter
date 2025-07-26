@@ -30,6 +30,7 @@
 
 // MARK: - UI显示
 "ui.current.state" = "当前状态";
+"ui.done" = "完成";
 
 // MARK: - 辅助功能
 "ui.accessibility.consume.hint" = "从当前意志力中减少20点";
@@ -45,6 +46,7 @@
 
 // MARK: - 语言设置
 "settings.language" = "语言";
+"settings.current.language" = "当前语言";
 "settings.language.japanese" = "日本語";
 "settings.language.english" = "English";
 "settings.language.chinese" = "简体中文";

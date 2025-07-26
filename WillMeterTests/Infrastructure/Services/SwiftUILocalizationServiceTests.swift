@@ -196,10 +196,10 @@ final class SwiftUILocalizationServiceTests: XCTestCase {
         // Given: 初期状態確認
         let initialLanguage = sut.currentLanguageCode
         XCTAssertNotEqual(initialLanguage, "en")
-        
+
         // When: 言語変更
         sut.changeLanguage(to: "en")
-        
+
         // Then: 言語が変更されている
         XCTAssertEqual(sut.currentLanguageCode, "en")
         XCTAssertNotEqual(sut.currentLanguageCode, initialLanguage)

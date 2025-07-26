@@ -62,12 +62,18 @@ public enum LocalizationKeys {
     public enum UI {
         public static let appTitle = "ui.app.title"
         public static let currentState = "ui.current.state"
+        public static let done = "ui.done"
 
         public enum Accessibility {
             public static let consumeHint = "ui.accessibility.consume.hint"
             public static let restoreHint = "ui.accessibility.restore.hint"
             public static let resetHint = "ui.accessibility.reset.hint"
         }
+    }
+
+    public enum Settings {
+        public static let language = "settings.language"
+        public static let currentLanguage = "settings.current.language"
     }
 
     public enum Recommendation {

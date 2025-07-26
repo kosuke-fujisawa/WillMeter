@@ -19,12 +19,25 @@ public struct OSCompatibilityLayer {
     /// - Parameter version: 比較対象のiOSバージョン（例: "19.0"）
     /// - Returns: 指定バージョン以上の場合true
     public static func isAvailable(_ version: String) -> Bool {
-        if #available(iOS 19.0, *) {
-            return version <= "19.0"
-        } else if #available(iOS 18.5, *) {
-            return version <= "18.5"
-        }
-        return false
+        guard let targetVersion = parseVersion(version) else { return false }
+
+        let systemVersion = UIDevice.current.systemVersion
+        guard let currentVersion = parseVersion(systemVersion) else { return false }
+
+        return currentVersion >= targetVersion
+    }
+
+    /// バージョン文字列を数値に変換する補助メソッド
+    /// - Parameter version: バージョン文字列（例: "18.5"）
+    /// - Returns: 比較可能な数値（例: 18.5）
+    private static func parseVersion(_ version: String) -> Double? {
+        let components = version.split(separator: ".").map(String.init)
+        guard !components.isEmpty else { return nil }
+
+        let major = Double(components[0]) ?? 0
+        let minor = components.count > 1 ? (Double(components[1]) ?? 0) / 10.0 : 0
+
+        return major + minor
     }
 
     // MARK: - SwiftUI Compatibility
