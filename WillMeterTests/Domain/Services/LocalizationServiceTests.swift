@@ -106,7 +106,10 @@ final class LocalizationServiceTests: XCTestCase {
         // Then: 全推奨アクションキーが定義されている
         for key in recommendationKeys {
             XCTAssertFalse(key.isEmpty, "Recommendation key should not be empty")
-            XCTAssertTrue(key.hasPrefix("recommendation."), "Recommendation key should start with 'recommendation.' prefix")
+            XCTAssertTrue(
+                key.hasPrefix("recommendation."),
+                "Recommendation key should start with 'recommendation.' prefix"
+            )
         }
     }
 

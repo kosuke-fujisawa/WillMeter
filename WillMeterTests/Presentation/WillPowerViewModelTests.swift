@@ -33,7 +33,7 @@ final class WillPowerViewModelTests: XCTestCase {
     func testInitialState() async throws {
         // Given - Wait for async loading to complete
         try await _Concurrency.Task.sleep(nanoseconds: 100_000_000) // 0.1 second
-        
+
         // Then
         XCTAssertEqual(viewModel.currentValue, 100)
         XCTAssertEqual(viewModel.maxValue, 100)
@@ -132,7 +132,7 @@ final class WillPowerViewModelTests: XCTestCase {
     func testStatusUpdatesCorrectly() async throws {
         // Given - Wait for async loading to complete
         try await _Concurrency.Task.sleep(nanoseconds: 100_000_000) // 0.1 second
-        
+
         // Initially high (100)
         XCTAssertEqual(viewModel.status, .high)
 

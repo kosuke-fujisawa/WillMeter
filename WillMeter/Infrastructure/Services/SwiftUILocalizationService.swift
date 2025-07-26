@@ -43,6 +43,7 @@ public final class SwiftUILocalizationService: LocalizationService, ObservableOb
         }
 
         // 意図的に動的キーを使用（LocalizationKeysで型安全性を確保）
+        // swiftlint:disable:next nslocalizedstring_key
         let localizedString = NSLocalizedString(key, bundle: bundle, comment: "")
 
         // キーがそのまま返された場合はフォールバック
@@ -91,6 +92,7 @@ public final class SwiftUILocalizationService: LocalizationService, ObservableOb
         }
 
         // フォールバック処理での動的キー使用（設計上必要）
+        // swiftlint:disable:next nslocalizedstring_key
         let fallbackString = NSLocalizedString(key, bundle: bundle, comment: "")
         return fallbackString == key ? key : fallbackString
     }
