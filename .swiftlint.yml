@@ -69,6 +69,7 @@ opt_in_rules:
   - strong_iboutlet
   - toggle_bool
   - trailing_closure
+  - trailing_whitespace
   - unneeded_parentheses_in_closure_argument
   - untyped_error_in_catch
   - vertical_parameter_alignment_on_call
