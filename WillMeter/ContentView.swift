@@ -17,7 +17,17 @@ struct ContentView: View {
     init() {
         let service = SwiftUILocalizationService()
         self._localizationService = StateObject(wrappedValue: service)
-        self._willPowerViewModel = StateObject(wrappedValue: WillPowerViewModel(localizationService: service))
+        
+        // リポジトリとUseCaseの初期化
+        let repository = InMemoryWillPowerRepository()
+        let useCase = WillPowerUseCase(repository: repository)
+        
+        self._willPowerViewModel = StateObject(
+            wrappedValue: WillPowerViewModel(
+                willPowerUseCase: useCase,
+                localizationService: service
+            )
+        )
     }
 
     var body: some View {

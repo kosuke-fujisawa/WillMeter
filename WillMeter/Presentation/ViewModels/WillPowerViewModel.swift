@@ -13,20 +13,16 @@ import SwiftUI
 
 @MainActor
 public class WillPowerViewModel: ObservableObject {
-    private let observableWillPower: ObservableWillPower
+    private let willPowerUseCase: WillPowerUseCase
     private let localizationService: LocalizationService
+    private var observableWillPower: ObservableWillPower?
 
-    public init(willPower: WillPower? = nil, localizationService: LocalizationService = SwiftUILocalizationService()) {
-        let domainEntity = willPower ?? WillPower(currentValue: 100, maxValue: 100)
-        self.observableWillPower = ObservableWillPower(domainEntity)
+    public init(
+        willPowerUseCase: WillPowerUseCase,
+        localizationService: LocalizationService = SwiftUILocalizationService()
+    ) {
+        self.willPowerUseCase = willPowerUseCase
         self.localizationService = localizationService
-
-        // インフラ層のObservableWillPowerの変更を監視してUI更新
-        observableWillPower.objectWillChange
-            .sink { [weak self] in
-                self?.objectWillChange.send()
-            }
-            .store(in: &cancellables)
 
         // 言語変更監視（SwiftUILocalizationServiceの場合）
         if let swiftUIService = localizationService as? SwiftUILocalizationService {
@@ -36,58 +32,120 @@ public class WillPowerViewModel: ObservableObject {
                 }
                 .store(in: &cancellables)
         }
+
+        // WillPowerデータの初期ロード
+        _Concurrency.Task {
+            await loadWillPower()
+        }
     }
 
     private var cancellables = Set<AnyCancellable>()
 
+    /// WillPowerデータをUseCaseから読み込み
+    private func loadWillPower() async {
+        do {
+            let loadedObservableWillPower = try await willPowerUseCase.loadWillPower()
+            self.observableWillPower = loadedObservableWillPower
+
+            // インフラ層のObservableWillPowerの変更を監視してUI更新
+            loadedObservableWillPower.objectWillChange
+                .sink { [weak self] in
+                    self?.objectWillChange.send()
+                }
+                .store(in: &cancellables)
+
+            // UI更新通知
+            objectWillChange.send()
+        } catch {
+            // エラーログ出力（本番環境では適切なログシステムを使用）
+            print("Failed to load WillPower: \(error)")
+            // エラー時はデフォルト値で初期化
+            let defaultWillPower = WillPower(currentValue: 100, maxValue: 100)
+            self.observableWillPower = ObservableWillPower(defaultWillPower)
+            objectWillChange.send()
+        }
+    }
+
     // MARK: - ドメインエンティティへの読み取り専用アクセス
 
     public var currentValue: Int {
-        observableWillPower.currentValue
+        observableWillPower?.currentValue ?? 0
     }
 
     public var maxValue: Int {
-        observableWillPower.maxValue
+        observableWillPower?.maxValue ?? 100
     }
 
     public var percentage: Double {
-        observableWillPower.percentage
+        observableWillPower?.percentage ?? 0.0
     }
 
     public var status: WillPowerStatus {
-        observableWillPower.status
+        observableWillPower?.status ?? .critical
     }
 
-    // MARK: - ユーザーアクション（ドメインロジックへの委譲）
+    // MARK: - ユーザーアクション（UseCaseを経由したドメインロジック実行）
 
     @discardableResult
     public func consumeWillPower(amount: Int) -> Bool {
-        return observableWillPower.consume(amount: amount)
+        guard let willPower = observableWillPower else {
+            return false
+        }
+        let success = willPower.consume(amount: amount)
+        if success {
+            autoSave()
+        }
+        return success
     }
 
     public func restoreWillPower(amount: Int) {
-        observableWillPower.restore(amount: amount)
+        guard let willPower = observableWillPower else {
+            return
+        }
+        willPower.restore(amount: amount)
+        autoSave()
     }
 
     public func resetWillPower() {
-        observableWillPower.reset()
+        guard let willPower = observableWillPower else {
+            return
+        }
+        willPower.reset()
+        autoSave()
+    }
+
+    /// 変更をUseCaseを通じて自動保存
+    private func autoSave() {
+        guard let willPower = observableWillPower else {
+            return
+        }
+        _Concurrency.Task {
+            await willPowerUseCase.autoSave(willPower)
+        }
     }
 
     // MARK: - Task Related Methods
 
     public func canPerformTask(_ task: Task) -> Bool {
-        return observableWillPower.canPerformTask(cost: task.willPowerCost)
+        guard let willPower = observableWillPower else {
+            return false
+        }
+        return willPower.canPerformTask(cost: task.willPowerCost)
     }
 
     @discardableResult
     public func performTask(_ task: Task) -> Bool {
+        guard let willPower = observableWillPower else {
+            return false
+        }
         guard canPerformTask(task) else {
             return false
         }
 
-        let success = observableWillPower.consume(amount: task.willPowerCost)
+        let success = willPower.consume(amount: task.willPowerCost)
         if success {
             task.markAsCompleted()
+            autoSave()
         }
         return success
     }
