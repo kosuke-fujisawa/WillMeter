@@ -152,5 +152,11 @@ file_header:
 force_unwrapping:
   severity: warning
 
+# Trailing whitespace - 末尾空白を厳格に管理
+trailing_whitespace:
+  severity: error
+  ignores_empty_lines: false
+  ignores_comments: false
+
 # Reporter format
 reporter: "xcode"

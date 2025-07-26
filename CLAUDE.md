@@ -95,6 +95,29 @@ xcodebuild -project WillMeter.xcodeproj -scheme WillMeter -destination 'platform
 xcodebuild -project WillMeter.xcodeproj -scheme WillMeter -destination 'platform=iOS Simulator,name=iPhone 16' test -enableCodeCoverage YES
 ```
 
+### コード品質自動化コマンド（trailing whitespace対応）
+```bash
+# 全Swiftファイルの末尾空白自動除去
+npm run clean:whitespace
+
+# 全ファイル（Swift, YAML, Markdown）の末尾空白除去
+npm run clean:all
+
+# SwiftLint + 末尾空白除去の包括的品質チェック
+npm run quality:check
+
+# pre-commit hookと同等の処理を手動実行
+npm run pre-commit
+
+# 手動での末尾空白除去（npmなし環境）
+find . -name "*.swift" -not -path "./.git/*" -exec sed -i '' 's/[[:space:]]*$//' {} \;
+```
+
+#### 自動化機能
+- **Git pre-commit hook**: コミット時に自動的に末尾空白除去+SwiftLint実行
+- **SwiftLint trailing_whitespace**: severity=error で厳格な品質管理
+- **npm scripts**: 開発者向け手動メンテナンスコマンド
+
 ## 🏗️ Clean Architecture + DDD アーキテクチャルール
 
 ### アーキテクチャ構成（4層レイヤー）

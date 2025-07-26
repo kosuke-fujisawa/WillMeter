@@ -200,7 +200,7 @@ public class ObservableWillPower: ObservableObject {
 ### ⛔ 制限事項
 
 - **商用利用の禁止**: 営利目的での使用は許可されていません
-- **適切なクレジット表示**: 作者名、ライセンスへのリンク、変更点の明示が必要  
+- **適切なクレジット表示**: 作者名、ライセンスへのリンク、変更点の明示が必要
   例: `© 2025 kosuke-fujisawa — CC BY-NC 4.0`
 
 詳細は [LICENSE](LICENSE) ファイルを参照してください。
