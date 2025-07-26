@@ -73,6 +73,7 @@ public struct OSCompatibilityLayer {
         @ViewBuilder content: () -> Content
     ) -> some View {
         if #available(iOS 19.0, *) {
+            // TODO: iOS 19での新しいNavigation実装に置き換える
             // 将来のiOS 19での新しいNavigation実装
             NavigationStack {
                 content()
@@ -239,6 +240,7 @@ public extension OSCompatibilityLayer {
     /// ログ出力の互換性ラッパー
     static func compatibleLog(_ message: String, category: String = "WillMeter") {
         if #available(iOS 19.0, *) {
+            // TODO: os.Loggerなど新しいログシステムへの移行
             // iOS 19での新しいロギング方式
             print("[\(category)] \(message)")
         } else {

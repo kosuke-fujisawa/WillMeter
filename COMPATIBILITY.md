@@ -32,7 +32,7 @@ WillMeterプロジェクトにおけるOS・ライブラリアップデートの
 ## Clean Architecture による影響局所化
 
 ### Domain層（影響ゼロ）
-```
+```text
 WillMeter/Domain/
 ├── Entities/
 │   ├── WillPower.swift     ← Foundation（UUID, Date）のみ
@@ -46,7 +46,7 @@ WillMeter/Domain/
 - **変更影響**: 最小限
 
 ### Application層（影響最小）
-```
+```text
 WillMeter/Application/
 └── UseCases/
     └── WillPowerUseCase.swift  ← Foundation, Domain依存のみ
@@ -55,7 +55,7 @@ WillMeter/Application/
 - **OS依存**: なし
 
 ### Infrastructure層（影響局所化）
-```
+```text
 WillMeter/Infrastructure/
 ├── Observables/           ← SwiftUI依存（局所化済み）
 └── Repositories/          ← 永続化実装（将来的影響あり）
@@ -64,7 +64,7 @@ WillMeter/Infrastructure/
 - **対策**: Adapter Pattern適用済み
 
 ### Presentation層（影響範囲明確）
-```
+```text
 WillMeter/Presentation/
 └── ViewModels/
     └── WillPowerViewModel.swift  ← SwiftUI, Combine依存

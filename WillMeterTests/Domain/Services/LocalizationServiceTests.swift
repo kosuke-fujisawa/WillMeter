@@ -25,7 +25,7 @@ final class LocalizationServiceTests: XCTestCase {
         // Then: 全キーが定義されている
         for key in keys {
             XCTAssertFalse(key.isEmpty, "Key should not be empty")
-            XCTAssertTrue(key.contains("willpower"), "Key should contain 'willpower' prefix")
+            XCTAssertTrue(key.hasPrefix("willpower."), "Key should start with 'willpower.' prefix")
         }
     }
 
@@ -42,7 +42,7 @@ final class LocalizationServiceTests: XCTestCase {
         // Then: 全ステータスキーが定義されている
         for key in statusKeys {
             XCTAssertFalse(key.isEmpty, "Status key should not be empty")
-            XCTAssertTrue(key.contains("willpower.status"), "Status key should contain 'willpower.status' prefix")
+            XCTAssertTrue(key.hasPrefix("willpower.status."), "Status key should start with 'willpower.status.' prefix")
         }
     }
 
@@ -57,7 +57,7 @@ final class LocalizationServiceTests: XCTestCase {
         // Then: 全アクションキーが定義されている
         for key in actionKeys {
             XCTAssertFalse(key.isEmpty, "Action key should not be empty")
-            XCTAssertTrue(key.contains("willpower.action"), "Action key should contain 'willpower.action' prefix")
+            XCTAssertTrue(key.hasPrefix("willpower.action."), "Action key should start with 'willpower.action.' prefix")
         }
     }
 
@@ -71,7 +71,7 @@ final class LocalizationServiceTests: XCTestCase {
         // Then: 全UIキーが定義されている
         for key in uiKeys {
             XCTAssertFalse(key.isEmpty, "UI key should not be empty")
-            XCTAssertTrue(key.contains("ui"), "UI key should contain 'ui' prefix")
+            XCTAssertTrue(key.hasPrefix("ui."), "UI key should start with 'ui.' prefix")
         }
     }
 
@@ -87,8 +87,8 @@ final class LocalizationServiceTests: XCTestCase {
         for key in accessibilityKeys {
             XCTAssertFalse(key.isEmpty, "Accessibility key should not be empty")
             XCTAssertTrue(
-                key.contains("ui.accessibility"),
-                "Accessibility key should contain 'ui.accessibility' prefix"
+                key.hasPrefix("ui.accessibility."),
+                "Accessibility key should start with 'ui.accessibility.' prefix"
             )
         }
     }
@@ -106,7 +106,7 @@ final class LocalizationServiceTests: XCTestCase {
         // Then: 全推奨アクションキーが定義されている
         for key in recommendationKeys {
             XCTAssertFalse(key.isEmpty, "Recommendation key should not be empty")
-            XCTAssertTrue(key.contains("recommendation"), "Recommendation key should contain 'recommendation' prefix")
+            XCTAssertTrue(key.hasPrefix("recommendation."), "Recommendation key should start with 'recommendation.' prefix")
         }
     }
 

@@ -16,7 +16,7 @@ WillMeterプロジェクトの月次ビルド・CI/CDシステムの手動実行
 2. **"Monthly Health Check & Slack Notification"** ワークフローを選択
 3. **"Run workflow"** ボタンをクリック
 4. パラメータ設定:
-   ```
+   ```yaml
    ✅ Create GitHub issue on failure: true
    ```
 5. **"Run workflow"** で実行開始
@@ -34,7 +34,7 @@ WillMeterプロジェクトの月次ビルド・CI/CDシステムの手動実行
 1. **"Multi-iOS Version Build Matrix"** ワークフローを選択
 2. **"Run workflow"** をクリック
 3. パラメータ設定:
-   ```
+   ```yaml
    iOS versions to test: 18.5,17.5
    ```
 4. 実行開始
@@ -51,7 +51,7 @@ WillMeterプロジェクトの月次ビルド・CI/CDシステムの手動実行
 1. **"Quality Metrics & Trend Analysis"** ワークフローを選択
 2. **"Run workflow"** をクリック
 3. パラメータ設定:
-   ```
+   ```yaml
    ✅ Generate trend analysis: true
    ✅ Save metrics to history: true
    ```

@@ -53,7 +53,7 @@
 
 // MARK: - タスクカテゴリ
 "task.category.work" = "仕事";
-"task.category.study" = "学習";
+"task.category.study" = "勉強";
 "task.category.health" = "健康";
 "task.category.personal" = "個人";
 "task.category.learning" = "学習";
