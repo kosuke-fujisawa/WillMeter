@@ -2,7 +2,10 @@
 // ObservableTask.swift
 // WillMeter
 //
-// インフラ層：TaskエンティティのSwiftUI統合
+// Created by WillMeter Project
+// Licensed under CC BY-NC 4.0
+// https://creativecommons.org/licenses/by-nc/4.0/
+//
 
 import Foundation
 import SwiftUI

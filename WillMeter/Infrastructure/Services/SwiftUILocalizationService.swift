@@ -1,10 +1,10 @@
 //
-//  SwiftUILocalizationService.swift
-//  WillMeter
+// SwiftUILocalizationService.swift
+// WillMeter
 //
-//  Created by WillMeter Project
-//  Licensed under CC BY-NC 4.0
-//  https://creativecommons.org/licenses/by-nc/4.0/
+// Created by WillMeter Project
+// Licensed under CC BY-NC 4.0
+// https://creativecommons.org/licenses/by-nc/4.0/
 //
 
 import Foundation
@@ -42,6 +42,7 @@ public final class SwiftUILocalizationService: LocalizationService, ObservableOb
             return self.localizedString(for: key, fallbackLanguage: "ja")
         }
 
+        // 意図的に動的キーを使用（LocalizationKeysで型安全性を確保）
         let localizedString = NSLocalizedString(key, bundle: bundle, comment: "")
 
         // キーがそのまま返された場合はフォールバック
@@ -76,8 +77,10 @@ public final class SwiftUILocalizationService: LocalizationService, ObservableOb
         currentLanguageCode = languageCode
         UserDefaults.standard.set(languageCode, forKey: Self.selectedLanguageKey)
 
-        // 言語変更をUI層に通知
-        objectWillChange.send()
+        // 言語変更をUI層に通知（メインスレッドで実行）
+        DispatchQueue.main.async { [weak self] in
+            self?.objectWillChange.send()
+        }
     }
 
     /// フォールバック言語での文字列取得
@@ -87,6 +90,7 @@ public final class SwiftUILocalizationService: LocalizationService, ObservableOb
             return key // 最終フォールバック
         }
 
+        // フォールバック処理での動的キー使用（設計上必要）
         let fallbackString = NSLocalizedString(key, bundle: bundle, comment: "")
         return fallbackString == key ? key : fallbackString
     }

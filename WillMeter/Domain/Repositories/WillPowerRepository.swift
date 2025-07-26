@@ -2,7 +2,10 @@
 // WillPowerRepository.swift
 // WillMeter
 //
-// ドメイン層：WillPowerエンティティの永続化抽象化
+// Created by WillMeter Project
+// Licensed under CC BY-NC 4.0
+// https://creativecommons.org/licenses/by-nc/4.0/
+//
 
 import Foundation
 

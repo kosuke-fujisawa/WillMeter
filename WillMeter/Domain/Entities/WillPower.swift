@@ -1,10 +1,10 @@
 //
-//  WillPower.swift
-//  WillMeter
+// WillPower.swift
+// WillMeter
 //
-//  Created by WillMeter Project
-//  Licensed under CC BY-NC 4.0
-//  https://creativecommons.org/licenses/by-nc/4.0/
+// Created by WillMeter Project
+// Licensed under CC BY-NC 4.0
+// https://creativecommons.org/licenses/by-nc/4.0/
 //
 
 import Foundation
