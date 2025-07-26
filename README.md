@@ -189,21 +189,24 @@ public class ObservableWillPower: ObservableObject {
 
 ## 📄 ライセンス
 
-このプロジェクトは **Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)** の下でライセンスされています。
+このプロジェクトは **[Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/)** の下でライセンスされています。
 
-### ✅ 許可されること
+**✅ 許可されること**
+
 - **非営利目的での自由な利用**: 複製、配布、改変が可能
 - **改変作品の作成**: リミックス、変換、派生作品の作成
 - **あらゆる媒体・形式での共有**: 制限なし
 
-### ⛔ 制限事項
+**⛔ 制限事項**
+
 - **商用利用の禁止**: 営利目的での使用は許可されていません
-- **適切なクレジット表示**: 作者名、ライセンスへのリンク、変更点の明示が必要
+- **適切なクレジット表示**: 作者名、ライセンスへのリンク、変更点の明示が必要  
+  例: `© 2025 kosuke-fujisawa — CC BY-NC 4.0`
 
 詳細は [LICENSE](LICENSE) ファイルを参照してください。
 
 ---
 
-*「意思力を見える化して、本当に大切なことに集中する」*
+「意思力を見える化して、本当に大切なことに集中する」
 
 **WillMeter** で、あなたの毎日をもっと意味のあるものに。
