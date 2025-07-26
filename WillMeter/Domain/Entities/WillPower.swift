@@ -1,9 +1,18 @@
+//
+// WillPower.swift
+// WillMeter
+//
+// Created by WillMeter Project
+// Licensed under CC BY-NC 4.0
+// https://creativecommons.org/licenses/by-nc/4.0/
+//
+
 import Foundation
 
 public class WillPower {
     private(set) var currentValue: Int
     public let maxValue: Int
-    
+
     // ドメインイベント通知のための観察者パターン
     private var observers: [(WillPower) -> Void] = []
 
@@ -13,7 +22,9 @@ public class WillPower {
     }
 
     public var percentage: Double {
-        guard maxValue > 0 else { return 0.0 }
+        guard maxValue > 0 else {
+            return 0.0
+        }
         return Double(currentValue) / Double(maxValue)
     }
 
@@ -35,7 +46,7 @@ public class WillPower {
     public func addObserver(_ observer: @escaping (WillPower) -> Void) {
         observers.append(observer)
     }
-    
+
     // ドメインイベント通知
     private func notifyObservers() {
         observers.forEach { $0(self) }
@@ -53,7 +64,9 @@ public class WillPower {
     }
 
     public func restore(amount: Int) {
-        guard amount >= 0 else { return }
+        guard amount >= 0 else {
+            return
+        }
         currentValue = min(currentValue + amount, maxValue)
         notifyObservers() // ドメインイベント通知
     }
@@ -69,12 +82,12 @@ public enum WillPowerStatus: String, CaseIterable {
     case low
     case critical
 
-    public var displayName: String {
+    public var localizationKey: String {
         switch self {
-        case .high: return "高"
-        case .medium: return "中"
-        case .low: return "低"
-        case .critical: return "危険"
+        case .high: return LocalizationKeys.WillPower.Status.high
+        case .medium: return LocalizationKeys.WillPower.Status.medium
+        case .low: return LocalizationKeys.WillPower.Status.low
+        case .critical: return LocalizationKeys.WillPower.Status.critical
         }
     }
 }

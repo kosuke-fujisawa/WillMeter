@@ -2,7 +2,10 @@
 // WillPowerUseCase.swift
 // WillMeter
 //
-// アプリケーション層：WillPowerに関するビジネスフロー
+// Created by WillMeter Project
+// Licensed under CC BY-NC 4.0
+// https://creativecommons.org/licenses/by-nc/4.0/
+//
 
 import Foundation
 
@@ -10,11 +13,11 @@ import Foundation
 /// アプリケーション層の責務：ドメインサービスとインフラの調整
 public class WillPowerUseCase {
     private let repository: WillPowerRepository
-    
+
     public init(repository: WillPowerRepository) {
         self.repository = repository
     }
-    
+
     /// WillPowerを読み込み、ObservableWillPowerとして返す
     /// - Returns: UI向けのObservableWillPower
     /// - Throws: 読み込みに失敗した場合のエラー
@@ -30,7 +33,7 @@ public class WillPowerUseCase {
             throw error
         }
     }
-    
+
     /// ObservableWillPowerを保存する
     /// - Parameter observableWillPower: 保存するObservableWillPower
     /// - Throws: 保存に失敗した場合のエラー
@@ -42,7 +45,7 @@ public class WillPowerUseCase {
         )
         try await repository.save(willPower)
     }
-    
+
     /// 定期的な自動保存を実行
     /// - Parameter observableWillPower: 保存するObservableWillPower
     public func autoSave(_ observableWillPower: ObservableWillPower) async {

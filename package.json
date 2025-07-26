@@ -1,0 +1,30 @@
+{
+  "name": "willmeter",
+  "version": "1.0.0",
+  "description": "意思力を見える化して、本当に大切なことに集中する iOS アプリ",
+  "scripts": {
+    "clean:whitespace": "find . -name '*.swift' -not -path './.git/*' -exec sed -i '' 's/[[:space:]]*$//' {} \\; && echo '✅ 全Swiftファイルの末尾空白を除去しました'",
+    "clean:all": "npm run clean:whitespace && find . \\( -name '*.yml' -o -name '*.yaml' -o -name '*.md' \\) -not -path './.git/*' -exec sed -i '' 's/[[:space:]]*$//' {} \\; && echo '✅ 全ファイルの末尾空白を除去しました'",
+    "lint": "swiftlint",
+    "lint:fix": "swiftlint --fix",
+    "quality:check": "npm run clean:all && npm run lint",
+    "pre-commit": "npm run quality:check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kosuke-fujisawa/WillMeter.git"
+  },
+  "keywords": [
+    "ios",
+    "swift",
+    "swiftui",
+    "willpower",
+    "productivity",
+    "clean-architecture",
+    "ddd",
+    "tdd"
+  ],
+  "author": "kosuke-fujisawa",
+  "license": "CC-BY-NC-4.0",
+  "devDependencies": {}
+}

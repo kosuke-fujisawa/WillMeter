@@ -1,0 +1,62 @@
+/*
+  Localizable.strings (Simplified Chinese)
+  WillMeter
+
+  Created by WillMeter Project
+  Licensed under CC BY-NC 4.0
+  https://creativecommons.org/licenses/by-nc/4.0/
+*/
+
+// MARK: - 应用程序
+"ui.app.title" = "意志力计";
+
+// MARK: - 意志力相关
+"willpower.title" = "意志力";
+"willpower.current.value" = "当前值";
+"willpower.max.value" = "最大值";
+"willpower.percentage" = "剩余";
+
+// MARK: - 状态显示
+"willpower.status.excellent" = "优秀";
+"willpower.status.good" = "良好";
+"willpower.status.normal" = "普通";
+"willpower.status.low" = "偏低";
+"willpower.status.critical" = "危险";
+
+// MARK: - 操作
+"willpower.action.consume" = "消耗意志力 (%d)";
+"willpower.action.restore" = "恢复意志力 (+%d)";
+"willpower.action.reset" = "重置";
+
+// MARK: - UI显示
+"ui.current.state" = "当前状态";
+"ui.done" = "完成";
+
+// MARK: - 辅助功能
+"ui.accessibility.consume.hint" = "从当前意志力中减少%d点";
+"ui.accessibility.restore.hint" = "为当前意志力增加%d点";
+"ui.accessibility.reset.hint" = "将意志力重置为最大值";
+
+// MARK: - 建议操作
+"recommendation.excellent" = "状态极佳！非常适合进行需要高度集中的任务。";
+"recommendation.good" = "状态良好，适合处理重要任务。";
+"recommendation.normal" = "状态正常，可以稳步推进日常任务。";
+"recommendation.low" = "有些疲劳，建议处理轻松的任务或休息一下。";
+"recommendation.critical" = "意志力不足，请充分休息。";
+
+// MARK: - 语言设置
+"settings.language" = "语言";
+"settings.current.language" = "当前语言";
+"settings.language.japanese" = "日本語";
+"settings.language.english" = "English";
+"settings.language.chinese" = "简体中文";
+
+// MARK: - 任务类别
+"task.category.work" = "工作";
+"task.category.study" = "学习";
+"task.category.health" = "健康";
+"task.category.personal" = "个人";
+"task.category.learning" = "进修";
+"task.category.development" = "开发";
+"task.category.urgent" = "紧急";
+"task.category.maintenance" = "维护";

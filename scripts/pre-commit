@@ -1,0 +1,35 @@
+#!/bin/bash
+#
+# Git pre-commit hook for WillMeter
+# 自動的にSwiftファイルの末尾空白を除去してSwiftLintを実行
+#
+
+echo "🔍 WillMeter pre-commit hook: trailing whitespace自動除去開始..."
+
+# 1. 全Swiftファイルの末尾空白を自動除去
+echo "   📝 全Swiftファイルの末尾空白除去中..."
+find . -name "*.swift" -not -path "./.git/*" -exec sed -i '' 's/[[:space:]]*$//' {} \;
+
+# 2. .swiftlint.yml, .md ファイルの末尾空白も除去
+echo "   📝 設定ファイル・ドキュメントの末尾空白除去中..."
+find . \( -name "*.yml" -o -name "*.yaml" -o -name "*.md" \) -not -path "./.git/*" -exec sed -i '' 's/[[:space:]]*$//' {} \;
+
+# 3. SwiftLint実行
+echo "   🔧 SwiftLint品質チェック実行中..."
+if command -v swiftlint >/dev/null 2>&1; then
+    swiftlint --quiet
+    if [ $? -ne 0 ]; then
+        echo "❌ SwiftLint違反が検出されました。修正してからコミットしてください。"
+        exit 1
+    fi
+    echo "   ✅ SwiftLint: 品質チェック完了"
+else
+    echo "   ⚠️  SwiftLintがインストールされていません"
+fi
+
+# 4. 修正されたファイルを自動的にステージングに追加
+echo "   📦 修正されたファイルをステージングに追加中..."
+git add -A
+
+echo "✅ pre-commit hook完了: trailing whitespace除去・SwiftLint実行完了"
+exit 0

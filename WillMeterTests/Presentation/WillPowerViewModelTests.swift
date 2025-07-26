@@ -1,21 +1,52 @@
+//
+// WillPowerViewModelTests.swift
+// WillMeterTests
+//
+// Created by WillMeter Project
+// Licensed under CC BY-NC 4.0
+// https://creativecommons.org/licenses/by-nc/4.0/
+//
+
 @testable import WillMeter
 import XCTest
 
 @MainActor
 final class WillPowerViewModelTests: XCTestCase {
     var viewModel: WillPowerViewModel!
+    var mockRepository: InMemoryWillPowerRepository!
+    var useCase: WillPowerUseCase!
 
     override func setUp() {
         super.setUp()
-        viewModel = WillPowerViewModel()
+        mockRepository = InMemoryWillPowerRepository()
+        useCase = WillPowerUseCase(repository: mockRepository)
+        viewModel = WillPowerViewModel(willPowerUseCase: useCase)
     }
 
     override func tearDown() {
         viewModel = nil
+        useCase = nil
+        mockRepository = nil
         super.tearDown()
     }
 
-    func testInitialState() throws {
+    // ヘルパーメソッド：ViewModelの初期化完了を確実に待機
+    private func waitForViewModelInitialization() async {
+        // ViewModelの初期化状態を確認
+        // 初期値が設定されるまで待機（最大1秒）
+        var attempts = 0
+        let maxAttempts = 10
+
+        while viewModel.currentValue == 0 && attempts < maxAttempts {
+            try? await _Concurrency.Task.sleep(nanoseconds: 100_000_000) // 0.1 second
+            attempts += 1
+        }
+    }
+
+    func testInitialState() async throws {
+        // Given - Ensure ViewModel is properly initialized
+        await waitForViewModelInitialization()
+
         // Then
         XCTAssertEqual(viewModel.currentValue, 100)
         XCTAssertEqual(viewModel.maxValue, 100)
@@ -23,8 +54,9 @@ final class WillPowerViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.status, .high)
     }
 
-    func testConsumeWillPower() throws {
-        // Given
+    func testConsumeWillPower() async throws {
+        // Given - Ensure ViewModel is properly initialized
+        await waitForViewModelInitialization()
         let consumeAmount = 30
 
         // When
@@ -37,8 +69,9 @@ final class WillPowerViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.status, .high)
     }
 
-    func testConsumeWillPowerFails() throws {
-        // Given
+    func testConsumeWillPowerFails() async throws {
+        // Given - Ensure ViewModel is properly initialized
+        await waitForViewModelInitialization()
         viewModel.consumeWillPower(amount: 80) // Reduce to 20
         let consumeAmount = 30
 
@@ -50,8 +83,9 @@ final class WillPowerViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.currentValue, 20) // Should remain unchanged
     }
 
-    func testRestoreWillPower() throws {
-        // Given
+    func testRestoreWillPower() async throws {
+        // Given - Ensure ViewModel is properly initialized
+        await waitForViewModelInitialization()
         viewModel.consumeWillPower(amount: 50) // Reduce to 50
         let restoreAmount = 30
 
@@ -64,9 +98,13 @@ final class WillPowerViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.status, .high)
     }
 
-    func testCanPerformTask() throws {
-        // Given
-        let task = Task(title: "Test Task", willPowerCost: 30, priority: .medium, category: .work)
+    func testCanPerformTask() async throws {
+        // Given - Ensure ViewModel is properly initialized
+        await waitForViewModelInitialization()
+        let task = Task(title: "Test Task",
+                        willPowerCost: 30,
+                        priority: .medium,
+                        category: .work)
 
         // When & Then
         XCTAssertTrue(viewModel.canPerformTask(task))
@@ -78,9 +116,13 @@ final class WillPowerViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.canPerformTask(task))
     }
 
-    func testPerformTask() throws {
-        // Given
-        let task = Task(title: "Test Task", willPowerCost: 30, priority: .medium, category: .work)
+    func testPerformTask() async throws {
+        // Given - Ensure ViewModel is properly initialized
+        await waitForViewModelInitialization()
+        let task = Task(title: "Test Task",
+                        willPowerCost: 30,
+                        priority: .medium,
+                        category: .work)
 
         // When
         let result = viewModel.performTask(task)
@@ -88,12 +130,16 @@ final class WillPowerViewModelTests: XCTestCase {
         // Then
         XCTAssertTrue(result)
         XCTAssertEqual(viewModel.currentValue, 70)
-        XCTAssertEqual(task.status, .completed)
+        XCTAssertEqual(task.currentStatus, .completed)
     }
 
-    func testPerformTaskFails() throws {
-        // Given
-        let task = Task(title: "Test Task", willPowerCost: 30, priority: .medium, category: .work)
+    func testPerformTaskFails() async throws {
+        // Given - Ensure ViewModel is properly initialized
+        await waitForViewModelInitialization()
+        let task = Task(title: "Test Task",
+                        willPowerCost: 30,
+                        priority: .medium,
+                        category: .work)
         viewModel.consumeWillPower(amount: 80) // Reduce to 20
 
         // When
@@ -102,10 +148,13 @@ final class WillPowerViewModelTests: XCTestCase {
         // Then
         XCTAssertFalse(result)
         XCTAssertEqual(viewModel.currentValue, 20) // Should remain unchanged
-        XCTAssertEqual(task.status, .pending) // Task should not be completed
+        XCTAssertEqual(task.currentStatus, .pending) // Task should not be completed
     }
 
-    func testStatusUpdatesCorrectly() throws {
+    func testStatusUpdatesCorrectly() async throws {
+        // Given - Ensure ViewModel is properly initialized
+        await waitForViewModelInitialization()
+
         // Initially high (100)
         XCTAssertEqual(viewModel.status, .high)
 
@@ -122,8 +171,9 @@ final class WillPowerViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.status, .critical)
     }
 
-    func testResetWillPower() throws {
-        // Given
+    func testResetWillPower() async throws {
+        // Given - Ensure ViewModel is properly initialized
+        await waitForViewModelInitialization()
         viewModel.consumeWillPower(amount: 50) // Reduce to 50
 
         // When

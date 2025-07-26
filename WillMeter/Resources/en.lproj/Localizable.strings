@@ -1,0 +1,62 @@
+/*
+  Localizable.strings (English)
+  WillMeter
+
+  Created by WillMeter Project
+  Licensed under CC BY-NC 4.0
+  https://creativecommons.org/licenses/by-nc/4.0/
+*/
+
+// MARK: - Application
+"ui.app.title" = "WillMeter";
+
+// MARK: - WillPower Related
+"willpower.title" = "Willpower";
+"willpower.current.value" = "Current";
+"willpower.max.value" = "Maximum";
+"willpower.percentage" = "Remaining";
+
+// MARK: - Status Display
+"willpower.status.excellent" = "Excellent";
+"willpower.status.good" = "Good";
+"willpower.status.normal" = "Normal";
+"willpower.status.low" = "Low";
+"willpower.status.critical" = "Critical";
+
+// MARK: - Actions
+"willpower.action.consume" = "Consume Willpower (%d)";
+"willpower.action.restore" = "Restore Willpower (+%d)";
+"willpower.action.reset" = "Reset";
+
+// MARK: - UI Display
+"ui.current.state" = "Current State";
+"ui.done" = "Done";
+
+// MARK: - Accessibility
+"ui.accessibility.consume.hint" = "Reduces current willpower by %d points";
+"ui.accessibility.restore.hint" = "Adds %d points to current willpower";
+"ui.accessibility.reset.hint" = "Resets willpower to maximum value";
+
+// MARK: - Recommendations
+"recommendation.excellent" = "Excellent condition! Perfect time for high-concentration tasks.";
+"recommendation.good" = "Good condition. Suitable for important tasks.";
+"recommendation.normal" = "Standard condition. Continue with daily tasks steadily.";
+"recommendation.low" = "Feeling a bit tired. Consider lighter tasks or taking a break.";
+"recommendation.critical" = "Willpower is insufficient. Please take adequate rest.";
+
+// MARK: - Language Settings
+"settings.language" = "Language";
+"settings.current.language" = "Current Language";
+"settings.language.japanese" = "日本語";
+"settings.language.english" = "English";
+"settings.language.chinese" = "简体中文";
+
+// MARK: - Task Categories
+"task.category.work" = "Work";
+"task.category.study" = "Study";
+"task.category.health" = "Health";
+"task.category.personal" = "Personal";
+"task.category.learning" = "Learning";
+"task.category.development" = "Development";
+"task.category.urgent" = "Urgent";
+"task.category.maintenance" = "Maintenance";

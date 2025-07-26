@@ -1,3 +1,12 @@
+//
+// TaskTests.swift
+// WillMeterTests
+//
+// Created by WillMeter Project
+// Licensed under CC BY-NC 4.0
+// https://creativecommons.org/licenses/by-nc/4.0/
+//
+
 @testable import WillMeter
 import XCTest
 
@@ -28,7 +37,7 @@ final class TaskTests: XCTestCase {
         XCTAssertEqual(task.willPowerCost, willPowerCost)
         XCTAssertEqual(task.priority, priority)
         XCTAssertEqual(task.category, category)
-        XCTAssertEqual(task.status, .pending)
+        XCTAssertEqual(task.currentStatus, .pending)
         XCTAssertFalse(task.isCompleted)
     }
 
@@ -40,7 +49,7 @@ final class TaskTests: XCTestCase {
         task.markAsCompleted()
 
         // Then
-        XCTAssertEqual(task.status, .completed)
+        XCTAssertEqual(task.currentStatus, .completed)
         XCTAssertTrue(task.isCompleted)
         XCTAssertNotNil(task.completedAt)
     }
@@ -53,7 +62,7 @@ final class TaskTests: XCTestCase {
         task.start()
 
         // Then
-        XCTAssertEqual(task.status, .inProgress)
+        XCTAssertEqual(task.currentStatus, .inProgress)
         XCTAssertFalse(task.isCompleted)
         XCTAssertNotNil(task.startedAt)
     }
@@ -67,7 +76,7 @@ final class TaskTests: XCTestCase {
         task.cancel()
 
         // Then
-        XCTAssertEqual(task.status, .cancelled)
+        XCTAssertEqual(task.currentStatus, .cancelled)
         XCTAssertFalse(task.isCompleted)
     }
 
@@ -80,7 +89,7 @@ final class TaskTests: XCTestCase {
         task.pause()
 
         // Then
-        XCTAssertEqual(task.status, .paused)
+        XCTAssertEqual(task.currentStatus, .paused)
         XCTAssertFalse(task.isCompleted)
     }
 
@@ -94,7 +103,7 @@ final class TaskTests: XCTestCase {
         task.resume()
 
         // Then
-        XCTAssertEqual(task.status, .inProgress)
+        XCTAssertEqual(task.currentStatus, .inProgress)
         XCTAssertFalse(task.isCompleted)
     }
 

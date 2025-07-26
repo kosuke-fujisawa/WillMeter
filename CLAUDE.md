@@ -54,7 +54,7 @@
 
 ### テスト構成（TDD準拠）
 - **ドメインテスト**: ビジネスロジックの単体テスト
-- **インフラテスト**: Repository等の実装テスト  
+- **インフラテスト**: Repository等の実装テスト
 - **UIテスト**: SwiftUIコンポーネントテスト
 - **統合テスト**: システム全体の動作確認
 
@@ -93,6 +93,39 @@ xcodebuild -project WillMeter.xcodeproj -scheme WillMeter -destination 'platform
 
 # テストカバレッジ生成
 xcodebuild -project WillMeter.xcodeproj -scheme WillMeter -destination 'platform=iOS Simulator,name=iPhone 16' test -enableCodeCoverage YES
+```
+
+### コード品質自動化コマンド（trailing whitespace対応）
+```bash
+# 全Swiftファイルの末尾空白自動除去
+npm run clean:whitespace
+
+# 全ファイル（Swift, YAML, Markdown）の末尾空白除去
+npm run clean:all
+
+# SwiftLint + 末尾空白除去の包括的品質チェック
+npm run quality:check
+
+# pre-commit hookと同等の処理を手動実行
+npm run pre-commit
+
+# 手動での末尾空白除去（npmなし環境）
+find . -name "*.swift" -not -path "./.git/*" -exec sed -i '' 's/[[:space:]]*$//' {} \;
+```
+
+#### 自動化機能
+- **Git pre-commit hook**: コミット時に自動的に末尾空白除去+SwiftLint実行
+- **SwiftLint trailing_whitespace**: severity=error で厳格な品質管理
+- **npm scripts**: 開発者向け手動メンテナンスコマンド
+
+#### Git Hooks セットアップ
+```bash
+# pre-commit hookの自動インストール
+./scripts/setup-hooks.sh
+
+# 手動インストール（必要に応じて）
+cp scripts/pre-commit .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
 ```
 
 ## 🏗️ Clean Architecture + DDD アーキテクチャルール
@@ -163,7 +196,7 @@ public class WillPower: ObservableObject {
 public class WillPower {
     private(set) var currentValue: Int
     private var observers: [(WillPower) -> Void] = []
-    
+
     public func addObserver(_ observer: @escaping (WillPower) -> Void) {
         observers.append(observer)
     }
@@ -172,7 +205,7 @@ public class WillPower {
 // Infrastructure層：SwiftUI統合
 public class ObservableWillPower: ObservableObject {
     @Published private var willPower: WillPower
-    
+
     public init(_ willPower: WillPower) {
         self.willPower = willPower
         willPower.addObserver { [weak self] _ in
@@ -201,6 +234,9 @@ public class ObservableWillPower: ObservableObject {
 - [x] Code Rabbitレビュー完了（AAA+評価）
 - [x] Observer Pattern実装完了
 - [x] 日本語コメント・ドキュメント整備
+- [x] CC BY-NC 4.0ライセンス管理実装
+- [x] OS・ライブラリアップデート対応設計完了
+- [x] 互換性テスト・CI/CD設定完了
 
 ## 🎯 品質保証（客観的指標ベース）
 

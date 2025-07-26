@@ -69,6 +69,7 @@ opt_in_rules:
   - strong_iboutlet
   - toggle_bool
   - trailing_closure
+  - trailing_whitespace
   - unneeded_parentheses_in_closure_argument
   - untyped_error_in_catch
   - vertical_parameter_alignment_on_call
@@ -135,17 +136,27 @@ type_name:
     - T
     - ID
 
-# File header template (optional)
+# File header template for CC BY-NC 4.0 license compliance
 file_header:
   required_pattern: |
                     \/\/
                     \/\/ .*\.swift
-                    \/\/ WillMeter
+                    \/\/ WillMeter(Tests)?
+                    \/\/
+                    \/\/ Created by WillMeter Project
+                    \/\/ Licensed under CC BY-NC 4\.0
+                    \/\/ https:\/\/creativecommons\.org\/licenses\/by-nc\/4\.0\/
                     \/\/
 
 # Force unwrapping in tests is acceptable
 force_unwrapping:
   severity: warning
+
+# Trailing whitespace - 末尾空白を厳格に管理
+trailing_whitespace:
+  severity: error
+  ignores_empty_lines: false
+  ignores_comments: false
 
 # Reporter format
 reporter: "xcode"
