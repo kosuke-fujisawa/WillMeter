@@ -20,7 +20,9 @@ jobs:
     - name: Select Xcode version
       run: |
         # GitHub ActionsのmacOSランナーで利用可能な最新のXcodeを使用
-        XCODE_PATH=$(find /Applications -name "Xcode*.app" -type d | sort -V | tail -1)
+        XCODE_PATH=$(find /Applications -maxdepth 1 -name "Xcode*.app" -type d | sort -V | tail -1)
+        echo "Available Xcode versions:"
+        find /Applications -maxdepth 1 -name "Xcode*.app" -type d | sort -V
         echo "Using Xcode: $XCODE_PATH"
         sudo xcode-select -s "$XCODE_PATH/Contents/Developer"
         xcodebuild -version
