@@ -9,7 +9,9 @@
 
 import Foundation
 
-public class Task: Identifiable {
+public class Task: Identifiable, Observable {
+    public typealias ObserverType = Task
+
     public let id: UUID
     public var title: String
     public var description: String?
@@ -28,8 +30,8 @@ public class Task: Identifiable {
     private(set) var startedAt: Date?
     private(set) var completedAt: Date?
 
-    // ドメインイベント通知のための観察者パターン
-    private var observers: [(Task) -> Void] = []
+    // 共通Observer実装を委譲
+    private let observerMixin = ObserverMixin<Task>()
 
     public init(
         id: UUID = UUID(),
@@ -59,14 +61,16 @@ public class Task: Identifiable {
         return priority.rawValue
     }
 
-    // ドメインイベント観察者の追加
+    // MARK: - Observable Protocol Implementation
+
+    /// ドメインイベント観察者の追加
     public func addObserver(_ observer: @escaping (Task) -> Void) {
-        observers.append(observer)
+        observerMixin.addObserver(observer)
     }
 
-    // ドメインイベント通知
-    private func notifyObservers() {
-        observers.forEach { $0(self) }
+    /// ドメインイベント通知
+    public func notifyObservers() {
+        observerMixin.notifyObservers(with: self)
     }
 
     public func start() {

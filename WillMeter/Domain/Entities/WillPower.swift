@@ -9,12 +9,14 @@
 
 import Foundation
 
-public class WillPower {
+public class WillPower: Observable {
+    public typealias ObserverType = WillPower
+
     private(set) var currentValue: Int
     public let maxValue: Int
 
-    // ドメインイベント通知のための観察者パターン
-    private var observers: [(WillPower) -> Void] = []
+    // 共通Observer実装を委譲
+    private let observerMixin = ObserverMixin<WillPower>()
 
     public init(currentValue: Int, maxValue: Int) {
         self.currentValue = max(0, min(currentValue, maxValue))
@@ -42,14 +44,16 @@ public class WillPower {
         }
     }
 
-    // ドメインイベント観察者の追加
+    // MARK: - Observable Protocol Implementation
+
+    /// ドメインイベント観察者の追加
     public func addObserver(_ observer: @escaping (WillPower) -> Void) {
-        observers.append(observer)
+        observerMixin.addObserver(observer)
     }
 
-    // ドメインイベント通知
-    private func notifyObservers() {
-        observers.forEach { $0(self) }
+    /// ドメインイベント通知
+    public func notifyObservers() {
+        observerMixin.notifyObservers(with: self)
     }
 
     @discardableResult
