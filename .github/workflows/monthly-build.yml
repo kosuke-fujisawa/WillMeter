@@ -12,16 +12,16 @@ jobs:
     strategy:
       matrix:
         ios-version: ['18.5', '17.0']
-        xcode-version: ['16.4']
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Xcode
-      uses: actions/setup-xcode@v1
-      with:
-        xcode-version: ${{ matrix.xcode-version }}
+    - name: Select Xcode version
+      run: |
+        sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+        xcodebuild -version
+        xcrun simctl list devices available
 
     - name: Cache Swift packages
       uses: actions/cache@v4
@@ -96,9 +96,11 @@ jobs:
       id: metrics
       run: |
         BUILD_TIME=$(date)
+        BUILD_TIME=$(date)
+        XCODE_VERSION=$(xcodebuild -version | head -n 1)
         echo "build_time=$BUILD_TIME" >> $GITHUB_OUTPUT
         echo "ios_version=${{ matrix.ios-version }}" >> $GITHUB_OUTPUT
-        echo "xcode_version=${{ matrix.xcode-version }}" >> $GITHUB_OUTPUT
+        echo "xcode_version=$XCODE_VERSION" >> $GITHUB_OUTPUT
 
   report-success:
     needs: monthly-build
