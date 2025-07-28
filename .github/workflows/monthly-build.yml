@@ -1,10 +1,10 @@
 name: Monthly Health Check
 
 on:
-  schedule:
-    # 毎月1日 09:00 UTC (日本時間18:00)
-    - cron: '0 9 1 * *'
-  workflow_dispatch:  # 手動実行も可能
+  # schedule:
+  #   # 毎月1日 09:00 UTC (日本時間18:00) - 環境互換性問題により一時停止
+  #   - cron: '0 9 1 * *'
+  workflow_dispatch:  # 手動実行のみ有効
 
 jobs:
   monthly-build:
