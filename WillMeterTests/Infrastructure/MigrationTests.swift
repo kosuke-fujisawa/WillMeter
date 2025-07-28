@@ -20,12 +20,18 @@ final class MigrationTests: XCTestCase {
         // テスト用のUserDefaultsを作成
         userDefaults = UserDefaults(suiteName: "test-migration")
         userDefaults.removePersistentDomain(forName: "test-migration")
+
+        // OSCompatibilityLayerにテスト用UserDefaultsを設定
+        OSCompatibilityLayer.CompatibleUserDefaults.setUserDefaults(userDefaults)
     }
 
     override func tearDown() {
         super.tearDown()
         userDefaults.removePersistentDomain(forName: "test-migration")
         userDefaults = nil
+
+        // OSCompatibilityLayerをデフォルトに戻す
+        OSCompatibilityLayer.CompatibleUserDefaults.resetUserDefaults()
     }
 
     // MARK: - 旧形式データから新形式への移行テスト

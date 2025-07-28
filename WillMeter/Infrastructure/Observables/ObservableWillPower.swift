@@ -12,36 +12,24 @@ import SwiftUI
 
 /// WillPowerエンティティをObservableObjectとしてラップ
 /// インフラ層の責務：ドメインエンティティとSwiftUIの橋渡し
-public class ObservableWillPower: ObservableObject {
-    @Published private var willPower: WillPower
-
-    public init(_ willPower: WillPower) {
-        self.willPower = willPower
-
-        // ドメインエンティティの変更を監視してUI更新
-        willPower.addObserver { [weak self] _ in
-            DispatchQueue.main.async {
-                self?.objectWillChange.send()
-            }
-        }
-    }
-
+/// 汎用ObservableWrapperを継承し、WillPower固有の機能を提供
+public class ObservableWillPower: ObservableWrapper<WillPower> {
     // MARK: - ドメインエンティティへの読み取り専用アクセス
 
     public var currentValue: Int {
-        willPower.currentValue
+        wrappedEntity.currentValue
     }
 
     public var maxValue: Int {
-        willPower.maxValue
+        wrappedEntity.maxValue
     }
 
     public var percentage: Double {
-        willPower.percentage
+        wrappedEntity.percentage
     }
 
     public var status: WillPowerStatus {
-        willPower.status
+        wrappedEntity.status
     }
 
     // MARK: - ドメインロジックへの委譲
@@ -51,23 +39,20 @@ public class ObservableWillPower: ObservableObject {
     /// - Returns: 消費に成功したかどうか
     @discardableResult
     public func consume(amount: Int) -> Bool {
-        let result = willPower.consume(amount: amount)
-        // ドメインエンティティが既に通知するため、ここでは追加通知不要
-        return result
+        return wrappedEntity.consume(amount: amount)
     }
 
     /// 意志力を回復する
     /// - Parameter amount: 回復量
     public func restore(amount: Int) {
-        willPower.restore(amount: amount)
-        // ドメインエンティティが既に通知するため、ここでは追加通知不要
+        wrappedEntity.restore(amount: amount)
     }
 
     /// タスクが実行可能かどうかを判定
     /// - Parameter cost: タスクのコスト
     /// - Returns: 実行可能かどうか
     public func canPerformTask(cost: Int) -> Bool {
-        return willPower.canPerformTask(cost: cost)
+        return wrappedEntity.canPerformTask(cost: cost)
     }
 
     /// リセット（最大値まで回復）

@@ -117,7 +117,18 @@ public struct OSCompatibilityLayer {
     /// 互換性のあるUserDefaults操作
     /// キー名の変更や型の変更に対応
     public struct CompatibleUserDefaults {
-        private static let userDefaults = UserDefaults.standard
+        private static var userDefaults = UserDefaults.standard
+
+        /// テスト用にUserDefaultsインスタンスを設定する
+        /// - Parameter userDefaults: 使用するUserDefaultsインスタンス
+        public static func setUserDefaults(_ userDefaults: UserDefaults) {
+            self.userDefaults = userDefaults
+        }
+
+        /// UserDefaultsをデフォルトにリセットする
+        public static func resetUserDefaults() {
+            self.userDefaults = UserDefaults.standard
+        }
 
         /// WillPowerデータの保存
         /// - Parameters:
