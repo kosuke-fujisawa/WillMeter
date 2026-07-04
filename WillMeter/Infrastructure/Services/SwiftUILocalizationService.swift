@@ -67,6 +67,11 @@ public final class SwiftUILocalizationService: LocalizationService, ObservableOb
         return String.localizedStringWithFormat(pluralString, count)
     }
 
+    /// フォーマット引数を伴う翻訳文字列取得（%d等のプレースホルダーを実際の値に置換）
+    public func localizedString(for key: String, arguments: CVarArg...) -> String {
+        String(format: localizedString(for: key), arguments: arguments)
+    }
+
     /// 言語を動的に変更
     /// - Parameter languageCode: 変更先の言語コード
     public func changeLanguage(to languageCode: String) {

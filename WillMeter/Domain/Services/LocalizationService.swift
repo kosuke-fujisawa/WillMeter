@@ -24,6 +24,13 @@ public protocol LocalizationService {
     /// - Returns: 数量に応じた適切な翻訳文字列
     func localizedString(for key: String, count: Int) -> String
 
+    /// フォーマット引数を伴う翻訳文字列取得（%d等のプレースホルダーを実際の値に置換）
+    /// - Parameters:
+    ///   - key: 翻訳文字列のキー
+    ///   - arguments: フォーマットに埋め込む値
+    /// - Returns: フォーマット済みの翻訳文字列
+    func localizedString(for key: String, arguments: CVarArg...) -> String
+
     /// 現在設定されている言語コード取得
     /// - Returns: 言語コード（例: "ja", "en", "zh-Hans"）
     var currentLanguageCode: String { get }

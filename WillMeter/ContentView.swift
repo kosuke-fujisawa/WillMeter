@@ -14,6 +14,8 @@ struct ContentView: View {
     @StateObject private var willPowerViewModel: WillPowerViewModel
     @State private var showLanguageSettings = false
 
+    private let willPowerStepAmount = 20
+
     init() {
         let service = SwiftUILocalizationService()
         self._localizationService = StateObject(wrappedValue: service)
@@ -38,26 +40,48 @@ struct ContentView: View {
                 Spacer()
 
                 VStack(spacing: 15) {
-                    Button(localizationService.localizedString(for: LocalizationKeys.WillPower.Action.consume)) {
-                        willPowerViewModel.consumeWillPower(amount: 20)
+                    Button(
+                        localizationService.localizedString(
+                            for: LocalizationKeys.WillPower.Action.consume,
+                            arguments: willPowerStepAmount
+                        )
+                    ) {
+                        willPowerViewModel.consumeWillPower(amount: willPowerStepAmount)
                     }
                     .buttonStyle(.borderedProminent)
                     .accessibilityLabel(
-                        localizationService.localizedString(for: LocalizationKeys.WillPower.Action.consume)
+                        localizationService.localizedString(
+                            for: LocalizationKeys.WillPower.Action.consume,
+                            arguments: willPowerStepAmount
+                        )
                     )
                     .accessibilityHint(
-                        localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.consumeHint)
+                        localizationService.localizedString(
+                            for: LocalizationKeys.UI.Accessibility.consumeHint,
+                            arguments: willPowerStepAmount
+                        )
                     )
 
-                    Button(localizationService.localizedString(for: LocalizationKeys.WillPower.Action.restore)) {
-                        willPowerViewModel.restoreWillPower(amount: 20)
+                    Button(
+                        localizationService.localizedString(
+                            for: LocalizationKeys.WillPower.Action.restore,
+                            arguments: willPowerStepAmount
+                        )
+                    ) {
+                        willPowerViewModel.restoreWillPower(amount: willPowerStepAmount)
                     }
                     .buttonStyle(.bordered)
                     .accessibilityLabel(
-                        localizationService.localizedString(for: LocalizationKeys.WillPower.Action.restore)
+                        localizationService.localizedString(
+                            for: LocalizationKeys.WillPower.Action.restore,
+                            arguments: willPowerStepAmount
+                        )
                     )
                     .accessibilityHint(
-                        localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.restoreHint)
+                        localizationService.localizedString(
+                            for: LocalizationKeys.UI.Accessibility.restoreHint,
+                            arguments: willPowerStepAmount
+                        )
                     )
 
                     Button(localizationService.localizedString(for: LocalizationKeys.WillPower.Action.reset)) {
@@ -89,6 +113,9 @@ struct ContentView: View {
                 LanguageSettingsView()
                     .environmentObject(localizationService)
             }
+        }
+        .task {
+            await willPowerViewModel.load()
         }
     }
 }
