@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build & Unit Test
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode version
+        run: |
+          XCODE_PATH=$(find /Applications -maxdepth 1 -name "Xcode*.app" -type d | sort -V | tail -1)
+          echo "Using Xcode: $XCODE_PATH"
+          sudo xcode-select -s "$XCODE_PATH/Contents/Developer"
+          xcodebuild -version
+
+      - name: Select iOS simulator
+        id: sim
+        run: |
+          # ランナーに実在するiPhoneシミュレーターを動的に選ぶ(名前固定による環境互換性問題を避ける)
+          DEVICE=$(xcrun simctl list devices available | grep -oE 'iPhone [^(]+' | head -1 | sed 's/ *$//')
+          if [ -z "$DEVICE" ]; then
+            echo "利用可能なiPhoneシミュレーターが見つかりません"
+            xcrun simctl list devices available
+            exit 1
+          fi
+          echo "Using simulator: $DEVICE"
+          echo "device=$DEVICE" >> "$GITHUB_OUTPUT"
+
+      - name: Build and run unit tests
+        run: |
+          xcodebuild -project WillMeter.xcodeproj -scheme WillMeter \
+            -destination "platform=iOS Simulator,name=${{ steps.sim.outputs.device }}" \
+            -only-testing:WillMeterTests \
+            CODE_SIGNING_ALLOWED=NO \
+            test
