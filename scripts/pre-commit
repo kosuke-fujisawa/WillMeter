@@ -27,9 +27,10 @@ else
     echo "   ⚠️  SwiftLintがインストールされていません"
 fi
 
-# 4. 修正されたファイルを自動的にステージングに追加
-echo "   📦 修正されたファイルをステージングに追加中..."
-git add -A
+# 4. hookが修正したステージ済みファイルのみ再ステージする
+# (git add -A だと未追跡のメタデータや無関係な変更まで巻き込むため、ステージ済みに限定)
+echo "   📦 ステージ済みファイルを再ステージ中..."
+git diff --cached --name-only -z | xargs -0 git add -- 2>/dev/null || true
 
 echo "✅ pre-commit hook完了: trailing whitespace除去・SwiftLint実行完了"
 exit 0
