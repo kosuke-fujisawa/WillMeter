@@ -29,7 +29,7 @@ public class Task: Identifiable {
     private(set) var completedAt: Date?
 
     // ドメインイベント通知のための観察者パターン
-    private var observers: [(Task) -> Void] = []
+    private let observerList = ObserverList<Task>()
 
     public init(
         id: UUID = UUID(),
@@ -61,12 +61,12 @@ public class Task: Identifiable {
 
     // ドメインイベント観察者の追加
     public func addObserver(_ observer: @escaping (Task) -> Void) {
-        observers.append(observer)
+        observerList.add(observer)
     }
 
     // ドメインイベント通知
     private func notifyObservers() {
-        observers.forEach { $0(self) }
+        observerList.notify(self)
     }
 
     public func start() {
