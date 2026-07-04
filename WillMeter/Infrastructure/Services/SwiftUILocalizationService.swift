@@ -69,7 +69,11 @@ public final class SwiftUILocalizationService: LocalizationService, ObservableOb
 
     /// フォーマット引数を伴う翻訳文字列取得（%d等のプレースホルダーを実際の値に置換）
     public func localizedString(for key: String, arguments: CVarArg...) -> String {
-        String(format: localizedString(for: key), arguments: arguments)
+        String(
+            format: localizedString(for: key),
+            locale: Locale(identifier: currentLanguageCode),
+            arguments: arguments
+        )
     }
 
     /// 言語を動的に変更

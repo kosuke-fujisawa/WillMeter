@@ -35,9 +35,15 @@ public class WillPowerViewModel: ObservableObject {
     }
 
     private var cancellables = Set<AnyCancellable>()
+    private var isLoaded = false
 
-    /// WillPowerデータをUseCaseから読み込み
+    /// WillPowerデータをUseCaseから読み込み（多重呼び出し時は初回のみ実行）
     func load() async {
+        guard !isLoaded else {
+            return
+        }
+        isLoaded = true
+
         do {
             let loadedObservableWillPower = try await willPowerUseCase.loadWillPower()
             self.observableWillPower = loadedObservableWillPower

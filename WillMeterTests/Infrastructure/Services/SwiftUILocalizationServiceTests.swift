@@ -126,6 +126,31 @@ final class SwiftUILocalizationServiceTests: XCTestCase {
         XCTAssertFalse(pluralResult.isEmpty)
     }
 
+    // MARK: - フォーマット引数対応テスト
+
+    func testLocalizedString_withArguments_shouldSubstitutePlaceholders() {
+        // Given: %dプレースホルダーを含むキー
+        let key = LocalizationKeys.WillPower.Action.consume
+
+        // When: 引数付きで翻訳文字列取得
+        let result = sut.localizedString(for: key, arguments: 20)
+
+        // Then: プレースホルダーが実際の値に置換される
+        XCTAssertTrue(result.contains("20"))
+        XCTAssertFalse(result.contains("%d"))
+    }
+
+    func testLocalizedString_withArguments_andInvalidKey_shouldReturnKeyUnchanged() {
+        // Given: フォーマット指定子を含まない無効なキー
+        let invalidKey = "invalid.key.does.not.exist"
+
+        // When: 引数付きで翻訳文字列取得
+        let result = sut.localizedString(for: invalidKey, arguments: 20)
+
+        // Then: フォーマット指定子がないためキーがそのまま返る
+        XCTAssertEqual(result, invalidKey)
+    }
+
     // MARK: - 表示名テスト
 
     func testCurrentLanguageDisplayName_shouldReturnCorrectDisplayName() {
