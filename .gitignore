@@ -91,3 +91,16 @@ iOSInjectionProject/
 
 # Mac
 .DS_Store
+.DS_Store?
+._*
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+
+# Node tooling
+node_modules/
+npm-debug.log*
+
+# exFAT/外付けSSDのメタデータ断片
+.!*

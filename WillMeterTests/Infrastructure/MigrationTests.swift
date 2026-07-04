@@ -13,27 +13,32 @@ import XCTest
 /// OSアップデートやアプリバージョン変更時のデータ移行テスト
 /// Issue #3: OS・ライブラリアップデートの影響を最小化する設計検討
 final class MigrationTests: XCTestCase {
-    private var userDefaults: UserDefaults!
+    // CompatibleUserDefaultsはUserDefaults.standardを読み書きするため、
+    // テストも同じstandardを使い、関連キーを毎回クリーンアップして独立性を保つ
+    private let willPowerKeys = ["willpower_data_v1", "current_willpower", "max_willpower"]
 
     override func setUp() {
         super.setUp()
-        // テスト用のUserDefaultsを作成
-        userDefaults = UserDefaults(suiteName: "test-migration")
-        userDefaults.removePersistentDomain(forName: "test-migration")
+        removeWillPowerData()
     }
 
     override func tearDown() {
+        removeWillPowerData()
         super.tearDown()
-        userDefaults.removePersistentDomain(forName: "test-migration")
-        userDefaults = nil
+    }
+
+    private func removeWillPowerData() {
+        for key in willPowerKeys {
+            UserDefaults.standard.removeObject(forKey: key)
+        }
     }
 
     // MARK: - 旧形式データから新形式への移行テスト
 
     func testLegacyWillPowerDataMigration() {
         // Given: 旧形式のWillPowerデータが存在
-        userDefaults.set(75, forKey: "current_willpower")
-        userDefaults.set(100, forKey: "max_willpower")
+        UserDefaults.standard.set(75, forKey: "current_willpower")
+        UserDefaults.standard.set(100, forKey: "max_willpower")
 
         // When: 新形式での読み込みを実行
         let result = OSCompatibilityLayer.CompatibleUserDefaults.loadWillPower()
@@ -62,8 +67,8 @@ final class MigrationTests: XCTestCase {
 
     func testDataMigrationWithMixedFormats() {
         // Given: 新旧両方のデータが存在（新形式が優先されるべき）
-        userDefaults.set(75, forKey: "current_willpower") // 旧形式
-        userDefaults.set(100, forKey: "max_willpower")   // 旧形式
+        UserDefaults.standard.set(75, forKey: "current_willpower") // 旧形式
+        UserDefaults.standard.set(100, forKey: "max_willpower")   // 旧形式
 
         OSCompatibilityLayer.CompatibleUserDefaults.saveWillPower(
             currentValue: 90,
@@ -127,9 +132,10 @@ final class MigrationTests: XCTestCase {
         XCTAssertTrue(OSCompatibilityLayer.isAvailable("17.0")) // iOS 17以降で動作
         XCTAssertTrue(OSCompatibilityLayer.isAvailable("18.0")) // iOS 18以降で動作
 
-        // 将来のバージョンは現在のOSバージョンに依存
-        let futureVersionAvailable = OSCompatibilityLayer.isAvailable("25.0")
-        // 現在のOSが25.0以降でない限りfalse
+        // 将来のバージョン（現在のメジャー+1）は必ずfalseになる
+        // バージョンを固定値にすると実OSが追いついた時点で壊れるため、実行環境から導出する
+        let currentMajor = ProcessInfo.processInfo.operatingSystemVersion.majorVersion
+        let futureVersionAvailable = OSCompatibilityLayer.isAvailable("\(currentMajor + 1).0")
         XCTAssertFalse(futureVersionAvailable)
     }
 

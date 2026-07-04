@@ -197,15 +197,23 @@ final class SwiftUILocalizationServiceTests: XCTestCase {
     // MARK: - Observable変更通知テスト
 
     func testLanguageChange_shouldTriggerObjectWillChange() {
-        // Given: 初期状態確認
+        // Given: 初期言語と異なる言語を切り替え先に選ぶ（実行環境のロケールに依存させない）
         let initialLanguage = sut.currentLanguageCode
-        XCTAssertNotEqual(initialLanguage, "en")
+        let targetLanguage = initialLanguage == "en" ? "ja" : "en"
+        var didTriggerChange = false
+
+        sut.objectWillChange
+            .sink {
+                didTriggerChange = true
+            }
+            .store(in: &cancellables)
 
         // When: 言語変更
-        sut.changeLanguage(to: "en")
+        sut.changeLanguage(to: targetLanguage)
 
-        // Then: 言語が変更されている
-        XCTAssertEqual(sut.currentLanguageCode, "en")
+        // Then: 変更通知が発火し、言語が変更されている
+        XCTAssertTrue(didTriggerChange)
+        XCTAssertEqual(sut.currentLanguageCode, targetLanguage)
         XCTAssertNotEqual(sut.currentLanguageCode, initialLanguage)
     }
 }

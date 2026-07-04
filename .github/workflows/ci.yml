@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build & Unit Test
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Select Xcode version
+        run: |
+          # 最新の安定版Xcodeを選ぶ(ベータ版は除外)
+          XCODE_PATH=$(find /Applications -maxdepth 1 -name "Xcode*.app" -type d | grep -v -i beta | sort -V | tail -1)
+          echo "Using Xcode: $XCODE_PATH"
+          sudo xcode-select -s "$XCODE_PATH/Contents/Developer"
+          xcodebuild -version
+
+      - name: Select iOS simulator
+        id: sim
+        run: |
+          # ランナーに実在するiPhoneシミュレーターを動的に選ぶ(名前固定による環境互換性問題を避ける)
+          # 機種名に括弧を含む場合(iPhone SE (3rd generation)等)も正しく取れるよう、末尾のUDIDと状態だけを削る
+          DEVICE=$(xcrun simctl list devices available | sed -nE 's/^ *(iPhone.*) \([0-9A-F-]{36}\) \(.*/\1/p' | head -1)
+          if [ -z "$DEVICE" ]; then
+            echo "利用可能なiPhoneシミュレーターが見つかりません"
+            xcrun simctl list devices available
+            exit 1
+          fi
+          echo "Using simulator: $DEVICE"
+          echo "device=$DEVICE" >> "$GITHUB_OUTPUT"
+
+      - name: Build and run unit tests
+        run: |
+          xcodebuild -project WillMeter.xcodeproj -scheme WillMeter \
+            -destination "platform=iOS Simulator,name=${{ steps.sim.outputs.device }}" \
+            -only-testing:WillMeterTests \
+            CODE_SIGNING_ALLOWED=NO \
+            test
