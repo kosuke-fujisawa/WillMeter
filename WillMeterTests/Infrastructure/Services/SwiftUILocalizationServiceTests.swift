@@ -129,7 +129,8 @@ final class SwiftUILocalizationServiceTests: XCTestCase {
     // MARK: - フォーマット引数対応テスト
 
     func testLocalizedString_withArguments_shouldSubstitutePlaceholders() {
-        // Given: %dプレースホルダーを含むキー
+        // Given: %dプレースホルダーを含むキー（実行環境のロケールに依存させないため言語を固定）
+        sut.changeLanguage(to: "en")
         let key = LocalizationKeys.WillPower.Action.consume
 
         // When: 引数付きで翻訳文字列取得

@@ -30,6 +30,20 @@ final class WillPowerViewModelTests: XCTestCase {
         super.tearDown()
     }
 
+    func testLoad_calledMultipleTimes_shouldInvokeUseCaseOnlyOnce() async throws {
+        // Given: loadWillPowerの呼び出し回数を計測するスパイRepository
+        let spyRepository = LoadCountingWillPowerRepository()
+        let spyUseCase = WillPowerUseCase(repository: spyRepository)
+        let spyViewModel = WillPowerViewModel(willPowerUseCase: spyUseCase)
+
+        // When: load()を複数回呼び出す
+        await spyViewModel.load()
+        await spyViewModel.load()
+
+        // Then: 実際のロードは初回の1回のみ
+        XCTAssertEqual(spyRepository.loadCallCount, 1)
+    }
+
     func testInitialState() async throws {
         // Given - Ensure ViewModel is properly initialized
         await viewModel.load()
@@ -170,5 +184,24 @@ final class WillPowerViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.currentValue, 100)
         XCTAssertEqual(viewModel.percentage, 1.0, accuracy: 0.01)
         XCTAssertEqual(viewModel.status, .high)
+    }
+}
+
+/// load()の多重呼び出し検証用スパイRepository
+private final class LoadCountingWillPowerRepository: WillPowerRepository, @unchecked Sendable {
+    private(set) var loadCallCount = 0
+    private let wrapped = InMemoryWillPowerRepository()
+
+    func save(_ willPower: WillPower) async throws {
+        try await wrapped.save(willPower)
+    }
+
+    func load() async throws -> WillPower {
+        loadCallCount += 1
+        return try await wrapped.load()
+    }
+
+    func createDefault() -> WillPower {
+        wrapped.createDefault()
     }
 }

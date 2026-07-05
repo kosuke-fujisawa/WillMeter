@@ -64,6 +64,8 @@ public class WillPowerViewModel: ObservableObject {
             let defaultWillPower = WillPower(currentValue: 100, maxValue: 100)
             self.observableWillPower = ObservableWillPower(defaultWillPower)
             objectWillChange.send()
+            // 次回呼び出し時に再ロードできるようガードを解除
+            isLoaded = false
         }
     }
 
