@@ -14,7 +14,7 @@ public class WillPower {
     public let maxValue: Int
 
     // ドメインイベント通知のための観察者パターン
-    private var observers: [(WillPower) -> Void] = []
+    private let observerList = ObserverList<WillPower>()
 
     public init(currentValue: Int, maxValue: Int) {
         self.currentValue = max(0, min(currentValue, maxValue))
@@ -44,12 +44,12 @@ public class WillPower {
 
     // ドメインイベント観察者の追加
     public func addObserver(_ observer: @escaping (WillPower) -> Void) {
-        observers.append(observer)
+        observerList.add(observer)
     }
 
     // ドメインイベント通知
     private func notifyObservers() {
-        observers.forEach { $0(self) }
+        observerList.notify(self)
     }
 
     @discardableResult

@@ -32,17 +32,18 @@ public class WillPowerViewModel: ObservableObject {
                 }
                 .store(in: &cancellables)
         }
-
-        // WillPowerデータの初期ロード
-        _Concurrency.Task {
-            await loadWillPower()
-        }
     }
 
     private var cancellables = Set<AnyCancellable>()
+    private var isLoaded = false
 
-    /// WillPowerデータをUseCaseから読み込み
-    private func loadWillPower() async {
+    /// WillPowerデータをUseCaseから読み込み（多重呼び出し時は初回のみ実行）
+    func load() async {
+        guard !isLoaded else {
+            return
+        }
+        isLoaded = true
+
         do {
             let loadedObservableWillPower = try await willPowerUseCase.loadWillPower()
             self.observableWillPower = loadedObservableWillPower
@@ -63,6 +64,8 @@ public class WillPowerViewModel: ObservableObject {
             let defaultWillPower = WillPower(currentValue: 100, maxValue: 100)
             self.observableWillPower = ObservableWillPower(defaultWillPower)
             objectWillChange.send()
+            // 次回呼び出し時に再ロードできるようガードを解除
+            isLoaded = false
         }
     }
 
