@@ -21,7 +21,7 @@ struct ContentView: View {
         self._localizationService = StateObject(wrappedValue: service)
 
         // リポジトリとUseCaseの初期化
-        let repository = InMemoryWillPowerRepository()
+        let repository = UserDefaultsWillPowerRepository()
         let useCase = WillPowerUseCase(repository: repository)
         self._willPowerViewModel = StateObject(
             wrappedValue: WillPowerViewModel(
