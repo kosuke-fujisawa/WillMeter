@@ -75,6 +75,8 @@ public enum LocalizationKeys {
             public static let consumeHint = "ui.accessibility.consume.hint"
             public static let restoreHint = "ui.accessibility.restore.hint"
             public static let resetHint = "ui.accessibility.reset.hint"
+            public static let languageButton = "ui.accessibility.language.button"
+            public static let languageButtonHint = "ui.accessibility.language.button.hint"
         }
     }
 
