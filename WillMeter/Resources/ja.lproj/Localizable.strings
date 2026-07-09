@@ -44,6 +44,15 @@
 "recommendation.low" = "少し疲れています。軽めのタスクか休憩を取ることをお勧めします。";
 "recommendation.critical" = "意志力が不足しています。十分な休息を取りましょう。";
 
+// MARK: - オンボーディング
+"onboarding.title" = "WillMeterへようこそ";
+"onboarding.description" = "ウィルパワー（意思力）を可視化し、本当に大切なことに集中するためのアプリです。";
+"onboarding.howto.title" = "使い方";
+"onboarding.howto.consume" = "タスクに取り組んだら「消費」でウィルパワーを減らします";
+"onboarding.howto.restore" = "休憩したら「回復」でウィルパワーを補います";
+"onboarding.howto.reset" = "「リセット」でいつでも最大値に戻せます";
+"onboarding.start.button" = "始める";
+
 // MARK: - 言語設定
 "settings.language" = "言語";
 "settings.current.language" = "現在の言語";

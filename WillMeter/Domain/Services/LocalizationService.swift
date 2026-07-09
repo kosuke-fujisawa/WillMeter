@@ -83,6 +83,16 @@ public enum LocalizationKeys {
         public static let currentLanguage = "settings.current.language"
     }
 
+    public enum Onboarding {
+        public static let title = "onboarding.title"
+        public static let description = "onboarding.description"
+        public static let howToTitle = "onboarding.howto.title"
+        public static let howToConsume = "onboarding.howto.consume"
+        public static let howToRestore = "onboarding.howto.restore"
+        public static let howToReset = "onboarding.howto.reset"
+        public static let startButton = "onboarding.start.button"
+    }
+
     public enum Recommendation {
         public static let excellent = "recommendation.excellent"
         public static let good = "recommendation.good"
