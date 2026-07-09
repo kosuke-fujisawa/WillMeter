@@ -70,6 +70,7 @@ public enum LocalizationKeys {
         public static let appTitle = "ui.app.title"
         public static let currentState = "ui.current.state"
         public static let done = "ui.done"
+        public static let errorTitle = "ui.error.title"
 
         public enum Accessibility {
             public static let consumeHint = "ui.accessibility.consume.hint"
@@ -121,5 +122,7 @@ public enum LocalizationKeys {
 
     public enum Error {
         public static let dataNotFound = "error.data.notfound"
+        public static let saveFailed = "error.save.failed"
+        public static let loadFailed = "error.load.failed"
     }
 }

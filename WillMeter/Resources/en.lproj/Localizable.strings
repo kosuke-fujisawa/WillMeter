@@ -31,11 +31,16 @@
 // MARK: - UI Display
 "ui.current.state" = "Current State";
 "ui.done" = "Done";
+"ui.error.title" = "Error";
 
 // MARK: - Accessibility
 "ui.accessibility.consume.hint" = "Reduces current willpower by %d points";
 "ui.accessibility.restore.hint" = "Adds %d points to current willpower";
 "ui.accessibility.reset.hint" = "Resets willpower to maximum value";
+
+// MARK: - Error Messages
+"error.save.failed" = "Failed to save data. Please try again.";
+"error.load.failed" = "Failed to load data. Starting with default values.";
 
 // MARK: - Recommendations
 "recommendation.excellent" = "Excellent condition! Perfect time for high-concentration tasks.";

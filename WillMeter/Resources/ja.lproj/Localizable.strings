@@ -31,11 +31,16 @@
 // MARK: - UI表示
 "ui.current.state" = "現在の状態";
 "ui.done" = "完了";
+"ui.error.title" = "エラー";
 
 // MARK: - アクセシビリティ
 "ui.accessibility.consume.hint" = "現在の意志力から%dポイントを減らします";
 "ui.accessibility.restore.hint" = "現在の意志力に%dポイントを追加します";
 "ui.accessibility.reset.hint" = "意志力を最大値に戻します";
+
+// MARK: - エラーメッセージ
+"error.save.failed" = "データの保存に失敗しました。もう一度お試しください。";
+"error.load.failed" = "データの読み込みに失敗しました。デフォルト値で開始します。";
 
 // MARK: - 推奨アクション
 "recommendation.excellent" = "素晴らしい状態です！集中力の高い作業に取り組みましょう。";
