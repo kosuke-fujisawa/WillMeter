@@ -61,6 +61,7 @@ struct ContentView: View {
                             arguments: willPowerStepAmount
                         )
                     )
+                    .accessibilityIdentifier("consumeButton")
 
                     Button(
                         localizationService.localizedString(
@@ -83,6 +84,7 @@ struct ContentView: View {
                             arguments: willPowerStepAmount
                         )
                     )
+                    .accessibilityIdentifier("restoreButton")
 
                     Button(localizationService.localizedString(for: LocalizationKeys.WillPower.Action.reset)) {
                         willPowerViewModel.resetWillPower()
@@ -94,6 +96,7 @@ struct ContentView: View {
                     .accessibilityHint(
                         localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.resetHint)
                     )
+                    .accessibilityIdentifier("resetButton")
                 }
 
                 Spacer()
@@ -107,6 +110,7 @@ struct ContentView: View {
                     } label: {
                         Image(systemName: "globe")
                     }
+                    .accessibilityIdentifier("languageToggleButton")
                 }
             }
             .sheet(isPresented: $showLanguageSettings) {
@@ -144,12 +148,13 @@ struct WillPowerDisplayView: View {
                     Text("\(viewModel.currentValue)")
                         .font(.largeTitle)
                         .fontWeight(.bold)
+                        .accessibilityIdentifier("willPowerCurrentValueText")
 
                     Text("/ \(viewModel.maxValue)")
                         .font(.title2)
                         .foregroundStyle(.secondary)
 
-                    Text(localizationService.localizedString(for: viewModel.status.localizationKey))
+                    Text(viewModel.localizedStatusDisplayName)
                         .font(.title3)
                         .foregroundStyle(Color(viewModel.statusColor))
                         .fontWeight(.semibold)

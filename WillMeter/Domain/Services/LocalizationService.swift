@@ -55,8 +55,6 @@ public enum LocalizationKeys {
             public static let normal = "willpower.status.normal"
             public static let low = "willpower.status.low"
             public static let critical = "willpower.status.critical"
-            public static let high = "willpower.status.high"
-            public static let medium = "willpower.status.medium"
         }
 
         public enum Action {
