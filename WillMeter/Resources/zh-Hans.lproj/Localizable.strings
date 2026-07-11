@@ -31,6 +31,7 @@
 // MARK: - UI显示
 "ui.current.state" = "当前状态";
 "ui.done" = "完成";
+"ui.error.title" = "错误";
 
 // MARK: - 辅助功能
 "ui.accessibility.consume.hint" = "从当前意志力中减少%d点";
@@ -38,6 +39,10 @@
 "ui.accessibility.reset.hint" = "将意志力重置为最大值";
 "ui.accessibility.language.button" = "语言设置";
 "ui.accessibility.language.button.hint" = "打开语言选择界面";
+
+// MARK: - 错误信息
+"error.save.failed" = "数据保存失败，请重试。";
+"error.load.failed" = "数据加载失败，将以默认值启动。";
 
 // MARK: - 建议操作
 "recommendation.excellent" = "状态极佳！非常适合进行需要高度集中的任务。";

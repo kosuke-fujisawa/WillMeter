@@ -136,6 +136,25 @@ struct ContentView: View {
                 }
                 .environmentObject(localizationService)
             }
+            .alert(
+                localizationService.localizedString(for: LocalizationKeys.UI.errorTitle),
+                isPresented: Binding(
+                    get: { willPowerViewModel.errorMessage != nil },
+                    set: { isPresented in
+                        if !isPresented {
+                            willPowerViewModel.dismissError()
+                        }
+                    }
+                ),
+                actions: {
+                    Button(localizationService.localizedString(for: LocalizationKeys.UI.done)) {
+                        willPowerViewModel.dismissError()
+                    }
+                },
+                message: {
+                    Text(willPowerViewModel.errorMessage ?? "")
+                }
+            )
         }
         .task {
             await willPowerViewModel.load()
