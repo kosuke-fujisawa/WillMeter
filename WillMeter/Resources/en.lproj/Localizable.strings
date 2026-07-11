@@ -36,6 +36,8 @@
 "ui.accessibility.consume.hint" = "Reduces current willpower by %d points";
 "ui.accessibility.restore.hint" = "Adds %d points to current willpower";
 "ui.accessibility.reset.hint" = "Resets willpower to maximum value";
+"ui.accessibility.language.button" = "Language settings";
+"ui.accessibility.language.button.hint" = "Opens the language selection screen";
 
 // MARK: - Recommendations
 "recommendation.excellent" = "Excellent condition! Perfect time for high-concentration tasks.";

@@ -36,6 +36,8 @@
 "ui.accessibility.consume.hint" = "現在の意志力から%dポイントを減らします";
 "ui.accessibility.restore.hint" = "現在の意志力に%dポイントを追加します";
 "ui.accessibility.reset.hint" = "意志力を最大値に戻します";
+"ui.accessibility.language.button" = "言語設定";
+"ui.accessibility.language.button.hint" = "言語選択画面を開きます";
 
 // MARK: - 推奨アクション
 "recommendation.excellent" = "素晴らしい状態です！集中力の高い作業に取り組みましょう。";

@@ -107,6 +107,12 @@ struct ContentView: View {
                     } label: {
                         Image(systemName: "globe")
                     }
+                    .accessibilityLabel(
+                        localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.languageButton)
+                    )
+                    .accessibilityHint(
+                        localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.languageButtonHint)
+                    )
                 }
             }
             .sheet(isPresented: $showLanguageSettings) {
@@ -156,6 +162,9 @@ struct WillPowerDisplayView: View {
                 }
             }
             .frame(width: 200, height: 200)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(localizationService.localizedString(for: LocalizationKeys.WillPower.title))
+            .accessibilityValue("\(viewModel.displayText), \(viewModel.statusText)")
 
             // Status Information
             VStack(spacing: 10) {
