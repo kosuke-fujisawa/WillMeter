@@ -36,6 +36,8 @@
 "ui.accessibility.consume.hint" = "現在の意志力から%dポイントを減らします";
 "ui.accessibility.restore.hint" = "現在の意志力に%dポイントを追加します";
 "ui.accessibility.reset.hint" = "意志力を最大値に戻します";
+"ui.accessibility.language.button" = "言語設定";
+"ui.accessibility.language.button.hint" = "言語選択画面を開きます";
 
 // MARK: - 推奨アクション
 "recommendation.excellent" = "素晴らしい状態です！集中力の高い作業に取り組みましょう。";
@@ -43,6 +45,15 @@
 "recommendation.normal" = "標準的な状態です。日常のタスクを着実に進めましょう。";
 "recommendation.low" = "少し疲れています。軽めのタスクか休憩を取ることをお勧めします。";
 "recommendation.critical" = "意志力が不足しています。十分な休息を取りましょう。";
+
+// MARK: - オンボーディング
+"onboarding.title" = "WillMeterへようこそ";
+"onboarding.description" = "ウィルパワー（意思力）を可視化し、本当に大切なことに集中するためのアプリです。";
+"onboarding.howto.title" = "使い方";
+"onboarding.howto.consume" = "タスクに取り組んだら「消費」でウィルパワーを減らします";
+"onboarding.howto.restore" = "休憩したら「回復」でウィルパワーを補います";
+"onboarding.howto.reset" = "「リセット」でいつでも最大値に戻せます";
+"onboarding.start.button" = "始める";
 
 // MARK: - 言語設定
 "settings.language" = "言語";

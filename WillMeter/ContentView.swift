@@ -13,6 +13,8 @@ struct ContentView: View {
     @StateObject private var localizationService: SwiftUILocalizationService
     @StateObject private var willPowerViewModel: WillPowerViewModel
     @State private var showLanguageSettings = false
+    @AppStorage("hasCompletedOnboarding")
+    private var hasCompletedOnboarding = false
 
     private let willPowerStepAmount = 20
 
@@ -107,11 +109,32 @@ struct ContentView: View {
                     } label: {
                         Image(systemName: "globe")
                     }
+                    .accessibilityLabel(
+                        localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.languageButton)
+                    )
+                    .accessibilityHint(
+                        localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.languageButtonHint)
+                    )
                 }
             }
             .sheet(isPresented: $showLanguageSettings) {
                 LanguageSettingsView()
                     .environmentObject(localizationService)
+            }
+            .fullScreenCover(
+                isPresented: Binding(
+                    get: { !hasCompletedOnboarding },
+                    set: { isPresented in
+                        if !isPresented {
+                            hasCompletedOnboarding = true
+                        }
+                    }
+                )
+            ) {
+                OnboardingView {
+                    hasCompletedOnboarding = true
+                }
+                .environmentObject(localizationService)
             }
         }
         .task {
@@ -156,6 +179,9 @@ struct WillPowerDisplayView: View {
                 }
             }
             .frame(width: 200, height: 200)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(localizationService.localizedString(for: LocalizationKeys.WillPower.title))
+            .accessibilityValue("\(viewModel.displayText), \(viewModel.statusText)")
 
             // Status Information
             VStack(spacing: 10) {
