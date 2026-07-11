@@ -1,0 +1,62 @@
+name: ユーザーテストフィードバック
+description: WillMeterを試していただいた感想・不具合報告はこちらから
+title: "[フィードバック] "
+labels:
+  - user-feedback
+body:
+  - type: markdown
+    attributes:
+      value: |
+        WillMeterをお試しいただきありがとうございます。
+        気づいた点を教えてください。細かいことでも構いません。
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: フィードバックの種類
+      options:
+        - 不具合(アプリが期待通り動かない)
+        - 使いにくい・分かりにくい点
+        - 機能の要望
+        - クラッシュ・強制終了
+        - その他
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: 内容
+      description: 何が起きたか、何を感じたかを教えてください
+      placeholder: |
+        例: 消費ボタンを押してもウィルパワーの値が変わらなかった
+        例: 言語設定の場所が分かりにくかった
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 再現手順(不具合の場合)
+      description: 同じ操作をすればまた発生しますか?手順が分かれば教えてください
+      placeholder: |
+        1. アプリを起動する
+        2. 「消費」ボタンを2回押す
+        3. ...
+    validations:
+      required: false
+
+  - type: input
+    id: device
+    attributes:
+      label: 端末・iOSバージョン
+      placeholder: 例. iPhone 15 / iOS 18.5
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ### スクリーンショットの添付について
+        - TestFlightアプリからのフィードバックでも、スクリーンショットに直接メモを書き込んで送信できます(TestFlightを開いたままスクリーンショットを撮ると送信画面が表示されます)
+        - この画面に直接画像を貼り付けることもできます(ドラッグ&ドロップ、またはクリップボードから貼り付け)
