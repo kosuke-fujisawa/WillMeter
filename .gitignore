@@ -101,6 +101,7 @@ iOSInjectionProject/
 # Node tooling
 node_modules/
 npm-debug.log*
+.review/
 
 # exFAT/外付けSSDのメタデータ断片
 .!*
