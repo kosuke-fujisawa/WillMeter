@@ -46,6 +46,15 @@
 "recommendation.low" = "Feeling a bit tired. Consider lighter tasks or taking a break.";
 "recommendation.critical" = "Willpower is insufficient. Please take adequate rest.";
 
+// MARK: - Onboarding
+"onboarding.title" = "Welcome to WillMeter";
+"onboarding.description" = "Visualize your willpower and stay focused on what truly matters.";
+"onboarding.howto.title" = "How to use";
+"onboarding.howto.consume" = "Tap \"Consume\" when you work on a task to reduce your willpower";
+"onboarding.howto.restore" = "Tap \"Restore\" when you take a break to regain willpower";
+"onboarding.howto.reset" = "Tap \"Reset\" anytime to return to the maximum value";
+"onboarding.start.button" = "Get Started";
+
 // MARK: - Language Settings
 "settings.language" = "Language";
 "settings.current.language" = "Current Language";

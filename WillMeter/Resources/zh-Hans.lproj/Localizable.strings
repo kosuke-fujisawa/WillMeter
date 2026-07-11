@@ -46,6 +46,15 @@
 "recommendation.low" = "有些疲劳，建议处理轻松的任务或休息一下。";
 "recommendation.critical" = "意志力不足，请充分休息。";
 
+// MARK: - 引导页
+"onboarding.title" = "欢迎使用意志力计";
+"onboarding.description" = "将意志力可视化，帮助你专注于真正重要的事情。";
+"onboarding.howto.title" = "使用方法";
+"onboarding.howto.consume" = "完成任务后点击「消耗」以减少意志力";
+"onboarding.howto.restore" = "休息后点击「恢复」以补充意志力";
+"onboarding.howto.reset" = "随时点击「重置」恢复到最大值";
+"onboarding.start.button" = "开始使用";
+
 // MARK: - 语言设置
 "settings.language" = "语言";
 "settings.current.language" = "当前语言";
