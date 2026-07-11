@@ -104,3 +104,6 @@ npm-debug.log*
 
 # exFAT/外付けSSDのメタデータ断片
 .!*
+
+# AIレビュー生成物
+tmp/ai-review/
