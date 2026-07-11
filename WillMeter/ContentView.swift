@@ -13,6 +13,8 @@ struct ContentView: View {
     @StateObject private var localizationService: SwiftUILocalizationService
     @StateObject private var willPowerViewModel: WillPowerViewModel
     @State private var showLanguageSettings = false
+    @AppStorage("hasCompletedOnboarding")
+    private var hasCompletedOnboarding = false
 
     private let willPowerStepAmount = 20
 
@@ -61,6 +63,7 @@ struct ContentView: View {
                             arguments: willPowerStepAmount
                         )
                     )
+                    .accessibilityIdentifier("consumeButton")
 
                     Button(
                         localizationService.localizedString(
@@ -83,6 +86,7 @@ struct ContentView: View {
                             arguments: willPowerStepAmount
                         )
                     )
+                    .accessibilityIdentifier("restoreButton")
 
                     Button(localizationService.localizedString(for: LocalizationKeys.WillPower.Action.reset)) {
                         willPowerViewModel.resetWillPower()
@@ -94,6 +98,7 @@ struct ContentView: View {
                     .accessibilityHint(
                         localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.resetHint)
                     )
+                    .accessibilityIdentifier("resetButton")
                 }
 
                 Spacer()
@@ -107,12 +112,53 @@ struct ContentView: View {
                     } label: {
                         Image(systemName: "globe")
                     }
+                    .accessibilityLabel(
+                        localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.languageButton)
+                    )
+                    .accessibilityHint(
+                        localizationService.localizedString(for: LocalizationKeys.UI.Accessibility.languageButtonHint)
+                    )
+                    .accessibilityIdentifier("languageToggleButton")
                 }
             }
             .sheet(isPresented: $showLanguageSettings) {
                 LanguageSettingsView()
                     .environmentObject(localizationService)
             }
+            .fullScreenCover(
+                isPresented: Binding(
+                    get: { !hasCompletedOnboarding },
+                    set: { isPresented in
+                        if !isPresented {
+                            hasCompletedOnboarding = true
+                        }
+                    }
+                )
+            ) {
+                OnboardingView {
+                    hasCompletedOnboarding = true
+                }
+                .environmentObject(localizationService)
+            }
+            .alert(
+                localizationService.localizedString(for: LocalizationKeys.UI.errorTitle),
+                isPresented: Binding(
+                    get: { willPowerViewModel.errorMessage != nil },
+                    set: { isPresented in
+                        if !isPresented {
+                            willPowerViewModel.dismissError()
+                        }
+                    }
+                ),
+                actions: {
+                    Button(localizationService.localizedString(for: LocalizationKeys.UI.done)) {
+                        willPowerViewModel.dismissError()
+                    }
+                },
+                message: {
+                    Text(willPowerViewModel.errorMessage ?? "")
+                }
+            )
         }
         .task {
             await willPowerViewModel.load()
@@ -150,18 +196,22 @@ struct WillPowerDisplayView: View {
                     Text("\(viewModel.currentValue)")
                         .font(.largeTitle)
                         .fontWeight(.bold)
+                        .accessibilityIdentifier("willPowerCurrentValueText")
 
                     Text("/ \(viewModel.maxValue)")
                         .font(.title2)
                         .foregroundStyle(.secondary)
 
-                    Text(localizationService.localizedString(for: viewModel.status.localizationKey))
+                    Text(viewModel.localizedStatusDisplayName)
                         .font(.title3)
                         .foregroundStyle(WillMeterTheme.statusColor(for: viewModel.status))
                         .fontWeight(.semibold)
                 }
             }
             .frame(width: WillMeterTheme.Gauge.size, height: WillMeterTheme.Gauge.size)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(localizationService.localizedString(for: LocalizationKeys.WillPower.title))
+            .accessibilityValue("\(viewModel.displayText), \(viewModel.statusText)")
 
             // Status Information
             VStack(spacing: 10) {

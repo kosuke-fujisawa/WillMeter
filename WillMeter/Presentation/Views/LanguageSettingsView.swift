@@ -51,6 +51,7 @@ struct LanguageSettingsView: View {
                         .font(.title2)
                         .fontWeight(.semibold)
                         .foregroundStyle(.primary)
+                        .accessibilityIdentifier("currentLanguageDisplayText")
                 }
                 .padding(.bottom, 40)
             }
@@ -61,6 +62,7 @@ struct LanguageSettingsView: View {
                     Button(localizationService.localizedString(for: LocalizationKeys.UI.done)) {
                         dismiss()
                     }
+                    .accessibilityIdentifier("languageSettingsDoneButton")
                 }
             }
         }
@@ -111,8 +113,15 @@ private struct LanguageSelectionRow: View {
                         lineWidth: WillMeterTheme.LanguageRow.borderWidth
                     )
             )
+            // Spacer()等の透明領域はデフォルトではヒットテスト対象外になるため、
+            // 行全体を確実にタップ可能にする
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("languageRow_\(languageCode)")
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(displayName), \(languageCode.uppercased())")
+        .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
     }
 }
 

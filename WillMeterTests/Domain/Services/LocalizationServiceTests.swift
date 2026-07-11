@@ -80,7 +80,9 @@ final class LocalizationServiceTests: XCTestCase {
         let accessibilityKeys = [
             LocalizationKeys.UI.Accessibility.consumeHint,
             LocalizationKeys.UI.Accessibility.restoreHint,
-            LocalizationKeys.UI.Accessibility.resetHint
+            LocalizationKeys.UI.Accessibility.resetHint,
+            LocalizationKeys.UI.Accessibility.languageButton,
+            LocalizationKeys.UI.Accessibility.languageButtonHint
         ]
 
         // Then: 全アクセシビリティキーが定義されている
@@ -167,6 +169,8 @@ final class LocalizationServiceTests: XCTestCase {
             LocalizationKeys.UI.Accessibility.consumeHint,
             LocalizationKeys.UI.Accessibility.restoreHint,
             LocalizationKeys.UI.Accessibility.resetHint,
+            LocalizationKeys.UI.Accessibility.languageButton,
+            LocalizationKeys.UI.Accessibility.languageButtonHint,
 
             // Recommendation keys
             LocalizationKeys.Recommendation.excellent,

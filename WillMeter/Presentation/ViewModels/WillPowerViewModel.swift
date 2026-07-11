@@ -36,6 +36,20 @@ public class WillPowerViewModel: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
     private var isLoaded = false
+    private var pendingSaveTask: _Concurrency.Task<Void, Never>?
+
+    /// 保存/読み込み失敗時にユーザーへ提示するエラーメッセージ
+    @Published public private(set) var errorMessage: String?
+
+    /// エラーメッセージを消去する
+    public func dismissError() {
+        errorMessage = nil
+    }
+
+    /// テスト用: 直前のautoSaveの完了を待機する
+    func waitForPendingSaveForTesting() async {
+        await pendingSaveTask?.value
+    }
 
     /// WillPowerデータをUseCaseから読み込み（多重呼び出し時は初回のみ実行）
     func load() async {
@@ -63,6 +77,7 @@ public class WillPowerViewModel: ObservableObject {
             // エラー時はデフォルト値で初期化
             let defaultWillPower = WillPower(currentValue: 100, maxValue: 100)
             self.observableWillPower = ObservableWillPower(defaultWillPower)
+            errorMessage = localizationService.localizedString(for: LocalizationKeys.Error.loadFailed)
             objectWillChange.send()
             // 次回呼び出し時に再ロードできるようガードを解除
             isLoaded = false
@@ -117,13 +132,19 @@ public class WillPowerViewModel: ObservableObject {
         autoSave()
     }
 
-    /// 変更をUseCaseを通じて自動保存
+    /// 変更をUseCaseを通じて自動保存し、失敗時はエラーメッセージを表示する
     private func autoSave() {
         guard let willPower = observableWillPower else {
             return
         }
-        _Concurrency.Task {
-            await willPowerUseCase.autoSave(willPower)
+        pendingSaveTask = _Concurrency.Task {
+            do {
+                try await willPowerUseCase.saveWillPower(willPower)
+                errorMessage = nil
+            } catch {
+                print("Auto-save failed: \(error)")
+                errorMessage = localizationService.localizedString(for: LocalizationKeys.Error.saveFailed)
+            }
         }
     }
 
@@ -164,7 +185,8 @@ public class WillPowerViewModel: ObservableObject {
         return "\(statusDisplayName) (\(Int(percentage * 100))%)"
     }
 
-    private var localizedStatusDisplayName: String {
+    /// 状態を表す短い表示名（例: 「最高」）。ゲージ内表示等、パーセンテージを含めない箇所で使用する
+    public var localizedStatusDisplayName: String {
         switch status {
         case .high:
             return localizationService.localizedString(for: LocalizationKeys.WillPower.Status.excellent)
