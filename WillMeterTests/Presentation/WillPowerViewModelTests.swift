@@ -198,6 +198,88 @@ final class WillPowerViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.percentage, 1.0, accuracy: 0.01)
         XCTAssertEqual(viewModel.status, .high)
     }
+
+    // MARK: - エラーフィードバックテスト
+
+    func testConsumeWillPower_whenSaveFails_shouldSetErrorMessage() async throws {
+        // Given: 保存が必ず失敗するRepository
+        let failingRepository = FailingWillPowerRepository(failSave: true)
+        let failingUseCase = WillPowerUseCase(repository: failingRepository)
+        let failingViewModel = WillPowerViewModel(willPowerUseCase: failingUseCase)
+        await failingViewModel.load()
+        XCTAssertNil(failingViewModel.errorMessage)
+
+        // When
+        failingViewModel.consumeWillPower(amount: 20)
+        await failingViewModel.waitForPendingSaveForTesting()
+
+        // Then
+        XCTAssertNotNil(failingViewModel.errorMessage)
+    }
+
+    func testAutoSave_whenSaveSucceedsAfterFailure_shouldClearErrorMessage() async throws {
+        // Given: 保存が失敗するRepositoryでエラーを発生させておく
+        let failingRepository = FailingWillPowerRepository(failSave: true)
+        let failingUseCase = WillPowerUseCase(repository: failingRepository)
+        let failingViewModel = WillPowerViewModel(willPowerUseCase: failingUseCase)
+        await failingViewModel.load()
+        failingViewModel.consumeWillPower(amount: 20)
+        await failingViewModel.waitForPendingSaveForTesting()
+        XCTAssertNotNil(failingViewModel.errorMessage)
+
+        // When: 保存が成功するようになってから再度操作する
+        failingRepository.failSave = false
+        failingViewModel.restoreWillPower(amount: 10)
+        await failingViewModel.waitForPendingSaveForTesting()
+
+        // Then
+        XCTAssertNil(failingViewModel.errorMessage)
+    }
+
+    func testLoad_whenRepositoryThrowsUnexpectedError_shouldSetErrorMessage() async throws {
+        // Given: 読み込みが必ず失敗するRepository
+        let failingRepository = FailingWillPowerRepository(failLoad: true)
+        let failingUseCase = WillPowerUseCase(repository: failingRepository)
+        let failingViewModel = WillPowerViewModel(willPowerUseCase: failingUseCase)
+
+        // When
+        await failingViewModel.load()
+
+        // Then
+        XCTAssertNotNil(failingViewModel.errorMessage)
+        // デフォルト値へのフォールバックは維持される
+        XCTAssertEqual(failingViewModel.currentValue, 100)
+    }
+}
+
+/// 保存/読み込み失敗をシミュレートするRepository
+private final class FailingWillPowerRepository: WillPowerRepository, @unchecked Sendable {
+    var failSave: Bool
+    var failLoad: Bool
+    private let wrapped = InMemoryWillPowerRepository()
+
+    init(failSave: Bool = false, failLoad: Bool = false) {
+        self.failSave = failSave
+        self.failLoad = failLoad
+    }
+
+    func save(_ willPower: WillPower) async throws {
+        if failSave {
+            throw RepositoryError.saveFailed(underlying: URLError(.notConnectedToInternet))
+        }
+        try await wrapped.save(willPower)
+    }
+
+    func load() async throws -> WillPower {
+        if failLoad {
+            throw RepositoryError.loadFailed(underlying: URLError(.notConnectedToInternet))
+        }
+        return try await wrapped.load()
+    }
+
+    func createDefault() -> WillPower {
+        wrapped.createDefault()
+    }
 }
 
 /// load()の多重呼び出し検証用スパイRepository

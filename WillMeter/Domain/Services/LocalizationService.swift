@@ -68,17 +68,30 @@ public enum LocalizationKeys {
         public static let appTitle = "ui.app.title"
         public static let currentState = "ui.current.state"
         public static let done = "ui.done"
+        public static let errorTitle = "ui.error.title"
 
         public enum Accessibility {
             public static let consumeHint = "ui.accessibility.consume.hint"
             public static let restoreHint = "ui.accessibility.restore.hint"
             public static let resetHint = "ui.accessibility.reset.hint"
+            public static let languageButton = "ui.accessibility.language.button"
+            public static let languageButtonHint = "ui.accessibility.language.button.hint"
         }
     }
 
     public enum Settings {
         public static let language = "settings.language"
         public static let currentLanguage = "settings.current.language"
+    }
+
+    public enum Onboarding {
+        public static let title = "onboarding.title"
+        public static let description = "onboarding.description"
+        public static let howToTitle = "onboarding.howto.title"
+        public static let howToConsume = "onboarding.howto.consume"
+        public static let howToRestore = "onboarding.howto.restore"
+        public static let howToReset = "onboarding.howto.reset"
+        public static let startButton = "onboarding.start.button"
     }
 
     public enum Recommendation {
@@ -119,5 +132,7 @@ public enum LocalizationKeys {
 
     public enum Error {
         public static let dataNotFound = "error.data.notfound"
+        public static let saveFailed = "error.save.failed"
+        public static let loadFailed = "error.load.failed"
     }
 }

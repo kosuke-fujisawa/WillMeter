@@ -110,6 +110,9 @@ private struct LanguageSelectionRow: View {
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("languageRow_\(languageCode)")
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(displayName), \(languageCode.uppercased())")
+        .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
     }
 }
 
