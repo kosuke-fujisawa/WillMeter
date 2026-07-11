@@ -129,14 +129,20 @@ struct WillPowerDisplayView: View {
             // Will Power Gauge
             ZStack {
                 Circle()
-                    .stroke(lineWidth: 15)
-                    .opacity(0.3)
+                    .stroke(lineWidth: WillMeterTheme.Gauge.lineWidth)
+                    .opacity(WillMeterTheme.Gauge.trackOpacity)
                     .foregroundStyle(.gray)
 
                 Circle()
                     .trim(from: 0.0, to: viewModel.percentage)
-                    .stroke(style: StrokeStyle(lineWidth: 15, lineCap: .round, lineJoin: .round))
-                    .foregroundStyle(Color(viewModel.statusColor))
+                    .stroke(
+                        style: StrokeStyle(
+                            lineWidth: WillMeterTheme.Gauge.lineWidth,
+                            lineCap: .round,
+                            lineJoin: .round
+                        )
+                    )
+                    .foregroundStyle(WillMeterTheme.statusColor(for: viewModel.status))
                     .rotationEffect(Angle(degrees: 270))
                     .animation(.easeInOut(duration: 0.5), value: viewModel.percentage)
 
@@ -151,11 +157,11 @@ struct WillPowerDisplayView: View {
 
                     Text(localizationService.localizedString(for: viewModel.status.localizationKey))
                         .font(.title3)
-                        .foregroundStyle(Color(viewModel.statusColor))
+                        .foregroundStyle(WillMeterTheme.statusColor(for: viewModel.status))
                         .fontWeight(.semibold)
                 }
             }
-            .frame(width: 200, height: 200)
+            .frame(width: WillMeterTheme.Gauge.size, height: WillMeterTheme.Gauge.size)
 
             // Status Information
             VStack(spacing: 10) {
