@@ -100,9 +100,18 @@ private struct LanguageSelectionRow: View {
             .padding(.vertical, 12)
             .padding(.horizontal, 16)
             .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(isSelected ? Color.blue.opacity(0.1) : Color.clear)
-                    .stroke(isSelected ? Color.blue : Color.gray.opacity(0.3), lineWidth: 1)
+                RoundedRectangle(cornerRadius: WillMeterTheme.LanguageRow.cornerRadius)
+                    .fill(
+                        isSelected
+                            ? Color.blue.opacity(WillMeterTheme.LanguageRow.selectedBackgroundOpacity)
+                            : Color.clear
+                    )
+                    .stroke(
+                        isSelected
+                            ? Color.blue
+                            : Color.gray.opacity(WillMeterTheme.LanguageRow.unselectedBorderOpacity),
+                        lineWidth: WillMeterTheme.LanguageRow.borderWidth
+                    )
             )
             // Spacer()等の透明領域はデフォルトではヒットテスト対象外になるため、
             // 行全体を確実にタップ可能にする
