@@ -185,7 +185,8 @@ public class WillPowerViewModel: ObservableObject {
         return "\(statusDisplayName) (\(Int(percentage * 100))%)"
     }
 
-    private var localizedStatusDisplayName: String {
+    /// 状態を表す短い表示名（例: 「最高」）。ゲージ内表示等、パーセンテージを含めない箇所で使用する
+    public var localizedStatusDisplayName: String {
         switch status {
         case .high:
             return localizationService.localizedString(for: LocalizationKeys.WillPower.Status.excellent)

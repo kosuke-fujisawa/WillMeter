@@ -67,6 +67,7 @@ struct OnboardingView: View {
             .controlSize(.large)
             .padding(.horizontal, 32)
             .padding(.bottom, 24)
+            .accessibilityIdentifier("onboardingStartButton")
         }
     }
 }

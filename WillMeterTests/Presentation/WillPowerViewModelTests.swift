@@ -55,6 +55,19 @@ final class WillPowerViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.status, .high)
     }
 
+    func testLocalizedStatusDisplayName_forHighStatus_shouldReturnTranslatedText() async throws {
+        // Given: status = .high(ローカライズキーが存在しない.high/.mediumケースで
+        //        以前は未翻訳の生キーがそのまま返っていた回帰テスト)
+        await viewModel.load()
+
+        // When
+        let displayName = viewModel.localizedStatusDisplayName
+
+        // Then: 生のローカライズキーではなく翻訳済みテキストが返ること
+        XCTAssertFalse(displayName.hasPrefix("willpower.status."), "未翻訳のキーがそのまま表示されないこと")
+        XCTAssertFalse(displayName.isEmpty)
+    }
+
     func testConsumeWillPower() async throws {
         // Given - Ensure ViewModel is properly initialized
         await viewModel.load()
