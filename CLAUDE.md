@@ -66,6 +66,9 @@
 ## 🛠️ 開発コマンド
 
 ### ビルドコマンド
+
+起動ディスクの空き容量逼迫を避けるため、DerivedDataは外付けドライブ(`/Volumes/T7 Shield/DerivedData`)に保存する運用です(Xcode本体は `defaults write com.apple.dt.Xcode IDECustomDerivedDataLocation` で設定済み)。`xcodebuild` をCLIから直接実行する場合は `-derivedDataPath` を明示してください。
+
 ```bash
 # SwiftLint実行
 swiftlint
@@ -74,7 +77,7 @@ swiftlint
 swiftlint --fix
 
 # iPhone シミュレーター用にビルド
-xcodebuild -project WillMeter.xcodeproj -scheme WillMeter -destination 'platform=iOS Simulator,name=iPhone 16' build
+xcodebuild -project WillMeter.xcodeproj -scheme WillMeter -destination 'platform=iOS Simulator,name=iPhone 16' -derivedDataPath "/Volumes/T7 Shield/DerivedData" build
 
 # Xcodeで開く
 open WillMeter.xcodeproj
@@ -83,16 +86,16 @@ open WillMeter.xcodeproj
 ### テストコマンド（TDD準拠）
 ```bash
 # 全テスト実行（TDD Red-Green-Refactor サイクル）
-xcodebuild -project WillMeter.xcodeproj -scheme WillMeter -destination 'platform=iOS Simulator,name=iPhone 16' test
+xcodebuild -project WillMeter.xcodeproj -scheme WillMeter -destination 'platform=iOS Simulator,name=iPhone 16' -derivedDataPath "/Volumes/T7 Shield/DerivedData" test
 
 # ドメインテストのみ（単体テスト）
-xcodebuild -project WillMeter.xcodeproj -scheme WillMeter -destination 'platform=iOS Simulator,name=iPhone 16' test -only-testing:WillMeterTests
+xcodebuild -project WillMeter.xcodeproj -scheme WillMeter -destination 'platform=iOS Simulator,name=iPhone 16' -derivedDataPath "/Volumes/T7 Shield/DerivedData" test -only-testing:WillMeterTests
 
 # UIテスト実行
-xcodebuild -project WillMeter.xcodeproj -scheme WillMeter -destination 'platform=iOS Simulator,name=iPhone 16' test -only-testing:WillMeterUITests
+xcodebuild -project WillMeter.xcodeproj -scheme WillMeter -destination 'platform=iOS Simulator,name=iPhone 16' -derivedDataPath "/Volumes/T7 Shield/DerivedData" test -only-testing:WillMeterUITests
 
 # テストカバレッジ生成
-xcodebuild -project WillMeter.xcodeproj -scheme WillMeter -destination 'platform=iOS Simulator,name=iPhone 16' test -enableCodeCoverage YES
+xcodebuild -project WillMeter.xcodeproj -scheme WillMeter -destination 'platform=iOS Simulator,name=iPhone 16' -derivedDataPath "/Volumes/T7 Shield/DerivedData" test -enableCodeCoverage YES
 ```
 
 ### コード品質自動化コマンド（trailing whitespace対応）
