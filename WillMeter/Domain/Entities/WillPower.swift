@@ -77,6 +77,10 @@ public class WillPower {
         currentValue = min(currentValue + amount, maxValue)
         notifyObservers() // ドメインイベント通知
     }
+
+    public func reset() {
+        restore(amount: maxValue - currentValue)
+    }
 }
 
 public enum WillPowerStatus: String, CaseIterable {

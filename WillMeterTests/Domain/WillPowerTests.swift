@@ -78,6 +78,22 @@ final class WillPowerTests: XCTestCase {
         XCTAssertEqual(willPower.percentage, 1.0, accuracy: 0.01)
     }
 
+    func testResetRestoresMaximumAndNotifiesObserver() {
+        // Given
+        let willPower = WillPower(currentValue: 40, maxValue: 100)
+        var notifiedValue: Int?
+        willPower.addObserver { updatedWillPower in
+            notifiedValue = updatedWillPower.currentValue
+        }
+
+        // When
+        willPower.reset()
+
+        // Then
+        XCTAssertEqual(willPower.currentValue, 100)
+        XCTAssertEqual(notifiedValue, 100)
+    }
+
     func testWillPowerStatus() throws {
         // Given & When & Then
         let highWillPower = WillPower(currentValue: 80, maxValue: 100)
