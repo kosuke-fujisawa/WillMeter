@@ -21,29 +21,19 @@ public protocol WillPowerRepository: Sendable {
     /// - Returns: 読み込んだWillPowerエンティティ
     /// - Throws: 読み込みに失敗した場合のエラー
     func load() async throws -> WillPower
-
-    /// デフォルトのWillPowerエンティティを作成する
-    /// - Returns: デフォルト設定のWillPowerエンティティ
-    func createDefault() -> WillPower
 }
 
 /// Repository実装のエラー
 public enum RepositoryError: Error, LocalizedError {
-    case dataNotFound
     case saveFailed(underlying: Error)
     case loadFailed(underlying: Error)
-    case invalidData
 
     public var errorDescription: String? {
         switch self {
-        case .dataNotFound:
-            return "データが見つかりません"
         case .saveFailed(let error):
             return "保存に失敗しました: \(error.localizedDescription)"
         case .loadFailed(let error):
             return "読み込みに失敗しました: \(error.localizedDescription)"
-        case .invalidData:
-            return "無効なデータです"
         }
     }
 }

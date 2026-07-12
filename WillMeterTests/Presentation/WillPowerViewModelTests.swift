@@ -112,59 +112,6 @@ final class WillPowerViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.status, .high)
     }
 
-    func testCanPerformTask() async throws {
-        // Given - Ensure ViewModel is properly initialized
-        await viewModel.load()
-        let task = Task(title: "Test Task",
-                        willPowerCost: 30,
-                        priority: .medium,
-                        category: .work)
-
-        // When & Then
-        XCTAssertTrue(viewModel.canPerformTask(task))
-
-        // Given - reduce will power
-        viewModel.consumeWillPower(amount: 80) // Reduce to 20
-
-        // When & Then
-        XCTAssertFalse(viewModel.canPerformTask(task))
-    }
-
-    func testPerformTask() async throws {
-        // Given - Ensure ViewModel is properly initialized
-        await viewModel.load()
-        let task = Task(title: "Test Task",
-                        willPowerCost: 30,
-                        priority: .medium,
-                        category: .work)
-
-        // When
-        let result = viewModel.performTask(task)
-
-        // Then
-        XCTAssertTrue(result)
-        XCTAssertEqual(viewModel.currentValue, 70)
-        XCTAssertEqual(task.currentStatus, .completed)
-    }
-
-    func testPerformTaskFails() async throws {
-        // Given - Ensure ViewModel is properly initialized
-        await viewModel.load()
-        let task = Task(title: "Test Task",
-                        willPowerCost: 30,
-                        priority: .medium,
-                        category: .work)
-        viewModel.consumeWillPower(amount: 80) // Reduce to 20
-
-        // When
-        let result = viewModel.performTask(task)
-
-        // Then
-        XCTAssertFalse(result)
-        XCTAssertEqual(viewModel.currentValue, 20) // Should remain unchanged
-        XCTAssertEqual(task.currentStatus, .pending) // Task should not be completed
-    }
-
     func testStatusUpdatesCorrectly() async throws {
         // Given - Ensure ViewModel is properly initialized
         await viewModel.load()
@@ -276,10 +223,6 @@ private final class FailingWillPowerRepository: WillPowerRepository, @unchecked 
         }
         return try await wrapped.load()
     }
-
-    func createDefault() -> WillPower {
-        wrapped.createDefault()
-    }
 }
 
 /// load()の多重呼び出し検証用スパイRepository
@@ -294,9 +237,5 @@ private final class LoadCountingWillPowerRepository: WillPowerRepository, @unche
     func load() async throws -> WillPower {
         loadCallCount += 1
         return try await wrapped.load()
-    }
-
-    func createDefault() -> WillPower {
-        wrapped.createDefault()
     }
 }

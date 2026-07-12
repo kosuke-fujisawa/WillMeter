@@ -11,28 +11,27 @@ import Foundation
 
 /// WillPowerRepositoryのインメモリ実装
 /// インフラ層の責務：データの永続化と取得（開発・テスト用）
-/// RepositoryUtilsを使用し共通処理を利用
 public class InMemoryWillPowerRepository: WillPowerRepository {
-    private var storedWillPower: WillPower?
+    private struct StoredWillPower {
+        let currentValue: Int
+        let maxValue: Int
+    }
+
+    private var storedWillPower: StoredWillPower?
 
     public init() {}
 
     public func save(_ willPower: WillPower) async throws {
-        // 共通ヘルパーを使用してコピー作成
-        storedWillPower = RepositoryUtils.copyWillPower(willPower)
+        storedWillPower = StoredWillPower(
+            currentValue: willPower.currentValue,
+            maxValue: willPower.maxValue
+        )
     }
 
     public func load() async throws -> WillPower {
         guard let stored = storedWillPower else {
-            throw RepositoryError.dataNotFound
+            return WillPower.makeDefault()
         }
-
-        // 共通ヘルパーを使用してコピー作成
-        return RepositoryUtils.copyWillPower(stored)
-    }
-
-    public func createDefault() -> WillPower {
-        // 共通ヘルパーを使用
-        return RepositoryUtils.createDefaultWillPower()
+        return WillPower(currentValue: stored.currentValue, maxValue: stored.maxValue)
     }
 }

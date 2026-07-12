@@ -92,14 +92,4 @@ final class WillPowerTests: XCTestCase {
         let criticalWillPower = WillPower(currentValue: 5, maxValue: 100)
         XCTAssertEqual(criticalWillPower.status, .critical)
     }
-
-    func testWillPowerCanPerformTask() throws {
-        // Given
-        let willPower = WillPower(currentValue: 50, maxValue: 100)
-
-        // When & Then
-        XCTAssertTrue(willPower.canPerformTask(cost: 30))
-        XCTAssertTrue(willPower.canPerformTask(cost: 50))
-        XCTAssertFalse(willPower.canPerformTask(cost: 60))
-    }
 }

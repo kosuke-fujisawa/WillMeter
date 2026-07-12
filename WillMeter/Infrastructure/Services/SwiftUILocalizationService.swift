@@ -8,11 +8,13 @@
 //
 
 import Foundation
+import OSLog
 import SwiftUI
 
-/// SwiftUI環境でのLocalizationService具体実装
-/// Infrastructure層でのUI技術依存を適切にカプセル化
-public final class SwiftUILocalizationService: LocalizationService, ObservableObject {
+/// SwiftUI環境でのローカライズと変更通知を提供する
+public final class SwiftUILocalizationService: ObservableObject {
+    private static let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "WillMeter", category: "Localization")
+
     /// 言語変更通知用Publisher
     @Published public private(set) var currentLanguageCode: String
 
@@ -20,6 +22,11 @@ public final class SwiftUILocalizationService: LocalizationService, ObservableOb
     private static let selectedLanguageKey = "selected_language"
 
     /// サポート言語リスト（Phase 1対応）
+    public static let languageDisplayNames = [
+        "ja": "日本語",
+        "en": "English",
+        "zh-Hans": "简体中文"
+    ]
     public let supportedLanguages = ["ja", "en", "zh-Hans"]
 
     public init() {
@@ -80,7 +87,7 @@ public final class SwiftUILocalizationService: LocalizationService, ObservableOb
     /// - Parameter languageCode: 変更先の言語コード
     public func changeLanguage(to languageCode: String) {
         guard supportedLanguages.contains(languageCode) else {
-            print("⚠️ Unsupported language: \(languageCode)")
+            Self.logger.warning("Unsupported language: \(languageCode, privacy: .public)")
             return
         }
 
@@ -108,7 +115,7 @@ public final class SwiftUILocalizationService: LocalizationService, ObservableOb
 
     /// システム言語からサポート言語を選択
     private static func selectSupportedLanguage(from preferredLanguages: [String]) -> String {
-        let supportedSet = Set(["ja", "en", "zh-Hans"])
+        let supportedSet = Set(languageDisplayNames.keys)
 
         for preferred in preferredLanguages {
             // 完全一致チェック
@@ -139,33 +146,13 @@ public final class SwiftUILocalizationService: LocalizationService, ObservableOb
 public extension SwiftUILocalizationService {
     /// 現在の言語表示名を取得
     var currentLanguageDisplayName: String {
-        switch currentLanguageCode {
-        case "ja":
-            return "日本語"
-        case "en":
-            return "English"
-        case "zh-Hans":
-            return "简体中文"
-        default:
-            return currentLanguageCode
-        }
+        Self.languageDisplayNames[currentLanguageCode] ?? currentLanguageCode
     }
 
     /// 全サポート言語の表示名を取得
     var supportedLanguagesDisplayNames: [(code: String, name: String)] {
-        return supportedLanguages.map { code in
-            let name: String
-            switch code {
-            case "ja":
-                name = "日本語"
-            case "en":
-                name = "English"
-            case "zh-Hans":
-                name = "简体中文"
-            default:
-                name = code
-            }
-            return (code: code, name: name)
+        supportedLanguages.map { code in
+            (code: code, name: Self.languageDisplayNames[code] ?? code)
         }
     }
 }
