@@ -21,18 +21,21 @@ public final class SwiftUILocalizationService: ObservableObject {
     /// ユーザーが手動設定した言語（UserDefaults保存）
     private static let selectedLanguageKey = "selected_language"
 
-    /// サポート言語リスト（Phase 1対応）
-    public static let languageDisplayNames = [
-        "ja": "日本語",
-        "en": "English",
-        "zh-Hans": "简体中文"
+    /// サポート言語の表示順と表示名を一元管理する
+    private static let supportedLanguageDefinitions: [(code: String, name: String)] = [
+        (code: "ja", name: "日本語"),
+        (code: "en", name: "English"),
+        (code: "zh-Hans", name: "简体中文")
     ]
-    public let supportedLanguages = ["ja", "en", "zh-Hans"]
+    public static let supportedLanguages = supportedLanguageDefinitions.map(\.code)
+    public static let languageDisplayNames = Dictionary(
+        uniqueKeysWithValues: supportedLanguageDefinitions.map { ($0.code, $0.name) }
+    )
 
     public init() {
         // 保存された言語設定を復元、未設定時はシステム言語
         if let savedLanguage = UserDefaults.standard.string(forKey: Self.selectedLanguageKey),
-           supportedLanguages.contains(savedLanguage) {
+           Self.supportedLanguages.contains(savedLanguage) {
             self.currentLanguageCode = savedLanguage
         } else {
             // システム言語からサポート言語を選択
@@ -86,7 +89,7 @@ public final class SwiftUILocalizationService: ObservableObject {
     /// 言語を動的に変更
     /// - Parameter languageCode: 変更先の言語コード
     public func changeLanguage(to languageCode: String) {
-        guard supportedLanguages.contains(languageCode) else {
+        guard Self.supportedLanguages.contains(languageCode) else {
             Self.logger.warning("Unsupported language: \(languageCode, privacy: .public)")
             return
         }
@@ -115,7 +118,7 @@ public final class SwiftUILocalizationService: ObservableObject {
 
     /// システム言語からサポート言語を選択
     private static func selectSupportedLanguage(from preferredLanguages: [String]) -> String {
-        let supportedSet = Set(languageDisplayNames.keys)
+        let supportedSet = Set(supportedLanguages)
 
         for preferred in preferredLanguages {
             // 完全一致チェック
@@ -151,8 +154,6 @@ public extension SwiftUILocalizationService {
 
     /// 全サポート言語の表示名を取得
     var supportedLanguagesDisplayNames: [(code: String, name: String)] {
-        supportedLanguages.map { code in
-            (code: code, name: Self.languageDisplayNames[code] ?? code)
-        }
+        Self.supportedLanguageDefinitions
     }
 }

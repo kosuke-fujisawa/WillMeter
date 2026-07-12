@@ -33,14 +33,18 @@ final class SwiftUILocalizationServiceTests: XCTestCase {
         // Given & When: サービス初期化
 
         // Then: サポート言語が正しく設定される
-        XCTAssertEqual(sut.supportedLanguages, ["ja", "en", "zh-Hans"])
+        XCTAssertEqual(SwiftUILocalizationService.supportedLanguages, ["ja", "en", "zh-Hans"])
+        XCTAssertEqual(
+            Set(SwiftUILocalizationService.supportedLanguages),
+            Set(SwiftUILocalizationService.languageDisplayNames.keys)
+        )
     }
 
     func testInitialization_shouldSetDefaultLanguage() {
         // Given & When: サービス初期化
 
         // Then: デフォルト言語が設定される
-        XCTAssertTrue(sut.supportedLanguages.contains(sut.currentLanguageCode))
+        XCTAssertTrue(SwiftUILocalizationService.supportedLanguages.contains(sut.currentLanguageCode))
     }
 
     // MARK: - 言語変更テスト
