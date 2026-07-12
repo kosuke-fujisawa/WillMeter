@@ -2,6 +2,8 @@
 
 このリポジトリでは、同一リポジトリ内の非ドラフトPRを作成・更新したときに `.github/workflows/ai-review.yml` が起動し、PR差分をLLMでレビューします。
 
+レビューの実装本体は共有Action [kosuke-fujisawa/ai-review-action](https://github.com/kosuke-fujisawa/ai-review-action) に移行済みで、このリポジトリ側にはワークフロー定義とレビュー指示（`.github/ai-review-instructions.md`）だけを置いています。
+
 ## 必須設定
 
 Repository secrets に以下を追加します。
@@ -25,10 +27,4 @@ Repository variables は任意です。
 
 ## ローカル確認
 
-```bash
-npm test
-node scripts/ai-review/collect-input.mjs
-node scripts/ai-review/review.mjs
-```
-
-APIキーなしで `review.mjs` を実行した場合、スキップ結果が `tmp/ai-review/` に生成されます。
+レビューのスクリプトとテストは共有Action側リポジトリにあるため、動作確認は [kosuke-fujisawa/ai-review-action](https://github.com/kosuke-fujisawa/ai-review-action) 側で行います。このリポジトリ側で変更しうるのは `.github/workflows/ai-review.yml` と `.github/ai-review-instructions.md` のみです。

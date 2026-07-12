@@ -42,132 +42,59 @@ WillMeter は意思力を「見える化」することで：
 - **フレームワーク**: SwiftUI
 - **最小対応OS**: iOS 18.5+
 - **開発環境**: Xcode 16.4+
-- **アーキテクチャ**: DDD (Domain-Driven Design) + TDD (Test-Driven Development)
-- **品質管理**: SwiftLint + Code Rabbit AI Review
+- **アーキテクチャ**: Simple First（軽量・シンプル優先） + TDD (Test-Driven Development)
+- **品質管理**: SwiftLint + AI自動レビュー（[docs/ai-review.md](docs/ai-review.md)）
 
 ## 🏗️ アーキテクチャ
 
-本プロジェクトは **Clean Architecture + DDD** を採用し、4層構造でレイヤー分離を実現：
+本プロジェクトは **Simple First** を設計方針とします。ドメインロジックを UI・永続化から分離しつつ、レイヤーや抽象化の一律強制はしません。判断の経緯は [ADR 0002](docs/adr/0002-adopt-simple-first-architecture.md) を参照してください。
 
 ```
-┌─────────────────────┐
-│   Presentation      │ ← SwiftUI Views, ViewModels (UI層)
-├─────────────────────┤
-│   Infrastructure    │ ← ObservableObject, Repository実装 (技術詳細)
-├─────────────────────┤
-│   Application       │ ← Use Cases, Application Services (ビジネス流れ)
-├─────────────────────┤
-│   Domain            │ ← Pure Entities, Repository抽象化 (ビジネスルール)
-└─────────────────────┘
+WillMeter/
+├── WillMeterApp.swift        ← エントリポイント
+├── ContentView.swift         ← メイン画面と依存の組み立て
+├── Domain/                   ← WillPower（値と不変条件）、翻訳キー定義
+├── Application/              ← WillPowerUseCase（読み込み・保存の窓口）
+├── Infrastructure/           ← UserDefaults永続化、ローカライズ実装
+└── Presentation/             ← WillPowerViewModel、テーマ、設定画面
 ```
 
-### 🎯 レイヤー責務の明確化
+データフローは `ContentView`（依存の組み立て）→ `WillPowerViewModel` → `WillPowerUseCase` → `WillPowerRepository`（UserDefaults実装）。ドメインの変更はオブザーバ経由で ViewModel が購読し、SwiftUI を再描画します（[ADR 0003](docs/adr/0003-simplify-ui-change-notifications.md)）。
 
-#### **Domain層** (ビジネスルールの中心)
-- **WillPower**: 意思力エンティティ（Observer Pattern実装）
-- **Task**: タスクエンティティ（ライフサイクル管理）
-- **Repository Interface**: データアクセス抽象化
+設計上の主な決定は `docs/adr/` に記録しています。
 
-#### **Application層** (ビジネスフローの調整)
-- **WillPowerUseCase**: 意思力の読み込み・保存フロー
-- ドメインサービスとインフラ層の調整
-
-#### **Infrastructure層** (技術的な詳細実装)
-- **ObservableWillPower**: SwiftUI統合用ラッパー
-- **ObservableTask**: TaskエンティティのUI統合
-- **Repository実装**: InMemory/UserDefaults永続化
-
-#### **Presentation層** (ユーザーインターフェース)
-- **WillPowerViewModel**: UI特化のプレゼンテーションロジック
-- **ContentView**: SwiftUI宣言的UI
-
-### 🔧 技術的特徴
-
-#### ObservableObject責務の適切な分離
-```swift
-// ❌ 従来（Domain層にObservableObject）
-public class WillPower: ObservableObject {
-    @Published var currentValue: Int
-}
-
-// ✅ 現在（Infrastructure層でラップ）
-// Domain層: Pure Entity
-public class WillPower {
-    private(set) var currentValue: Int
-    private var observers: [(WillPower) -> Void] = []
-}
-
-// Infrastructure層: SwiftUI統合
-public class ObservableWillPower: ObservableObject {
-    @Published private var willPower: WillPower
-}
-```
-
-#### Observer Patternによるドメインイベント
-- ドメインエンティティの変更を通知
-- インフラ層がUI更新をハンドリング
-- 依存方向の適切な制御
+- [ADR 0001](docs/adr/0001-willpower-no-daily-reset.md): ウィルパワーは暦日で自動リセットしない
+- [ADR 0002](docs/adr/0002-adopt-simple-first-architecture.md): Simple First を既定の設計方針として採用
+- [ADR 0003](docs/adr/0003-simplify-ui-change-notifications.md): UI変更通知を ViewModel へ集約
 
 ## 🧪 開発方針
 
 ### テスト駆動開発 (TDD)
-- Red-Green-Refactor サイクルの徹底
-- ドメインロジックの完全テストカバレッジ
-- 継続的リファクタリングによる品質向上
-
-### ドメイン駆動設計 (DDD)
-- ユビキタス言語による共通理解
-- 意思力管理ドメインの深いモデリング
-- 境界づけられたコンテキストによる複雑性管理
+- Red-Green-Refactor サイクルで新しい振る舞いとバグ修正を進める
+- ドメインロジックは UI・永続化から独立してテストする
 
 ### 品質保証
 - **SwiftLint**: 静的解析による品質維持
-- **Code Rabbit**: AI支援レビューの活用
-- **客観的指標**: 測定可能な品質メトリクス
+- **AI自動レビュー**: PRごとに自動レビューを実行（[docs/ai-review.md](docs/ai-review.md)）
+- **CI**: push/PR ごとに SwiftLint + Unit Test を実行（`.github/workflows/ci.yml`）
 
 ## 📊 開発状況
 
-### 現在のフェーズ: ✅ Clean Architecture実装完了 / ユーザーテストに向けた仕上げ中
-- [x] プロジェクト初期設定
-- [x] DDD + TDD 開発環境構築
-- [x] Git/GitHub 管理開始
-- [x] Clean Architecture 4層構造実装
-- [x] ドメインモデル設計（WillPower, Task エンティティ）
-- [x] 基本UI実装（ウィルパワーの円形ゲージ表示、消費/回復/リセット操作）
-- [x] Repository Patternによるデータアクセス抽象化
-- [x] Infrastructure層分離（ObservableObject責務適正化）
-- [x] 包括的単体テストスイート実装
+### 現在のフェーズ: ユーザーテスト（TestFlight配布）に向けた仕上げ中
+- [x] ウィルパワーの円形ゲージ表示、消費/回復/リセット操作
+- [x] データ永続化（アプリ再起動でウィルパワーの値を保持）
 - [x] 多言語対応（日本語・英語・簡体字中国語）
-- [ ] データ永続化のUI接続（アプリ再起動でウィルパワーの値が保持されるようにする）
-- [ ] タスク管理画面の実装（ドメイン層の`Task`エンティティは実装済み、UI未実装）
+- [x] オンボーディング画面
+- [x] 単体テスト・UIテストと CI（SwiftLint + Unit Test）
+- [ ] タスク管理機能
 - [ ] 意思力推移のグラフ表示・履歴分析
 
 ユーザーテスト実施に向けた残タスクは [GitHub Issues](https://github.com/kosuke-fujisawa/WillMeter/issues) で管理しています。
 
-### 品質指標（達成済み）
-- **テストカバレッジ**: 包括的単体テスト（Red-Green-Refactor）
-- **SwiftLint違反**: 0件（100%準拠）
-- **Code Rabbit評価**: AAA+（アーキテクチャ設計優秀評価）
-- **アーキテクチャ違反**: 0件（Clean Architecture準拠）
-
-## 🤝 開発方針
-
-### AI支援開発
-開発支援AIは**理系女子大学院生**のペルソナで：
-- 論理的で体系的なアプローチ
-- エビデンスベースの問題解決
-- 最新研究動向の活用
-
-### コードレビュー
-- **Code Rabbit** による AI支援レビュー必須
-- DDD原則の厳格な適用
-- 客観的指標による品質評価
-
 ## 🔮 今後の展開
 
 ### Phase 1: コアMVP (Minimum Viable Product)
-- 基本的な意思力カウンター機能（実装済み）
-- データ永続化（UI接続待ち）
+- 基本的な意思力カウンター機能と永続化（実装済み）
 - シンプルなタスク管理画面
 - 意思力推移のグラフ表示・履歴分析
 
@@ -187,9 +114,8 @@ public class ObservableWillPower: ObservableObject {
 
 ### 開発参加の前に
 1. [CLAUDE.md](./CLAUDE.md) を必読
-2. DDD + TDD 開発方針の理解
+2. Simple First + TDD 開発方針の理解（[ADR 0002](docs/adr/0002-adopt-simple-first-architecture.md)）
 3. SwiftLint セットアップ
-4. Code Rabbit レビュー設定
 
 ## 📄 ライセンス
 
