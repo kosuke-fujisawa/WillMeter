@@ -8,7 +8,6 @@ export const resultPath = `${outputDir}/result.json`;
 export const commentPath = `${outputDir}/comment.md`;
 
 const excludedDiffPathspecs = [
-  ":(exclude,glob)**/*.md",
   ":(exclude,glob)**/*.txt",
   ":(exclude,glob)**/*.lock",
   ":(exclude,glob)**/package-lock.json",

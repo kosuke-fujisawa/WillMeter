@@ -66,13 +66,13 @@ test("parseReviewJsonは高確信度の重大指摘だけを最大3件残す", (
   assert.ok(result.findings.every((finding) => finding.severity === "medium"));
 });
 
-test("buildDiffArgsは少ない文脈で自動生成物と文書を除外する", () => {
+test("buildDiffArgsは少ない文脈で自動生成物を除外しMarkdownを残す", () => {
   const args = buildDiffArgs("origin/main...HEAD");
 
   assert.ok(args.includes("--unified=20"));
   assert.ok(args.includes("--diff-filter=ACDMRT"));
   assert.ok(args.includes("origin/main...HEAD"));
-  assert.ok(args.includes(":(exclude,glob)**/*.md"));
+  assert.equal(args.includes(":(exclude,glob)**/*.md"), false);
   assert.ok(args.includes(":(exclude,glob)**/package-lock.json"));
   assert.ok(args.includes(":(exclude,glob)**/dist/**"));
   assert.ok(args.includes(":(exclude,glob)**/*.png"));
