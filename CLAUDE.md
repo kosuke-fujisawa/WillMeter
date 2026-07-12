@@ -53,6 +53,8 @@ WillMeter は、ウィルパワー（意思力）を可視化・操作する Swi
 
 ## 開発コマンド
 
+起動ディスクの空き容量逼迫を避けるため、DerivedDataは外付けドライブ(`/Volumes/T7 Shield/DerivedData`)に保存する運用です(Xcode本体は `defaults write com.apple.dt.Xcode IDECustomDerivedDataLocation` で設定済み)。`xcodebuild` をCLIから直接実行する場合は `-derivedDataPath` を明示してください。
+
 ```bash
 # 静的解析
 swiftlint
@@ -60,16 +62,19 @@ swiftlint
 # Unit Test
 xcodebuild -project WillMeter.xcodeproj -scheme WillMeter \
   -destination 'platform=iOS Simulator,name=iPhone 16' \
+  -derivedDataPath "/Volumes/T7 Shield/DerivedData" \
   test -only-testing:WillMeterTests
 
 # UI Test
 xcodebuild -project WillMeter.xcodeproj -scheme WillMeter \
   -destination 'platform=iOS Simulator,name=iPhone 16' \
+  -derivedDataPath "/Volumes/T7 Shield/DerivedData" \
   test -only-testing:WillMeterUITests
 
 # Build
 xcodebuild -project WillMeter.xcodeproj -scheme WillMeter \
-  -destination 'platform=iOS Simulator,name=iPhone 16' build
+  -destination 'platform=iOS Simulator,name=iPhone 16' \
+  -derivedDataPath "/Volumes/T7 Shield/DerivedData" build
 ```
 
 利用可能なシミュレーター名が異なる場合は `xcrun simctl list devices available` で確認し、destination を調整してください。
