@@ -49,8 +49,8 @@ final class UserDefaultsWillPowerRepositoryTests: XCTestCase {
         let loaded = try await repository.load()
 
         // Then
-        XCTAssertEqual(loaded.currentValue, RepositoryUtils.DefaultWillPower.currentValue)
-        XCTAssertEqual(loaded.maxValue, RepositoryUtils.DefaultWillPower.maxValue)
+        XCTAssertEqual(loaded.currentValue, WillPower.defaultCurrentValue)
+        XCTAssertEqual(loaded.maxValue, WillPower.defaultMaxValue)
     }
 
     func testSaveOverwritesPreviousValue() async throws {

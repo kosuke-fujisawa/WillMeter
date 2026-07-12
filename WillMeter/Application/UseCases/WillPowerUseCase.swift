@@ -18,31 +18,15 @@ public class WillPowerUseCase {
         self.repository = repository
     }
 
-    /// WillPowerを読み込み、ObservableWillPowerとして返す
-    /// - Returns: UI向けのObservableWillPower
+    /// WillPowerを読み込む
     /// - Throws: 読み込みに失敗した場合のエラー
-    public func loadWillPower() async throws -> ObservableWillPower {
-        do {
-            let willPower = try await repository.load()
-            return ObservableWillPower(willPower)
-        } catch RepositoryError.dataNotFound {
-            // データがない場合はデフォルトを作成
-            let defaultWillPower = repository.createDefault()
-            return ObservableWillPower(defaultWillPower)
-        } catch {
-            throw error
-        }
+    public func loadWillPower() async throws -> WillPower {
+        try await repository.load()
     }
 
-    /// ObservableWillPowerを保存する
-    /// - Parameter observableWillPower: 保存するObservableWillPower
+    /// WillPowerを保存する
     /// - Throws: 保存に失敗した場合のエラー
-    public func saveWillPower(_ observableWillPower: ObservableWillPower) async throws {
-        // インフラ層のObservableWillPowerからドメインエンティティを取得
-        let willPower = WillPower(
-            currentValue: observableWillPower.currentValue,
-            maxValue: observableWillPower.maxValue
-        )
+    public func saveWillPower(_ willPower: WillPower) async throws {
         try await repository.save(willPower)
     }
 }

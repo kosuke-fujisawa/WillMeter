@@ -34,7 +34,6 @@ final class LocalizationServiceTests: XCTestCase {
         let statusKeys = [
             LocalizationKeys.WillPower.Status.excellent,
             LocalizationKeys.WillPower.Status.good,
-            LocalizationKeys.WillPower.Status.normal,
             LocalizationKeys.WillPower.Status.low,
             LocalizationKeys.WillPower.Status.critical
         ]
@@ -100,7 +99,6 @@ final class LocalizationServiceTests: XCTestCase {
         let recommendationKeys = [
             LocalizationKeys.Recommendation.excellent,
             LocalizationKeys.Recommendation.good,
-            LocalizationKeys.Recommendation.normal,
             LocalizationKeys.Recommendation.low,
             LocalizationKeys.Recommendation.critical
         ]
@@ -152,7 +150,6 @@ final class LocalizationServiceTests: XCTestCase {
             // Status keys
             LocalizationKeys.WillPower.Status.excellent,
             LocalizationKeys.WillPower.Status.good,
-            LocalizationKeys.WillPower.Status.normal,
             LocalizationKeys.WillPower.Status.low,
             LocalizationKeys.WillPower.Status.critical,
 
@@ -175,7 +172,6 @@ final class LocalizationServiceTests: XCTestCase {
             // Recommendation keys
             LocalizationKeys.Recommendation.excellent,
             LocalizationKeys.Recommendation.good,
-            LocalizationKeys.Recommendation.normal,
             LocalizationKeys.Recommendation.low,
             LocalizationKeys.Recommendation.critical
         ]

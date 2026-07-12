@@ -9,29 +9,29 @@
 
 import Combine
 import Foundation
+import OSLog
 import SwiftUI
 
 @MainActor
 public class WillPowerViewModel: ObservableObject {
+    private static let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "WillMeter", category: "WillPower")
+
     private let willPowerUseCase: WillPowerUseCase
-    private let localizationService: LocalizationService
-    private var observableWillPower: ObservableWillPower?
+    private let localizationService: SwiftUILocalizationService
+    private var willPower: WillPower?
 
     public init(
         willPowerUseCase: WillPowerUseCase,
-        localizationService: LocalizationService = SwiftUILocalizationService()
+        localizationService: SwiftUILocalizationService = SwiftUILocalizationService()
     ) {
         self.willPowerUseCase = willPowerUseCase
         self.localizationService = localizationService
 
-        // 言語変更監視（SwiftUILocalizationServiceの場合）
-        if let swiftUIService = localizationService as? SwiftUILocalizationService {
-            swiftUIService.objectWillChange
-                .sink { [weak self] in
-                    self?.objectWillChange.send()
-                }
-                .store(in: &cancellables)
-        }
+        localizationService.objectWillChange
+            .sink { [weak self] in
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
     }
 
     private var cancellables = Set<AnyCancellable>()
@@ -59,54 +59,49 @@ public class WillPowerViewModel: ObservableObject {
         isLoaded = true
 
         do {
-            let loadedObservableWillPower = try await willPowerUseCase.loadWillPower()
-            self.observableWillPower = loadedObservableWillPower
-
-            // インフラ層のObservableWillPowerの変更を監視してUI更新
-            loadedObservableWillPower.objectWillChange
-                .sink { [weak self] in
-                    self?.objectWillChange.send()
-                }
-                .store(in: &cancellables)
-
-            // UI更新通知
-            objectWillChange.send()
+            setWillPower(try await willPowerUseCase.loadWillPower())
         } catch {
-            // エラーログ出力（本番環境では適切なログシステムを使用）
-            print("Failed to load WillPower: \(error)")
-            // エラー時はデフォルト値で初期化
-            let defaultWillPower = WillPower(currentValue: 100, maxValue: 100)
-            self.observableWillPower = ObservableWillPower(defaultWillPower)
+            Self.logger.error("Failed to load WillPower: \(error.localizedDescription, privacy: .public)")
+            setWillPower(WillPower.makeDefault())
             errorMessage = localizationService.localizedString(for: LocalizationKeys.Error.loadFailed)
-            objectWillChange.send()
             // 次回呼び出し時に再ロードできるようガードを解除
             isLoaded = false
         }
     }
 
+    private func setWillPower(_ willPower: WillPower) {
+        self.willPower = willPower
+        willPower.addObserver { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.objectWillChange.send()
+            }
+        }
+        objectWillChange.send()
+    }
+
     // MARK: - ドメインエンティティへの読み取り専用アクセス
 
     public var currentValue: Int {
-        observableWillPower?.currentValue ?? 0
+        willPower?.currentValue ?? 0
     }
 
     public var maxValue: Int {
-        observableWillPower?.maxValue ?? 100
+        willPower?.maxValue ?? WillPower.defaultMaxValue
     }
 
     public var percentage: Double {
-        observableWillPower?.percentage ?? 0.0
+        willPower?.percentage ?? 0.0
     }
 
     public var status: WillPowerStatus {
-        observableWillPower?.status ?? .critical
+        willPower?.status ?? .critical
     }
 
     // MARK: - ユーザーアクション（UseCaseを経由したドメインロジック実行）
 
     @discardableResult
     public func consumeWillPower(amount: Int) -> Bool {
-        guard let willPower = observableWillPower else {
+        guard let willPower else {
             return false
         }
         let success = willPower.consume(amount: amount)
@@ -117,7 +112,7 @@ public class WillPowerViewModel: ObservableObject {
     }
 
     public func restoreWillPower(amount: Int) {
-        guard let willPower = observableWillPower else {
+        guard let willPower else {
             return
         }
         willPower.restore(amount: amount)
@@ -125,7 +120,7 @@ public class WillPowerViewModel: ObservableObject {
     }
 
     public func resetWillPower() {
-        guard let willPower = observableWillPower else {
+        guard let willPower else {
             return
         }
         willPower.reset()
@@ -134,7 +129,7 @@ public class WillPowerViewModel: ObservableObject {
 
     /// 変更をUseCaseを通じて自動保存し、失敗時はエラーメッセージを表示する
     private func autoSave() {
-        guard let willPower = observableWillPower else {
+        guard let willPower else {
             return
         }
         pendingSaveTask = _Concurrency.Task {
@@ -142,36 +137,10 @@ public class WillPowerViewModel: ObservableObject {
                 try await willPowerUseCase.saveWillPower(willPower)
                 errorMessage = nil
             } catch {
-                print("Auto-save failed: \(error)")
+                Self.logger.error("Auto-save failed: \(error.localizedDescription, privacy: .public)")
                 errorMessage = localizationService.localizedString(for: LocalizationKeys.Error.saveFailed)
             }
         }
-    }
-
-    // MARK: - Task Related Methods
-
-    public func canPerformTask(_ task: Task) -> Bool {
-        guard let willPower = observableWillPower else {
-            return false
-        }
-        return willPower.canPerformTask(cost: task.willPowerCost)
-    }
-
-    @discardableResult
-    public func performTask(_ task: Task) -> Bool {
-        guard let willPower = observableWillPower else {
-            return false
-        }
-        guard canPerformTask(task) else {
-            return false
-        }
-
-        let success = willPower.consume(amount: task.willPowerCost)
-        if success {
-            task.markAsCompleted()
-            autoSave()
-        }
-        return success
     }
 
     // MARK: - Computed Properties for UI
@@ -199,14 +168,6 @@ public class WillPowerViewModel: ObservableObject {
         }
     }
 
-    public var isLowWillPower: Bool {
-        return status == .low || status == .critical
-    }
-
-    public var isCriticalWillPower: Bool {
-        return status == .critical
-    }
-
     // MARK: - Recommendations
 
     public var recommendedAction: String {
@@ -220,20 +181,5 @@ public class WillPowerViewModel: ObservableObject {
         case .critical:
             return localizationService.localizedString(for: LocalizationKeys.Recommendation.critical)
         }
-    }
-
-    public func getSuggestedTasks(from tasks: [Task]) -> [Task] {
-        return tasks
-            .filter { task in
-                canPerformTask(task)
-            }
-            .sorted { task1, task2 in
-                // Priority based sorting
-                if task1.priority.rawValue != task2.priority.rawValue {
-                    return task1.priority.rawValue > task2.priority.rawValue
-                }
-                // If same priority, sort by will power cost (ascending)
-                return task1.willPowerCost < task2.willPowerCost
-            }
     }
 }

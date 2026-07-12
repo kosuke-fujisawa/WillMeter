@@ -9,37 +9,6 @@
 
 import Foundation
 
-/// ドメイン層での多言語化サービス抽象化
-/// Clean Architecture原則に従い、UI技術に依存しない形で言語リソースアクセスを提供
-public protocol LocalizationService {
-    /// 指定されたキーに対応する翻訳済み文字列を取得
-    /// - Parameter key: 翻訳文字列のキー（階層構造: "willpower.current.label"）
-    /// - Returns: 現在の言語設定に基づく翻訳済み文字列
-    func localizedString(for key: String) -> String
-
-    /// 複数形対応の翻訳文字列取得
-    /// - Parameters:
-    ///   - key: 翻訳文字列のキー
-    ///   - count: 数量（複数形判定用）
-    /// - Returns: 数量に応じた適切な翻訳文字列
-    func localizedString(for key: String, count: Int) -> String
-
-    /// フォーマット引数を伴う翻訳文字列取得（%d等のプレースホルダーを実際の値に置換）
-    /// - Parameters:
-    ///   - key: 翻訳文字列のキー
-    ///   - arguments: フォーマットに埋め込む値
-    /// - Returns: フォーマット済みの翻訳文字列
-    func localizedString(for key: String, arguments: CVarArg...) -> String
-
-    /// 現在設定されている言語コード取得
-    /// - Returns: 言語コード（例: "ja", "en", "zh-Hans"）
-    var currentLanguageCode: String { get }
-
-    /// サポートされている言語コード一覧
-    /// - Returns: 利用可能な言語コードの配列
-    var supportedLanguages: [String] { get }
-}
-
 /// 多言語化キー定数
 /// 階層的な命名規則によるタイプセーフなキー管理
 public enum LocalizationKeys {
@@ -52,7 +21,6 @@ public enum LocalizationKeys {
         public enum Status {
             public static let excellent = "willpower.status.excellent"
             public static let good = "willpower.status.good"
-            public static let normal = "willpower.status.normal"
             public static let low = "willpower.status.low"
             public static let critical = "willpower.status.critical"
         }
@@ -97,37 +65,8 @@ public enum LocalizationKeys {
     public enum Recommendation {
         public static let excellent = "recommendation.excellent"
         public static let good = "recommendation.good"
-        public static let normal = "recommendation.normal"
         public static let low = "recommendation.low"
         public static let critical = "recommendation.critical"
-    }
-
-    public enum Task {
-        public enum Status {
-            public static let pending = "task.status.pending"
-            public static let inProgress = "task.status.inprogress"
-            public static let completed = "task.status.completed"
-            public static let cancelled = "task.status.cancelled"
-            public static let paused = "task.status.paused"
-        }
-
-        public enum Priority {
-            public static let low = "task.priority.low"
-            public static let medium = "task.priority.medium"
-            public static let high = "task.priority.high"
-            public static let critical = "task.priority.critical"
-        }
-
-        public enum Category {
-            public static let work = "task.category.work"
-            public static let study = "task.category.study"
-            public static let health = "task.category.health"
-            public static let personal = "task.category.personal"
-            public static let learning = "task.category.learning"
-            public static let development = "task.category.development"
-            public static let urgent = "task.category.urgent"
-            public static let maintenance = "task.category.maintenance"
-        }
     }
 
     public enum Error {

@@ -19,7 +19,6 @@
 // MARK: - ステータス表示
 "willpower.status.excellent" = "最高";
 "willpower.status.good" = "良好";
-"willpower.status.normal" = "普通";
 "willpower.status.low" = "低下";
 "willpower.status.critical" = "危険";
 
@@ -47,7 +46,6 @@
 // MARK: - 推奨アクション
 "recommendation.excellent" = "素晴らしい状態です！集中力の高い作業に取り組みましょう。";
 "recommendation.good" = "良好な状態です。重要なタスクを進めるのに適しています。";
-"recommendation.normal" = "標準的な状態です。日常のタスクを着実に進めましょう。";
 "recommendation.low" = "少し疲れています。軽めのタスクか休憩を取ることをお勧めします。";
 "recommendation.critical" = "意志力が不足しています。十分な休息を取りましょう。";
 
@@ -66,13 +64,3 @@
 "settings.language.japanese" = "日本語";
 "settings.language.english" = "English";
 "settings.language.chinese" = "简体中文";
-
-// MARK: - タスクカテゴリ
-"task.category.work" = "仕事";
-"task.category.study" = "勉強";
-"task.category.health" = "健康";
-"task.category.personal" = "個人";
-"task.category.learning" = "学習";
-"task.category.development" = "開発";
-"task.category.urgent" = "緊急";
-"task.category.maintenance" = "メンテナンス";

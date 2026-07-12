@@ -10,6 +10,13 @@
 import Foundation
 
 public class WillPower {
+    public static let defaultCurrentValue = 100
+    public static let defaultMaxValue = 100
+
+    public static func makeDefault() -> WillPower {
+        WillPower(currentValue: defaultCurrentValue, maxValue: defaultMaxValue)
+    }
+
     private(set) var currentValue: Int
     public let maxValue: Int
 
@@ -71,8 +78,8 @@ public class WillPower {
         notifyObservers() // ドメインイベント通知
     }
 
-    public func canPerformTask(cost: Int) -> Bool {
-        return currentValue >= cost && cost >= 0
+    public func reset() {
+        restore(amount: maxValue - currentValue)
     }
 }
 

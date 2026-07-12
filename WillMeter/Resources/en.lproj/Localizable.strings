@@ -19,7 +19,6 @@
 // MARK: - Status Display
 "willpower.status.excellent" = "Excellent";
 "willpower.status.good" = "Good";
-"willpower.status.normal" = "Normal";
 "willpower.status.low" = "Low";
 "willpower.status.critical" = "Critical";
 
@@ -47,7 +46,6 @@
 // MARK: - Recommendations
 "recommendation.excellent" = "Excellent condition! Perfect time for high-concentration tasks.";
 "recommendation.good" = "Good condition. Suitable for important tasks.";
-"recommendation.normal" = "Standard condition. Continue with daily tasks steadily.";
 "recommendation.low" = "Feeling a bit tired. Consider lighter tasks or taking a break.";
 "recommendation.critical" = "Willpower is insufficient. Please take adequate rest.";
 
@@ -66,13 +64,3 @@
 "settings.language.japanese" = "日本語";
 "settings.language.english" = "English";
 "settings.language.chinese" = "简体中文";
-
-// MARK: - Task Categories
-"task.category.work" = "Work";
-"task.category.study" = "Study";
-"task.category.health" = "Health";
-"task.category.personal" = "Personal";
-"task.category.learning" = "Learning";
-"task.category.development" = "Development";
-"task.category.urgent" = "Urgent";
-"task.category.maintenance" = "Maintenance";

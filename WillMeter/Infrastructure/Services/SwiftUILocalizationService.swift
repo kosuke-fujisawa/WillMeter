@@ -8,24 +8,34 @@
 //
 
 import Foundation
+import OSLog
 import SwiftUI
 
-/// SwiftUI環境でのLocalizationService具体実装
-/// Infrastructure層でのUI技術依存を適切にカプセル化
-public final class SwiftUILocalizationService: LocalizationService, ObservableObject {
+/// SwiftUI環境でのローカライズと変更通知を提供する
+public final class SwiftUILocalizationService: ObservableObject {
+    private static let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "WillMeter", category: "Localization")
+
     /// 言語変更通知用Publisher
     @Published public private(set) var currentLanguageCode: String
 
     /// ユーザーが手動設定した言語（UserDefaults保存）
     private static let selectedLanguageKey = "selected_language"
 
-    /// サポート言語リスト（Phase 1対応）
-    public let supportedLanguages = ["ja", "en", "zh-Hans"]
+    /// サポート言語の表示順と表示名を一元管理する
+    private static let supportedLanguageDefinitions: [(code: String, name: String)] = [
+        (code: "ja", name: "日本語"),
+        (code: "en", name: "English"),
+        (code: "zh-Hans", name: "简体中文")
+    ]
+    public static let supportedLanguages = supportedLanguageDefinitions.map(\.code)
+    public static let languageDisplayNames = Dictionary(
+        uniqueKeysWithValues: supportedLanguageDefinitions.map { ($0.code, $0.name) }
+    )
 
     public init() {
         // 保存された言語設定を復元、未設定時はシステム言語
         if let savedLanguage = UserDefaults.standard.string(forKey: Self.selectedLanguageKey),
-           supportedLanguages.contains(savedLanguage) {
+           Self.supportedLanguages.contains(savedLanguage) {
             self.currentLanguageCode = savedLanguage
         } else {
             // システム言語からサポート言語を選択
@@ -79,8 +89,8 @@ public final class SwiftUILocalizationService: LocalizationService, ObservableOb
     /// 言語を動的に変更
     /// - Parameter languageCode: 変更先の言語コード
     public func changeLanguage(to languageCode: String) {
-        guard supportedLanguages.contains(languageCode) else {
-            print("⚠️ Unsupported language: \(languageCode)")
+        guard Self.supportedLanguages.contains(languageCode) else {
+            Self.logger.warning("Unsupported language: \(languageCode, privacy: .public)")
             return
         }
 
@@ -108,7 +118,7 @@ public final class SwiftUILocalizationService: LocalizationService, ObservableOb
 
     /// システム言語からサポート言語を選択
     private static func selectSupportedLanguage(from preferredLanguages: [String]) -> String {
-        let supportedSet = Set(["ja", "en", "zh-Hans"])
+        let supportedSet = Set(supportedLanguages)
 
         for preferred in preferredLanguages {
             // 完全一致チェック
@@ -139,33 +149,11 @@ public final class SwiftUILocalizationService: LocalizationService, ObservableOb
 public extension SwiftUILocalizationService {
     /// 現在の言語表示名を取得
     var currentLanguageDisplayName: String {
-        switch currentLanguageCode {
-        case "ja":
-            return "日本語"
-        case "en":
-            return "English"
-        case "zh-Hans":
-            return "简体中文"
-        default:
-            return currentLanguageCode
-        }
+        Self.languageDisplayNames[currentLanguageCode] ?? currentLanguageCode
     }
 
     /// 全サポート言語の表示名を取得
     var supportedLanguagesDisplayNames: [(code: String, name: String)] {
-        return supportedLanguages.map { code in
-            let name: String
-            switch code {
-            case "ja":
-                name = "日本語"
-            case "en":
-                name = "English"
-            case "zh-Hans":
-                name = "简体中文"
-            default:
-                name = code
-            }
-            return (code: code, name: name)
-        }
+        Self.supportedLanguageDefinitions
     }
 }
