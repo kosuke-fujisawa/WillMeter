@@ -9,7 +9,7 @@
     "lint:fix": "swiftlint --fix",
     "quality:check": "npm run clean:all && npm run lint",
     "pre-commit": "npm run quality:check",
-    "test:scripts": "bash scripts/tests/pre-commit-test.sh"
+    "test:scripts": "bash scripts/tests/pre-commit-test.sh && bash scripts/tests/upload-testflight-portability-test.sh && bash scripts/tests/upload-testflight-test.sh"
   },
   "repository": {
     "type": "git",
