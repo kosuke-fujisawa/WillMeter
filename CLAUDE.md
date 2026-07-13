@@ -45,6 +45,15 @@ WillMeter は、ウィルパワー（意思力）を可視化・操作する Swi
 
 テストのために依存を差し替える必要が生じた場合は protocol の導入を検討できます。ただし、具体型やクロージャで十分なら、より単純な方法を優先します。
 
+## 実装上の制約（コードから読み取りにくいもの）
+
+- **永続化キーの互換性**: ウィルパワーは UserDefaults の `willPower.currentValue` / `willPower.maxValue`、言語設定は `selected_language` に保存される。キー名を変えると既存ユーザーのデータが失われる
+- **初回起動判定**: `UserDefaultsWillPowerRepository.load()` は `maxValue > 0` を「保存済みデータあり」の判定に使う。`maxValue = 0` は正常値として保存できない前提
+- **日次自動リセットはしない**: 日付変更や時間経過でウィルパワーを自動変化させない（[ADR 0001](docs/adr/0001-willpower-no-daily-reset.md)）。`reset()` は 0 クリアではなく最大値まで回復する操作
+- **自動保存は fire-and-forget**: ViewModel の操作系はドメインを同期的に変更し、保存は別 Task で非同期実行する。テストで保存完了を待つには `waitForPendingSaveForTesting()` を使う
+- **ローカライズは独自実装**: `SwiftUILocalizationService` が言語コードから `.lproj` バンドルを手動ロードする。翻訳が見つからない場合は日本語（ja）へフォールバックする
+- **UI変更通知は ViewModel へ集約**: ドメインと言語変更を ViewModel が直接購読する（[ADR 0003](docs/adr/0003-simplify-ui-change-notifications.md)）。中継用ラッパーや protocol を再導入しない
+
 ## コミュニケーション
 
 - ユーザーへの応答は日本語を優先する

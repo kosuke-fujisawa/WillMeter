@@ -2,6 +2,8 @@
 
 同一リポジトリ内の非ドラフトPRを作成・更新すると、`.github/workflows/ai-review.yml` が共有Action `kosuke-fujisawa/ai-review-action@v1` を実行します。
 
+レビューの実装本体は共有Action [kosuke-fujisawa/ai-review-action](https://github.com/kosuke-fujisawa/ai-review-action) に移行済みで、このリポジトリ側にはワークフロー定義とレビュー指示（`.github/ai-review-instructions.md`）だけを置いています。
+
 ## 必須設定
 
 - Repository secret `OPENAI_API_KEY`: OpenAI APIキー
@@ -17,6 +19,6 @@
 
 差分予算は最大30,000文字です。高確信度の `critical`、`high`、`medium` だけを最大3件返します。
 
-## 共通基盤
+## ローカル確認
 
-実装とテストの正本は [kosuke-fujisawa/ai-review-action](https://github.com/kosuke-fujisawa/ai-review-action) です。このリポジトリにはWorkflowとプロジェクト固有のレビュー方針だけを置きます。
+レビューのスクリプトとテストは共有Action側リポジトリにあるため、動作確認は [kosuke-fujisawa/ai-review-action](https://github.com/kosuke-fujisawa/ai-review-action) 側で行います。このリポジトリ側で変更しうるのは `.github/workflows/ai-review.yml` と `.github/ai-review-instructions.md` のみです。

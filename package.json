@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "意思力を見える化して、本当に大切なことに集中する iOS アプリ",
   "scripts": {
-    "clean:whitespace": "find . -name '*.swift' -not -path './.git/*' -exec sed -i '' 's/[[:space:]]*$//' {} \\; && echo '✅ 全Swiftファイルの末尾空白を除去しました'",
-    "clean:all": "npm run clean:whitespace && find . \\( -name '*.yml' -o -name '*.yaml' -o -name '*.md' \\) -not -path './.git/*' -exec sed -i '' 's/[[:space:]]*$//' {} \\; && echo '✅ 全ファイルの末尾空白を除去しました'",
+    "clean:whitespace": "git ls-files -z '*.swift' | xargs -0 sed -i '' 's/[[:space:]]*$//' && echo '✅ 全Swiftファイルの末尾空白を除去しました'",
+    "clean:all": "npm run clean:whitespace && git ls-files -z '*.yml' '*.yaml' '*.md' | xargs -0 sed -i '' 's/[[:space:]]*$//' && echo '✅ 全ファイルの末尾空白を除去しました'",
     "lint": "swiftlint",
     "lint:fix": "swiftlint --fix",
     "quality:check": "npm run clean:all && npm run lint",

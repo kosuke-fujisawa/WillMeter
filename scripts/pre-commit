@@ -7,12 +7,15 @@
 echo "🔍 WillMeter pre-commit hook: trailing whitespace自動除去開始..."
 
 # 1. 全Swiftファイルの末尾空白を自動除去
+# exFATドライブ上ではメタデータファイル(._* や .!*)が大量に生成され、
+# findでの全走査はsedのクラッシュとタイムアウトを招くため、
+# git追跡ファイルのみを対象にする
 echo "   📝 全Swiftファイルの末尾空白除去中..."
-find . -name "*.swift" -not -path "./.git/*" -exec sed -i '' 's/[[:space:]]*$//' {} \;
+git ls-files -z '*.swift' | xargs -0 sed -i '' 's/[[:space:]]*$//'
 
 # 2. .swiftlint.yml, .md ファイルの末尾空白も除去
 echo "   📝 設定ファイル・ドキュメントの末尾空白除去中..."
-find . \( -name "*.yml" -o -name "*.yaml" -o -name "*.md" \) -not -path "./.git/*" -exec sed -i '' 's/[[:space:]]*$//' {} \;
+git ls-files -z '*.yml' '*.yaml' '*.md' | xargs -0 sed -i '' 's/[[:space:]]*$//'
 
 # 3. SwiftLint実行
 echo "   🔧 SwiftLint品質チェック実行中..."
