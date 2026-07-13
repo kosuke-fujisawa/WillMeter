@@ -12,6 +12,7 @@ TEMP_ROOT="${TEMP_ROOT%/}"
 ARCHIVE_PATH="${ARCHIVE_PATH:-$TEMP_ROOT/WillMeter-$RUN_ID.xcarchive}"
 EXPORT_PATH="${EXPORT_PATH:-$TEMP_ROOT/WillMeter-export-$RUN_ID}"
 DRY_RUN=false
+ENABLE_CRASH_TEST=false
 
 usage() {
     cat <<'EOF'
@@ -19,6 +20,7 @@ Usage: DEVELOPMENT_TEAM=<Team ID> scripts/upload-testflight.sh [options]
 
 Options:
   --archive-path <path>  Archiveの保存先を指定する
+  --enable-crash-test    クラッシュレポート検証UIを含むビルドを作成する
   --dry-run              実行するxcodebuildコマンドだけを表示する
   --help                 このヘルプを表示する
 
@@ -43,6 +45,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --dry-run)
             DRY_RUN=true
+            shift
+            ;;
+        --enable-crash-test)
+            ENABLE_CRASH_TEST=true
             shift
             ;;
         --help)
@@ -76,6 +82,15 @@ archive_command=(
     -derivedDataPath "$DERIVED_DATA_PATH"
     -archivePath "$ARCHIVE_PATH"
     DEVELOPMENT_TEAM="$DEVELOPMENT_TEAM"
+)
+
+if [[ "$ENABLE_CRASH_TEST" == true ]]; then
+    archive_command+=(
+        'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) CRASH_REPORT_TESTING'
+    )
+fi
+
+archive_command+=(
     -allowProvisioningUpdates
     archive
 )
@@ -92,6 +107,9 @@ upload_command=(
 echo "Archive: $ARCHIVE_PATH"
 echo "Export logs: $EXPORT_PATH"
 echo "XcodeがApp Store Connectへのアップロード時にビルド番号を自動管理します。"
+if [[ "$ENABLE_CRASH_TEST" == true ]]; then
+    echo "警告: クラッシュレポート検証UIを含むTestFlightビルドです。"
+fi
 
 if [[ "$DRY_RUN" == true ]]; then
     echo "Archive command:"

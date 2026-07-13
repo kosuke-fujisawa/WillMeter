@@ -53,3 +53,15 @@ DEVELOPMENT_TEAM=XXXXXXXXXX scripts/upload-testflight.sh \
 - アップロード失敗: App Store ConnectのBuild Uploadsでエラー詳細を確認する
 
 Apple側で処理が`Failed`になった場合は、同じビルド番号を再利用できる場合があります。Xcodeの自動管理に任せ、プロジェクトファイルを手動編集しないでください。
+
+## クラッシュレポート検証用ビルド
+
+Issue #40のクラッシュレポート収集を実地確認するときだけ、次のコマンドで検証用UIを含むビルドをアップロードします。
+
+```bash
+DEVELOPMENT_TEAM=XXXXXXXXXX scripts/upload-testflight.sh --enable-crash-test
+```
+
+このオプションはArchiveへ`CRASH_REPORT_TESTING`コンパイル条件を渡します。通常のアップロードには検証UIが含まれません。
+
+検証後は`--enable-crash-test`を付けずに通常ビルドをアップロードし、テスターが利用するビルドを差し替えてください。詳しい確認手順は[クラッシュレポート運用手順](crash-reporting.md)を参照してください。
