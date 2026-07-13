@@ -39,7 +39,7 @@ test_partial_staging_is_preserved() {
     [[ "$working_content" == $'let value = 2   \nlet unstaged = true' ]] || fail "未ステージの作業ツリーが変更されました"
 }
 
-test_deleted_tracked_file_is_ignored() {
+test_all_tracked_files_are_cleaned_and_deleted_file_is_ignored() {
     local test_repository
     test_repository=$(mktemp -d)
     trap 'rm -rf "$test_repository"' RETURN
@@ -52,16 +52,17 @@ test_deleted_tracked_file_is_ignored() {
     git -C "$test_repository" add Deleted.swift Existing.swift
     git -C "$test_repository" commit --quiet -m initial
     rm "$test_repository/Deleted.swift"
+    printf 'let unstaged = true   \n' > "$test_repository/Existing.swift"
 
     (
         cd "$test_repository"
         bash "$REPOSITORY_ROOT/scripts/clean-trailing-whitespace.sh" swift
     )
 
-    [[ $(cat "$test_repository/Existing.swift") == 'let existing = true' ]] || fail "実在するSwiftファイルが整形されていません"
+    [[ $(cat "$test_repository/Existing.swift") == 'let unstaged = true' ]] || fail "未ステージ変更のある追跡Swiftファイルが整形されていません"
 }
 
 test_partial_staging_is_preserved
-test_deleted_tracked_file_is_ignored
+test_all_tracked_files_are_cleaned_and_deleted_file_is_ignored
 
 echo "✅ pre-commitスクリプトテスト成功"

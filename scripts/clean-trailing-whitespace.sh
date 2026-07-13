@@ -17,7 +17,7 @@ case "$scope" in
         ;;
 esac
 
-git ls-files -z --cached -- "${patterns[@]}" |
+git ls-files -z -- "${patterns[@]}" |
 while IFS= read -r -d '' file; do
     # git ls-filesは未ステージで削除されたパスも返すため、実在する通常ファイルだけを整形する。
     if [[ -f "$file" ]]; then
