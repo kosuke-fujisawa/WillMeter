@@ -2,9 +2,15 @@
 
 set -uo pipefail
 
+PLATFORM_NAME="${PLATFORM_NAME:-$(uname -s)}"
+if [[ "$PLATFORM_NAME" != "Darwin" ]]; then
+    echo "SKIP: macOS専用のTestFlight配布テストです"
+    exit 0
+fi
+
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-SCRIPT_PATH="$REPO_ROOT/scripts/upload-testflight.sh"
-EXPORT_OPTIONS_PATH="$REPO_ROOT/Config/TestFlightExportOptions.plist"
+SCRIPT_PATH="${SCRIPT_PATH:-$REPO_ROOT/scripts/upload-testflight.sh}"
+EXPORT_OPTIONS_PATH="${EXPORT_OPTIONS_PATH:-$REPO_ROOT/Config/TestFlightExportOptions.plist}"
 failures=0
 
 pass() {
@@ -31,13 +37,13 @@ assert_contains() {
 if [[ -f "$SCRIPT_PATH" ]]; then
     pass "TestFlightアップロードスクリプトが存在する"
 else
-    fail "TestFlightアップロードスクリプトが存在する"
+    fail "TestFlightアップロードスクリプトが見つかりません"
 fi
 
 if [[ -f "$EXPORT_OPTIONS_PATH" ]]; then
     pass "ExportOptions plistが存在する"
 else
-    fail "ExportOptions plistが存在する"
+    fail "ExportOptions plistが見つかりません"
 fi
 
 if [[ -f "$SCRIPT_PATH" && -f "$EXPORT_OPTIONS_PATH" ]]; then
