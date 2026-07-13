@@ -55,6 +55,13 @@ if [[ -f "$SCRIPT_PATH" && -f "$EXPORT_OPTIONS_PATH" ]]; then
     assert_contains "$dry_run_output" "-exportArchive" "dry-runにApp Store Connectアップロード処理が含まれる"
     assert_contains "$dry_run_output" "-exportPath" "アップロード処理にexportPathが含まれる"
 
+    custom_derived_data_output="$(
+        DERIVED_DATA_PATH=/tmp/WillMeterDerivedData \
+            DEVELOPMENT_TEAM=TESTTEAM \
+            bash "$SCRIPT_PATH" --dry-run 2>&1
+    )"
+    assert_contains "$custom_derived_data_output" "/tmp/WillMeterDerivedData" "DerivedDataの保存先を環境変数で上書きできる"
+
     missing_team_output="$(env -u DEVELOPMENT_TEAM bash "$SCRIPT_PATH" 2>&1)"
     missing_team_status=$?
     if [[ $missing_team_status -ne 0 ]]; then
@@ -67,10 +74,14 @@ if [[ -f "$SCRIPT_PATH" && -f "$EXPORT_OPTIONS_PATH" ]]; then
     method="$(/usr/libexec/PlistBuddy -c 'Print :method' "$EXPORT_OPTIONS_PATH")"
     destination="$(/usr/libexec/PlistBuddy -c 'Print :destination' "$EXPORT_OPTIONS_PATH")"
     manages_build_number="$(/usr/libexec/PlistBuddy -c 'Print :manageAppVersionAndBuildNumber' "$EXPORT_OPTIONS_PATH")"
+    signing_style="$(/usr/libexec/PlistBuddy -c 'Print :signingStyle' "$EXPORT_OPTIONS_PATH")"
+    upload_symbols="$(/usr/libexec/PlistBuddy -c 'Print :uploadSymbols' "$EXPORT_OPTIONS_PATH")"
 
     [[ "$method" == "app-store-connect" ]] && pass "App Store Connect配布を指定する" || fail "App Store Connect配布を指定する"
     [[ "$destination" == "upload" ]] && pass "exportではなくuploadを指定する" || fail "exportではなくuploadを指定する"
     [[ "$manages_build_number" == "true" ]] && pass "Xcodeのビルド番号自動管理を有効にする" || fail "Xcodeのビルド番号自動管理を有効にする"
+    [[ "$signing_style" == "automatic" ]] && pass "自動署名を指定する" || fail "自動署名を指定する"
+    [[ "$upload_symbols" == "true" ]] && pass "dSYMシンボルのアップロードを有効にする" || fail "dSYMシンボルのアップロードを有効にする"
 fi
 
 if [[ $failures -gt 0 ]]; then

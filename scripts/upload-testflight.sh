@@ -5,7 +5,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROJECT_PATH="$REPO_ROOT/WillMeter.xcodeproj"
 EXPORT_OPTIONS_PATH="$REPO_ROOT/Config/TestFlightExportOptions.plist"
-DERIVED_DATA_PATH="/Volumes/T7 Shield/DerivedData"
+DERIVED_DATA_PATH="${DERIVED_DATA_PATH:-/Volumes/T7 Shield/DerivedData}"
 RUN_ID="$(date '+%Y%m%d-%H%M%S')"
 TEMP_ROOT="${TMPDIR:-/tmp}"
 TEMP_ROOT="${TEMP_ROOT%/}"
