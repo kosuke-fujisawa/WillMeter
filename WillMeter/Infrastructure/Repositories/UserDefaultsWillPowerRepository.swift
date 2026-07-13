@@ -26,14 +26,13 @@ public class UserDefaultsWillPowerRepository: WillPowerRepository {
     }
 
     public func load() async throws -> WillPower {
-        let maxValue = userDefaults.integer(forKey: maxValueKey)
-
-        // 初回起動時（未保存）は共通デフォルトを使用
-        guard maxValue > 0 else {
+        // 初回起動時や保存途中の不完全なデータは共通デフォルトを使用
+        guard let maxValue = userDefaults.object(forKey: maxValueKey) as? Int,
+              let currentValue = userDefaults.object(forKey: currentValueKey) as? Int,
+              maxValue > 0 else {
             return WillPower.makeDefault()
         }
 
-        let currentValue = userDefaults.integer(forKey: currentValueKey)
         return WillPower(currentValue: currentValue, maxValue: maxValue)
     }
 }
