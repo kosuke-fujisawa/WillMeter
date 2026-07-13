@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "description": "意思力を見える化して、本当に大切なことに集中する iOS アプリ",
   "scripts": {
-    "clean:whitespace": "git ls-files -z '*.swift' | xargs -0 sed -i '' 's/[[:space:]]*$//' && echo '✅ 全Swiftファイルの末尾空白を除去しました'",
-    "clean:all": "npm run clean:whitespace && git ls-files -z '*.yml' '*.yaml' '*.md' | xargs -0 sed -i '' 's/[[:space:]]*$//' && echo '✅ 全ファイルの末尾空白を除去しました'",
+    "clean:whitespace": "bash scripts/clean-trailing-whitespace.sh swift && echo '✅ 全Swiftファイルの末尾空白を除去しました'",
+    "clean:all": "bash scripts/clean-trailing-whitespace.sh all && echo '✅ 全ファイルの末尾空白を除去しました'",
     "lint": "swiftlint",
     "lint:fix": "swiftlint --fix",
     "quality:check": "npm run clean:all && npm run lint",
-    "pre-commit": "npm run quality:check"
+    "pre-commit": "npm run quality:check",
+    "test:scripts": "bash scripts/tests/pre-commit-test.sh"
   },
   "repository": {
     "type": "git",

@@ -6,16 +6,31 @@
 
 echo "🔍 WillMeter pre-commit hook: trailing whitespace自動除去開始..."
 
-# 1. 全Swiftファイルの末尾空白を自動除去
-# exFATドライブ上ではメタデータファイル(._* や .!*)が大量に生成され、
-# findでの全走査はsedのクラッシュとタイムアウトを招くため、
-# git追跡ファイルのみを対象にする
-echo "   📝 全Swiftファイルの末尾空白除去中..."
-git ls-files -z '*.swift' | xargs -0 sed -i '' 's/[[:space:]]*$//'
+format_staged_files() {
+    local temporary_file
+    temporary_file=$(mktemp)
+    trap 'rm -f "$temporary_file"' RETURN
 
-# 2. .swiftlint.yml, .md ファイルの末尾空白も除去
-echo "   📝 設定ファイル・ドキュメントの末尾空白除去中..."
-git ls-files -z '*.yml' '*.yaml' '*.md' | xargs -0 sed -i '' 's/[[:space:]]*$//'
+    while IFS= read -r -d '' file; do
+        git show ":$file" > "$temporary_file"
+        sed -i '' 's/[[:space:]]*$//' "$temporary_file"
+
+        if ! git show ":$file" | cmp -s - "$temporary_file"; then
+            local index_entry mode blob
+            index_entry=$(git ls-files -s -- "$file")
+            mode=${index_entry%% *}
+            blob=$(git hash-object -w "$temporary_file")
+            git update-index --cacheinfo "$mode,$blob,$file"
+        fi
+    done < <(git diff --cached --name-only --diff-filter=ACMR -z -- "$@")
+}
+
+# 作業ツリーには未ステージの変更があり得るため、ステージ済みblobだけを整形する。
+echo "   📝 ステージ済みSwiftファイルの末尾空白除去中..."
+format_staged_files '*.swift'
+
+echo "   📝 ステージ済み設定ファイル・ドキュメントの末尾空白除去中..."
+format_staged_files '*.yml' '*.yaml' '*.md'
 
 # 3. SwiftLint実行
 echo "   🔧 SwiftLint品質チェック実行中..."
@@ -29,11 +44,6 @@ if command -v swiftlint >/dev/null 2>&1; then
 else
     echo "   ⚠️  SwiftLintがインストールされていません"
 fi
-
-# 4. hookが修正したステージ済みファイルのみ再ステージする
-# (git add -A だと未追跡のメタデータや無関係な変更まで巻き込むため、ステージ済みに限定)
-echo "   📦 ステージ済みファイルを再ステージ中..."
-git diff --cached --name-only -z | xargs -0 git add -- 2>/dev/null || true
 
 echo "✅ pre-commit hook完了: trailing whitespace除去・SwiftLint実行完了"
 exit 0

@@ -49,7 +49,7 @@ WillMeter は意思力を「見える化」することで：
 
 本プロジェクトは **Simple First** を設計方針とします。ドメインロジックを UI・永続化から分離しつつ、レイヤーや抽象化の一律強制はしません。判断の経緯は [ADR 0002](docs/adr/0002-adopt-simple-first-architecture.md) を参照してください。
 
-```
+```text
 WillMeter/
 ├── WillMeterApp.swift        ← エントリポイント
 ├── ContentView.swift         ← メイン画面と依存の組み立て
