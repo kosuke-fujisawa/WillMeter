@@ -39,6 +39,11 @@ struct LanguageSettingsView: View {
                 }
                 .padding(.horizontal, 20)
 
+#if CRASH_REPORT_TESTING
+                CrashReportTestSection()
+                    .padding(.horizontal, 20)
+#endif
+
                 Spacer()
 
                 // 現在の言語表示

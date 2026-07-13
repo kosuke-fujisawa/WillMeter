@@ -106,6 +106,31 @@ final class WillMeterUITests: XCTestCase {
         doneButton.tap()
     }
 
+#if CRASH_REPORT_TESTING
+    @MainActor
+    func testCrashReportVerificationRequiresConfirmation() throws {
+        let app = XCUIApplication()
+        app.launch()
+        dismissOnboardingIfPresent(app)
+
+        let languageToggleButton = app.buttons["languageToggleButton"]
+        XCTAssertTrue(languageToggleButton.waitForExistence(timeout: 5))
+        languageToggleButton.tap()
+
+        let crashReportTestButton = app.buttons["crashReportTestButton"]
+        XCTAssertTrue(crashReportTestButton.waitForExistence(timeout: 5), "検証用ビルドだけにボタンが表示されること")
+        crashReportTestButton.tap()
+
+        let confirmButton = app.buttons["クラッシュさせる"]
+        XCTAssertTrue(confirmButton.waitForExistence(timeout: 5), "意図的クラッシュの前に確認を求めること")
+
+        let cancelButton = app.buttons["キャンセル"]
+        XCTAssertTrue(cancelButton.exists)
+        cancelButton.tap()
+        XCTAssertTrue(app.exists, "キャンセル時はアプリが継続すること")
+    }
+#endif
+
     @MainActor
     func testLaunchPerformance() throws {
         if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
