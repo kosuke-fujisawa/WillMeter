@@ -40,7 +40,7 @@ WillMeter は意思力を「見える化」することで：
 ## 🛠️ 技術スタック
 
 - **フレームワーク**: SwiftUI
-- **最小対応OS**: iOS 18.5+
+- **最小対応OS**: iOS 17.0+
 - **開発環境**: Xcode 16.4+
 - **アーキテクチャ**: Simple First（軽量・シンプル優先） + TDD (Test-Driven Development)
 - **品質管理**: SwiftLint + AI自動レビュー（[docs/ai-review.md](docs/ai-review.md)）

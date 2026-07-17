@@ -99,5 +99,5 @@ xcodebuild -project WillMeter.xcodeproj -scheme WillMeter \
 ## 技術要件
 
 - Xcode 16.4 以上
-- iOS 18.5 以上
+- iOS 17.0 以上（最小対応バージョンの根拠は [ADR 0006](docs/adr/0006-lower-min-ios-to-17.md)）
 - SwiftUI / XCTest / SwiftLint
