@@ -394,21 +394,20 @@ WillMeter/
 
 ### 4.4 データ保存方式
 
-- **UserDefaults**: 軽量なUI設定(初回起動済みフラグ、テーマ、モノクロモード、選択中タブ、言語設定)。
-- **JSONファイル**: WillMeterDay、ActivityLog、Category、SubCategory、PersonalBaseline、現在状態、Tips閲覧状態。保存時は一時ファイルへ書き込み後に置換し、破損に備え直前世代のバックアップを1世代保持する。
+- **UserDefaults**: 軽量なUI設定(テーマ、モノクロモード、選択中タブ、言語設定、v1移行完了フラグ)。オンボーディング完了はJSON内のアプリ状態から判断する。
+- **JSONファイル**: WillMeterDay、ActivityLog、Category、SubCategory、PersonalBaseline、現在状態、Tips閲覧状態を、単一のスナップショットへ保存する。保存時は一時ファイルへ書き込み後に置換し、破損に備え直前世代のバックアップを1世代保持する。
 - **StoreKit 2**: プレミアム権利(非消耗型、商品1点)。
 - **SwiftDataは採用しない**(データ量が小さくJSONの方が構造を把握しやすい、エクスポートとの親和性が高い、Repositoryを介せば将来移行できるため)。ただしJSONファイルをViewやViewModelから直接操作してはならず、Repository相当を経由する。
 
-推奨ファイル分割(参考、必要になった時点で分割):
+保存単位は[ADR 0007](../adr/0007-store-v2-data-as-single-json-and-migrate-v1-values.md)で決定した。複数ファイル間の更新不整合を避けるため、初期リリースでは種類別に分割しない。
 
 ```
 Application Support/WillMeter/
-├── state.json
-├── days.json
-├── activity_logs.json
-├── categories.json
-└── metadata.json
+├── willmeter-data.json
+└── willmeter-data.backup.json
 ```
+
+JSON形式は製品バージョンとは独立した `dataFormatVersion` を持ち、初期値を1とする。IDはUUID文字列、日時はタイムゾーンを含むISO 8601文字列で保存する。未知の新しい形式を自動上書きせず、古い形式は明示的な段階移行後に不変条件を検証する。
 
 ---
 
@@ -419,7 +418,7 @@ Application Support/WillMeter/
 | 機能領域 | 状態 | 現状の実装箇所 | 新仕様とのギャップ |
 |---|---|---|---|
 | ウィルパワーEntity | 要置換 | `WillMeter/Domain/Entities/WillPower.swift`(`currentValue`/`maxValue`とも既定100、`0〜maxValue`にクランプ、`consume/restore/reset`) | 新仕様は内部上限なしの主観値(`-10〜+10`基準、防御範囲`-999〜999`)、「最大ウィルパワー」概念の廃止、「好調時の目安」への置き換えが必要。**根本的に非互換**なため作り直しが前提 |
-| 永続化(現在値) | 要置換 | `WillMeter/Infrastructure/Repositories/UserDefaultsWillPowerRepository.swift`。キー `willPower.currentValue` / `willPower.maxValue`。`maxValue > 0` を「保存済みデータあり」の判定に使用(CLAUDE.mdの制約) | 新仕様はJSONファイル中心の保存(WillMeterDay/ActivityLog等)へ移行。既存キーのデータ移行 or 廃棄は7章の要決定事項 |
+| 永続化(現在値) | 要置換(方針決定済み) | `WillMeter/Infrastructure/Repositories/UserDefaultsWillPowerRepository.swift`。キー `willPower.currentValue` / `willPower.maxValue`。`maxValue > 0` を「保存済みデータあり」の判定に使用(CLAUDE.mdの制約) | [ADR 0007](../adr/0007-store-v2-data-as-single-json-and-migrate-v1-values.md)により、単一JSONスナップショットへ置換し、既存の相対値を−10〜+10へ線形移行する。実装は未着手 |
 | 永続化(言語設定) | 済(流用可) | `SwiftUILocalizationService.swift`、UserDefaultsキー `selected_language` | 新仕様でもUserDefaults管理のまま流用してよい |
 | オンボーディング | 部分 | `WillMeter/Presentation/Views/OnboardingView.swift`(アプリ説明+使い方3項目+開始ボタンのみ、`@AppStorage("hasCompletedOnboarding")`で制御) | 「現在値設定」(ONB-002)・「好調時の目安設定」(ONB-003)画面が未実装。既存Viewへの追加拡張が可能 |
 | タブ構成 | 未 | 現状は`NavigationStack`ベースの単一画面(`ContentView.swift`) | メーター/履歴/設定/クレジットの4タブ構成が必要 |
@@ -439,7 +438,7 @@ Application Support/WillMeter/
 ### 5.1 特筆すべき非互換ポイント
 
 - **WillPowerモデルの全面置き換えが前提**。既存の`WillPower`クラス(0〜100、`maxValue`固定、`consume`が「不足時false」を返す仕様)は新仕様の数値モデル(上限なし・主観値・好調時の目安)と概念からして異なる。段階的移行ではなく作り直しに近い判断が必要になる可能性が高い。
-- **既存UserDefaultsデータの扱いが未決定**。新規ユーザーは影響ないが、TestFlight配布済みの既存データ(`willPower.currentValue`等)をどう扱うか(移行/リセット/破棄)は実装着手前に決める必要がある(7章)。
+- **既存UserDefaultsデータはv2へ一度だけ移行する**。`currentValue/maxValue` の相対位置を−10〜+10へ線形変換し、好調時の目安10、移行時刻開始のWillMeterDay、分析対象外の移行記録として保存する。詳細はADR 0007を正とする。
 - ソフトウェアのアーキテクチャ大枠(Simple First / ADR 0002)は新仕様と矛盾しないため維持する。
 
 ---
@@ -454,6 +453,7 @@ Application Support/WillMeter/
 | [0004](../adr/0004-let-xcode-manage-testflight-build-numbers.md) TestFlightビルド番号 | Xcodeが自動管理 | 新仕様と無関係、維持 |
 | [0005](../adr/0005-use-apple-crash-reports.md) Apple標準クラッシュレポート使用 | Firebase/Sentry等は導入しない | 新仕様と無関係、維持 |
 | [0006](../adr/0006-lower-min-ios-to-17.md) 最小iOS 17.0 | iOS 17.0以上をサポート対象とする | 新仕様の実装(StoreKit 2等)もiOS 17.0で問題なし、維持 |
+| [0007](../adr/0007-store-v2-data-as-single-json-and-migrate-v1-values.md) 単一JSON保存とv1値移行 | v2ドメインデータを原子的に保存し、v1の相対値を−10〜+10へ線形移行する | **本文書4.4節と5.1節へ反映済み**。Issue #74以降の保存・移行実装はこの契約に従う |
 
 ---
 
@@ -463,15 +463,15 @@ Application Support/WillMeter/
 
 ### Phase 1: ドメイン基盤
 
-- 【要置換】新数値モデルの検討・実装: `WillPowerValue`(内部上限なし・防御範囲`-999〜999`)、既存`WillPower`クラスの置き換え方針を決定(作り直し前提でTDD)。
+- 【要置換】新数値モデルの実装: `WillPowerValue`(内部上限なし・永続化境界の防御範囲`-999〜999`)。既存`WillPower`クラスは作り直し、v1値の移行はADR 0007に従ってTDDで実装する。
 - 【新規】`PersonalBaseline`(好調時の目安)、`WillMeterDay`、`ActivityLog`、`ActivityDirection`、`SleepType`、`RecordType`のEntity/Value Object設計。
 - 【新規】日境界ルール(睡眠2種別、`awaitingDayStart`状態遷移)のドメインロジックをTDDで実装。
 - 【新規】不変条件14項目(2.16節)を満たすことをユニットテストで保証。
 
 ### Phase 2: ローカル保存
 
-- 【新規】JSON Repositoryの実装(WillMeterDay/ActivityLog/Category等)。一時ファイル書き込み→置換、1世代バックアップ。
-- 【要置換 or 流用】既存`UserDefaultsWillPowerRepository`の扱いを決定: 軽量UI設定専用に縮小するか、廃止して新Repositoryへ統合するか(7.1節「未確定事項」参照)。
+- 【新規】単一JSONスナップショットの保存境界を実装(WillMeterDay/ActivityLog/Category等)。一時ファイルの再検証→原子的置換、1世代バックアップ、正本破損時の復旧を行う。
+- 【要置換】既存`UserDefaultsWillPowerRepository`はv1移行入力としてのみ読み取り、v2の正本には使用しない。軽量UI設定と言語設定はUserDefaultsに残す。
 - 【新規】Repositoryのユニットテスト。
 
 ### Phase 3: 基本UI
@@ -521,18 +521,23 @@ Application Support/WillMeter/
 
 実装着手前、または該当Phase着手前に決定が必要な事項。
 
-1. 既存UserDefaultsデータ(`willPower.currentValue`/`willPower.maxValue`)の扱い: 移行するか、破棄して作り直すか。
-2. 正式なBundle Identifier(現状 `mhlyc.WillMeter` がクラッシュレポート検証で使用されているが、これを正式運用IDとするか要確認)。
-3. App Store上の正式価格・プレミアム商品ID。
-4. ソースコードおよびアプリ内コンテンツのライセンス(現状`LICENSE`はCC BY-NC 4.0だが、ソフトウェアライセンスとして適切か再検討)。
-5. デフォルトテーマ・プレミアムテーマの具体的な色値。
-6. 初期カテゴリ・サブカテゴリの最終名称と初期値(ユーザーテストで調整前提)。
-7. 対応言語を既存3言語(ja/en/zh-Hans)のまま維持するか。
-8. 日次履歴の保持件数に上限を設けるか。
-9. 週次分析の週開始曜日をロケール依存のままにするか、設定で変更可能にするか。
-10. サポートページURL・プライバシーポリシーURL。
-11. 開発者名・表示名(クレジット画面用)。
-12. 正式なアプリアイコン。
+解消済み:
+
+- 既存UserDefaultsデータ(`willPower.currentValue`/`willPower.maxValue`)は、相対位置をv2の−10〜+10へ線形変換して一度だけ移行する([ADR 0007](../adr/0007-store-v2-data-as-single-json-and-migrate-v1-values.md))。
+
+未確定:
+
+1. 正式なBundle Identifier(現状 `mhlyc.WillMeter` がクラッシュレポート検証で使用されているが、これを正式運用IDとするか要確認)。
+2. App Store上の正式価格・プレミアム商品ID。
+3. ソースコードおよびアプリ内コンテンツのライセンス(現状`LICENSE`はCC BY-NC 4.0だが、ソフトウェアライセンスとして適切か再検討)。
+4. デフォルトテーマ・プレミアムテーマの具体的な色値。
+5. 初期カテゴリ・サブカテゴリの最終名称と初期値(ユーザーテストで調整前提)。
+6. 対応言語を既存3言語(ja/en/zh-Hans)のまま維持するか。
+7. 日次履歴の保持件数に上限を設けるか。
+8. 週次分析の週開始曜日をロケール依存のままにするか、設定で変更可能にするか。
+9. サポートページURL・プライバシーポリシーURL。
+10. 開発者名・表示名(クレジット画面用)。
+11. 正式なアプリアイコン。
 
 ---
 
