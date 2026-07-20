@@ -39,7 +39,8 @@
 ## 遭遇した制約と対応
 
 - Apple Developer Program加入前はPersonal Teamのみだったため、加入後に配布用TeamをXcodeへ反映した
-- 署名IdentityとProvisioning Profileがなかったため、Xcodeで証明書を作成し、Developer Modeを有効にしたテスト端末をTeamへ登録した
+- TestFlight配布用の署名IdentityとProvisioning Profileがなかったため、Xcodeで証明書と署名設定を準備した
+- 実機検証の準備として、Developer Modeを有効にしたテスト端末をTeamへ登録した（TestFlight配布自体の必須手順ではない）
 - App Store Connectにアプリレコードがなかったため、Bundle ID `mhlyc.WillMeter`でWillMeterを登録した
 - 検証ビルドのアップロード後、Apple側の処理完了を待って内部テスターへ配布した
 
