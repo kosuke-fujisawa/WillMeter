@@ -394,20 +394,20 @@ WillMeter/
 
 ### 4.4 データ保存方式
 
-- **UserDefaults**: 軽量なUI設定(テーマ、モノクロモード、選択中タブ、言語設定、v1移行完了フラグ)。オンボーディング完了はJSON内のアプリ状態から判断する。
+- **UserDefaults**: 軽量なUI設定(テーマ、モノクロモード、選択中タブ、言語設定、v1移行完了フラグ `willMeter.v2.legacyMigrationCompleted`)。移行フラグはv1から生成したv2正本の保存・再読込み検証に成功した後だけ `true` にし、全データ削除時も `true` を維持する。オンボーディング完了はJSON内のアプリ状態から判断する。
 - **JSONファイル**: WillMeterDay、ActivityLog、Category、SubCategory、PersonalBaseline、現在状態、Tips閲覧状態を、単一のスナップショットへ保存する。保存時は一時ファイルへ書き込み後に置換し、破損に備え直前世代のバックアップを1世代保持する。
 - **StoreKit 2**: プレミアム権利(非消耗型、商品1点)。
 - **SwiftDataは採用しない**(データ量が小さくJSONの方が構造を把握しやすい、エクスポートとの親和性が高い、Repositoryを介せば将来移行できるため)。ただしJSONファイルをViewやViewModelから直接操作してはならず、Repository相当を経由する。
 
 保存単位は[ADR 0007](../adr/0007-store-v2-data-as-single-json-and-migrate-v1-values.md)で決定した。複数ファイル間の更新不整合を避けるため、初期リリースでは種類別に分割しない。
 
-```
+```text
 Application Support/WillMeter/
 ├── willmeter-data.json
 └── willmeter-data.backup.json
 ```
 
-JSON形式は製品バージョンとは独立した `dataFormatVersion` を持ち、初期値を1とする。IDはUUID文字列、日時はタイムゾーンを含むISO 8601文字列で保存する。未知の新しい形式を自動上書きせず、古い形式は明示的な段階移行後に不変条件を検証する。
+JSON形式は製品バージョンとは独立した `dataFormatVersion` を持ち、初期値を1とする。IDはUUID文字列、日時は小数秒とタイムゾーンを含むISO 8601文字列で保存する。未知の新しい形式を自動上書きせず、古い形式は明示的な段階移行後に不変条件を検証する。
 
 ---
 

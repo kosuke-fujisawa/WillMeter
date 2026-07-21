@@ -35,7 +35,7 @@ Application Support/WillMeter/
 
 書込み中だけ同じディレクトリに `willmeter-data.tmp` を作成する。ViewやViewModelはファイルを直接操作せず、保存境界を担当する型を経由する。実装が1つである間は、形式だけのprotocol階層を追加しない。
 
-UserDefaultsはテーマ、モノクロモード、選択中タブ、`selected_language`、v1移行完了フラグなどの軽量設定に限定する。プレミアム権利はStoreKit 2を正本とし、JSONへ複製しない。オンボーディング完了状態はJSON内のアプリ状態から判断し、既存の `hasCompletedOnboarding` をv2の正本にはしない。
+UserDefaultsはテーマ、モノクロモード、選択中タブ、`selected_language`、v1移行完了フラグ `willMeter.v2.legacyMigrationCompleted` などの軽量設定に限定する。プレミアム権利はStoreKit 2を正本とし、JSONへ複製しない。オンボーディング完了状態はJSON内のアプリ状態から判断し、既存の `hasCompletedOnboarding` をv2の正本にはしない。
 
 ### ルートスキーマ
 
@@ -131,7 +131,7 @@ ActivityLogの `recordType` は初期形式では `normal` / `adjustment` / `day
 
 ### v1からの移行
 
-v2正本もバックアップも存在せず、v1移行完了フラグも立っていない初回起動だけ、次のUserDefaultsキーを読む。
+v2正本もバックアップも存在せず、UserDefaultsの `willMeter.v2.legacyMigrationCompleted` が未設定または `false` の初回起動だけ、次のUserDefaultsキーを読む。
 
 - `willPower.currentValue`
 - `willPower.maxValue`
@@ -156,7 +156,7 @@ migratedValue = round((Double(boundedCurrent) / Double(maxValue)) * 20 - 10)
 
 v1キーが欠損、型不一致、または `maxValue <= 0` の場合は推測で補完せず、v2を `uninitialized` として初期設定を求める。
 
-移行完了フラグはv2正本の保存と再読込み検証に成功した後だけUserDefaultsへ記録する。v1キーは移行直後には削除せず、旧TestFlight版へ戻した場合の手掛かりとして当面読取り専用で残す。ただしv2の全データ削除では、正本・バックアップ・一時ファイル・v1キーを削除し、移行完了フラグを維持して古い値の再取込みを防ぐ。
+`willMeter.v2.legacyMigrationCompleted` は、v1から生成したv2正本の保存と再読込み検証に成功した後だけ `true` に設定する。v1キーは移行直後には削除せず、旧TestFlight版へ戻した場合の手掛かりとして当面読取り専用で残す。v2の全データ削除では、正本・バックアップ・一時ファイル・v1キーを削除した後も同キーを `true` のまま維持し、未設定または `false` へ戻してはならない。これにより、全データ削除後に古い値を再取込みしない。
 
 移行完了後に正本とバックアップの両方が破損しても、更新されていないv1値へ自動で戻してはならない。破損を明示し、利用者の確認なしに新規状態で上書きしない。
 
