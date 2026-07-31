@@ -1,8 +1,6 @@
 # AIレビュー設定
 
-同一リポジトリ内の非ドラフトPRを作成・更新すると、`.github/workflows/ai-review.yml` が共有Action `kosuke-fujisawa/ai-review-action@v1` を実行します。
-
-レビューの実装本体は共有Action [kosuke-fujisawa/ai-review-action](https://github.com/kosuke-fujisawa/ai-review-action) に移行済みで、このリポジトリ側にはワークフロー定義とレビュー指示（`.github/ai-review-instructions.md`）だけを置いています。
+同一リポジトリ内の非ドラフトPRを作成・更新すると、`.github/workflows/ai-review.yml` がPR-Agent v0.35.0を実行します。`skip-ai-review` ラベルを付けたPRは自動レビューしません。
 
 ## 必須設定
 
@@ -11,14 +9,9 @@
 
 ## 動作
 
-1. PR差分をファイル単位で配分し、`AGENTS.md`、固有レビュー方針、GitHub check-runsを収集する。
-2. 削除シンボルについて、HEADに残る参照を `git grep` で検証する。
-3. OpenAI Responses APIへレビューを依頼する。
-4. 実在する場所・検証コマンド・実行経路・反証結果を提示できる指摘だけをコメントする。
-5. 入力・出力・コメント本文を `ai-review` artifactへ保存する。
+- PR作成・更新時にレビュー、説明生成、改善提案を自動実行する。
+- Repository owner、member、collaboratorはPRコメントからPR-Agentコマンドを実行できる。
+- レビュー設定と固有指示は `.pr_agent.toml` で管理する。
+- PR-Agentはv0.35.0の検証済みcommit SHAへ固定する。
 
-差分予算は最大30,000文字です。高確信度の `critical`、`high`、`medium` だけを最大3件返します。
-
-## ローカル確認
-
-レビューのスクリプトとテストは共有Action側リポジトリにあるため、動作確認は [kosuke-fujisawa/ai-review-action](https://github.com/kosuke-fujisawa/ai-review-action) 側で行います。このリポジトリ側で変更しうるのは `.github/workflows/ai-review.yml` と `.github/ai-review-instructions.md` のみです。
+独自Action `kosuke-fujisawa/ai-review-action` と `.github/ai-review-instructions.md` は使用しません。

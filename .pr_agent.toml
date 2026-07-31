@@ -1,0 +1,19 @@
+[config]
+fallback_models = []
+response_language = "ja-JP"
+
+[pr_reviewer]
+num_max_findings = 3
+require_security_review = true
+extra_instructions = """
+バグ、セキュリティ、データ破壊、テスト不足を優先してください。
+確信度が高く、具体的な入力または実行経路と観測可能な影響を説明できる問題だけを指摘してください。
+正常に動作する合理的な可能性が残る場合や、設定・外部APIの仕様を差分だけで確認できない場合は推測で指摘しないでください。
+好みのスタイル指摘と差分外の大規模リファクタリング提案は避け、PR差分に直接関係する問題へ限定してください。
+"""
+
+[pr_description]
+publish_labels = false
+
+[pr_code_suggestions]
+focus_only_on_problems = true
